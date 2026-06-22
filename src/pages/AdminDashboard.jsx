@@ -1,119 +1,142 @@
 import React, { useState } from 'react';
-import { BarChart3, Users, Building2, Truck, Package, AlertCircle, Settings, FileText } from 'lucide-react';
 
 const navItems = [
-  { icon: '📊', label: 'Overview' },
-  { icon: '🍱', label: 'Donors' },
-  { icon: '🏢', label: 'NGOs' },
-  { icon: '🚴', label: 'Volunteers' },
-  { icon: '🙏', label: 'Requests' },
-  { icon: '🚚', label: 'Deliveries' },
-  { icon: '📋', label: 'Reports' },
-  { icon: '⚙️', label: 'Settings' },
+  { ico:'📊', label:'Overview' },
+  { ico:'🍱', label:'Donors' },
+  { ico:'🏢', label:'NGOs' },
+  { ico:'🚴', label:'Volunteers' },
+  { ico:'🙏', label:'Requests' },
+  { ico:'🚚', label:'Deliveries' },
+  { ico:'📋', label:'Reports' },
+  { ico:'⚙️', label:'Settings' },
 ];
 
 const AdminDashboard = () => {
-  const [activeNav, setActiveNav] = useState('Overview');
+  const [active, setActive] = useState('Overview');
 
   return (
-    <div style={{ background: 'var(--cream)', padding: '80px 0' }}>
-      <div className="container">
-        <div className="section-header">
-          <div className="section-tag">🔐 Admin Panel</div>
-          <h2 className="section-title">Admin Dashboard</h2>
-          <p className="section-sub">Manage all operations, track impact, and moderate the platform.</p>
+    <div style={{ background:'var(--cream)', padding:'96px 0' }} id="admin-dashboard">
+      <div className="wrap">
+        <div className="sec-head">
+          <div className="sec-tag">🔐 Admin</div>
+          <h2 className="sec-title">Admin Dashboard</h2>
+          <p className="sec-sub">Full platform control — monitor, moderate, and manage all operations.</p>
         </div>
 
-        <div className="admin-layout">
+        <div className="admin-shell">
           {/* Sidebar */}
-          <div className="admin-sidebar">
-            <div style={{ padding: '16px 20px 12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                <div style={{ width: '36px', height: '36px', background: 'rgba(255,255,255,0.15)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>🛡️</div>
+          <div className="admin-side">
+            <div className="admin-side-logo">
+              <div className="flex items-c gap-2 mb-1">
+                <div style={{ width:34, height:34, borderRadius:10, background:'rgba(255,255,255,.15)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.1rem' }}>🛡️</div>
                 <div>
-                  <p style={{ color: 'white', fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.9rem' }}>Admin Panel</p>
-                  <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem' }}>Food For Hungry</p>
+                  <p style={{ color:'#fff', fontFamily:'Poppins', fontWeight:700, fontSize:'.87rem' }}>Admin Panel</p>
+                  <p style={{ color:'rgba(255,255,255,.4)', fontSize:'.7rem' }}>Food For Hungry</p>
                 </div>
               </div>
             </div>
-            <div className="admin-sidebar-title">Main Menu</div>
+            <div className="a-nav-group">Main Menu</div>
             {navItems.map(item => (
-              <button key={item.label} className={`admin-nav-item ${activeNav === item.label ? 'active' : ''}`} onClick={() => setActiveNav(item.label)}>
-                <span>{item.icon}</span> {item.label}
+              <button key={item.label} className={`a-nav${active===item.label?' on':''}`} onClick={() => setActive(item.label)}>
+                <span>{item.ico}</span> {item.label}
               </button>
             ))}
           </div>
 
-          {/* Main Content */}
-          <div style={{ padding: '28px', background: '#FAFAFA' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }}>
+          {/* Main */}
+          <div className="admin-main">
+            <div className="flex items-c justify-b mb-6 flex-wrap gap-3">
               <div>
-                <h3 style={{ fontFamily: 'Poppins', fontSize: '1.3rem', fontWeight: 800 }}>Platform Overview</h3>
-                <p style={{ color: 'var(--text-soft)', fontSize: '0.875rem' }}>Today — {new Date().toDateString()}</p>
+                <p className="poppins f-800 text-xl">Platform Overview</p>
+                <p className="clr-soft text-sm mt-1">{new Date().toDateString()}</p>
               </div>
-              <span className="badge badge-green">● System Live</span>
+              <div className="flex gap-2">
+                <span className="status-chip s-delivered" style={{ padding:'6px 14px' }}>● System Live</span>
+                <button className="btn btn-primary btn-sm">+ Add Donor</button>
+              </div>
             </div>
 
-            {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
+            {/* Stats grid */}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14, marginBottom:24 }}>
               {[
-                { icon: '🍱', num: '147', label: 'Today\'s Donations', color: '#DCFCE7', change: '+12%' },
-                { icon: '🙏', num: '83', label: 'Active Requests', color: '#FED7AA', change: '+7%' },
-                { icon: '🚴', num: '34', label: 'Online Volunteers', color: '#DBEAFE', change: '+5' },
-                { icon: '🆘', num: '6', label: 'SOS Pending', color: '#FEE2E2', change: 'Urgent' },
-              ].map((s, i) => (
-                <div key={i} style={{ background: 'white', borderRadius: '16px', padding: '18px', border: '1px solid #EEF2F7', boxShadow: 'var(--shadow-sm)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>{s.icon}</div>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: i === 3 ? 'var(--red-sos)' : 'var(--green-primary)', background: i === 3 ? '#FEE2E2' : '#DCFCE7', padding: '3px 8px', borderRadius: '9999px' }}>{s.change}</span>
+                { ico:'🍱', bg:'#DCFCE7', n:'147', l:"Today's Donations", delta:'+12%', pos:true },
+                { ico:'🙏', bg:'#FED7AA', n:'83', l:'Active Requests', delta:'+7', pos:true },
+                { ico:'🚴', bg:'#DBEAFE', n:'34', l:'Online Volunteers', delta:'+5', pos:true },
+                { ico:'🆘', bg:'#FEE2E2', n:'6', l:'SOS Pending', delta:'Urgent', pos:false },
+              ].map(s => (
+                <div key={s.l} className="mini-stat">
+                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
+                    <div className="mini-stat-ico" style={{ background:s.bg, margin:0 }}>{s.ico}</div>
+                    <span className="mini-stat-delta" style={{ background:s.pos?'#DCFCE7':'#FEE2E2', color:s.pos?'var(--g-primary)':'var(--red)' }}>{s.delta}</span>
                   </div>
-                  <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.6rem', color: 'var(--text-dark)', lineHeight: 1 }}>{s.num}</p>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-soft)', marginTop: '4px' }}>{s.label}</p>
+                  <div className="mini-stat-n">{s.n}</div>
+                  <div className="mini-stat-l">{s.l}</div>
                 </div>
               ))}
             </div>
 
-            {/* Two columns */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-              {/* Recent Donations */}
-              <div style={{ background: 'white', borderRadius: '16px', padding: '20px', border: '1px solid #EEF2F7' }}>
-                <p style={{ fontFamily: 'Poppins', fontWeight: 700, marginBottom: '16px', fontSize: '1rem' }}>🍱 Recent Donations</p>
+            {/* Chart area */}
+            <div style={{ background:'#fff', border:'1px solid #EEF2F7', borderRadius:16, padding:20, marginBottom:20 }}>
+              <p className="poppins f-700 mb-4">📈 Weekly Delivery Trend</p>
+              <div style={{ display:'flex', alignItems:'flex-end', gap:10, height:100 }}>
+                {[65,80,55,90,72,95,88].map((h,i) => (
+                  <div key={i} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:6 }}>
+                    <div style={{ width:'100%', height:`${h}%`, background:`linear-gradient(to top,var(--g-primary),var(--g-light))`, borderRadius:'6px 6px 0 0', opacity:.85+i*.02 }} />
+                    <span className="text-xs clr-soft">{['M','T','W','T','F','S','S'][i]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom 2-col */}
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+              {/* Recent donations */}
+              <div style={{ background:'#fff', borderRadius:14, padding:18, border:'1px solid #EEF2F7' }}>
+                <p className="poppins f-700 mb-4">🍱 Recent Donations</p>
                 {[
-                  { name: 'Hotel Saravana Bhavan', food: '30 plates rice', time: '5 mins ago', status: 'pending' },
-                  { name: 'Raj Catering', food: '50 kg biryani', time: '22 mins ago', status: 'accepted' },
-                  { name: 'Krishna Bakery', food: '200 buns', time: '1 hr ago', status: 'delivered' },
-                  { name: 'Ananya Home', food: '10 kg dal', time: '2 hrs ago', status: 'delivered' },
-                ].map((d, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: i < 3 ? '1px solid var(--border)' : 'none' }}>
+                  { name:'Hotel Saravana Bhavan', food:'30 plates rice', time:'5 min', s:'pending' },
+                  { name:'Raj Catering', food:'60 kg biryani', time:'22 min', s:'accepted' },
+                  { name:'Krishna Bakery', food:'200 buns', time:'1 hr', s:'pickup' },
+                  { name:'Ananya Home', food:'15 kg dal', time:'2 hrs', s:'delivered' },
+                ].map((d,i,arr) => (
+                  <div key={i} className="flex items-c justify-b py-2" style={{ borderBottom:i<arr.length-1?'1px solid var(--border-soft)':'none' }}>
                     <div>
-                      <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>{d.name}</p>
-                      <p style={{ fontSize: '0.8rem', color: 'var(--text-soft)' }}>{d.food} · {d.time}</p>
+                      <p className="poppins f-600 text-sm">{d.name}</p>
+                      <p className="text-xs clr-soft mt-1">{d.food} · {d.time} ago</p>
                     </div>
-                    <span className={`badge ${d.status === 'delivered' ? 'badge-green' : d.status === 'accepted' ? 'badge-blue' : 'badge-orange'}`}>
-                      {d.status}
+                    <span className={`status-chip ${d.s==='pending'?'s-pending':d.s==='accepted'?'s-accepted':d.s==='pickup'?'s-pickup':'s-delivered'}`} style={{ fontSize:'.68rem' }}>
+                      {d.s==='pending'?'Pending':d.s==='accepted'?'Accepted':d.s==='pickup'?'Picked Up':'Delivered'}
                     </span>
                   </div>
                 ))}
               </div>
 
-              {/* SOS Requests */}
-              <div style={{ background: 'white', borderRadius: '16px', padding: '20px', border: '1px solid #EEF2F7' }}>
-                <p style={{ fontFamily: 'Poppins', fontWeight: 700, marginBottom: '16px', fontSize: '1rem' }}>🆘 SOS Requests</p>
+              {/* SOS */}
+              <div style={{ background:'#fff', borderRadius:14, padding:18, border:'1px solid #EEF2F7' }}>
+                <p className="poppins f-700 mb-4">🆘 SOS — Pending Dispatch</p>
                 {[
-                  { name: 'Ravi Kumar', loc: 'Dharavi, Chennai', people: '8 people', urgent: true },
-                  { name: 'Anbu Shelter', loc: 'Adyar, Chennai', people: '25 people', urgent: true },
-                  { name: 'Old Age Home', loc: 'T Nagar', people: '40 elderly', urgent: false },
-                ].map((s, i) => (
-                  <div key={i} style={{ background: s.urgent ? '#FEF2F2' : '#F9FAFB', border: `1px solid ${s.urgent ? 'var(--red-border)' : 'var(--border)'}`, borderRadius: '12px', padding: '12px 14px', marginBottom: '10px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  { name:'Ravi Kumar', loc:'Dharavi, Chennai', ppl:'8 people', hot:true },
+                  { name:'Anbu Shelter', loc:'Adyar, Chennai', ppl:'25 people', hot:true },
+                  { name:'Old Age Home', loc:'T Nagar', ppl:'40 elderly', hot:false },
+                ].map((s,i) => (
+                  <div key={i} style={{ background:s.hot?'var(--red-soft)':'var(--border-soft)', border:`1px solid ${s.hot?'var(--red-mid)':'var(--border)'}`, borderRadius:12, padding:'12px 14px', marginBottom:10 }}>
+                    <div className="flex items-c justify-b">
                       <div>
-                        <p style={{ fontWeight: 600, fontSize: '0.9rem' }}>{s.name}</p>
-                        <p style={{ fontSize: '0.8rem', color: 'var(--text-soft)' }}>📍 {s.loc} · {s.people}</p>
+                        <p className="poppins f-600 text-sm">{s.name}</p>
+                        <p className="text-xs clr-soft mt-1">📍 {s.loc} · {s.ppl}</p>
                       </div>
-                      <button className="btn btn-danger btn-sm">Dispatch</button>
+                      <button className={`btn btn-sm ${s.hot?'btn-red':'btn-outline'}`}>Dispatch</button>
                     </div>
                   </div>
                 ))}
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:10, marginTop:14 }}>
+                  {[['Chennai','45 del'],['Coimbatore','22 del'],['Madurai','18 del']].map(([c,n]) => (
+                    <div key={c} style={{ background:'var(--g-soft)', border:'1px solid #BBF7D0', borderRadius:10, padding:'10px 12px', textAlign:'center' }}>
+                      <p className="poppins f-700 text-sm clr-green">{n}</p>
+                      <p className="text-xs clr-soft">{c}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

@@ -1,81 +1,109 @@
 import React, { useState } from 'react';
-import { MapPin, CheckCircle, Phone } from 'lucide-react';
 
-const ngos = [
-  { name: 'Feeding India Chennai', area: 'Chennai, TN', deliveries: 1240, volunteers: 34, emoji: '🏛️', verified: true },
-  { name: 'Annai Trust', area: 'Coimbatore, TN', deliveries: 876, volunteers: 22, emoji: '🤝', verified: true },
-  { name: 'Hope Foundation', area: 'Madurai, TN', deliveries: 643, volunteers: 18, emoji: '🌱', verified: true },
-  { name: 'Serve India', area: 'Salem, TN', deliveries: 421, volunteers: 12, emoji: '❤️', verified: true },
-  { name: 'No Food Waste NGO', area: 'Trichy, TN', deliveries: 987, volunteers: 29, emoji: '♻️', verified: true },
-  { name: 'Goonj Tamil Nadu', area: 'Tirunelveli, TN', deliveries: 554, volunteers: 16, emoji: '🌟', verified: true },
+const donations = [
+  { donor:'Hotel Saravana Bhavan', food:'30 plates rice & dal', time:'5 min ago', status:'pending' },
+  { donor:'Raj Catering Services', food:'60 kg veg biryani', time:'18 min ago', status:'accepted' },
+  { donor:'Krishna Bakery', food:'200 buns + bread', time:'55 min ago', status:'pickup' },
+  { donor:'Ananya Home Kitchen', food:'15 kg sambar rice', time:'2 hrs ago', status:'delivered' },
+  { donor:'Green Bowl Restaurant', food:'40 plates pasta', time:'3 hrs ago', status:'delivered' },
+];
+
+const requests = [
+  { name:'Ravi & Family', loc:'Dharavi Colony, Chennai', people:8, urgent:true },
+  { name:'Anbu Night Shelter', loc:'Adyar Bridge, Chennai', people:25, urgent:true },
+  { name:'Old Age Home', loc:'T Nagar West', people:40, urgent:false },
 ];
 
 const NGODashboard = () => {
+  const [tab, setTab] = useState('incoming');
+
   return (
-    <div style={{ background: 'white', padding: '80px 0' }}>
-      <div className="container">
-        <div className="section-header">
-          <div className="section-tag">🏢 NGO Network</div>
-          <h2 className="section-title">Our Verified NGO Partners</h2>
-          <p className="section-sub">Join 28+ trusted hunger relief organizations making a real difference across Tamil Nadu.</p>
+    <div style={{ background:'#fff', padding:'96px 0' }} id="ngo-dashboard">
+      <div className="wrap">
+        <div className="sec-head">
+          <div className="sec-tag">🏢 NGO Panel</div>
+          <h2 className="sec-title">NGO Dashboard</h2>
+          <p className="sec-sub">Manage incoming donations, active requests, and volunteer assignments from one place.</p>
         </div>
 
-        {/* Summary */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '48px' }}>
+        {/* Summary Stats */}
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20, marginBottom:40 }}>
           {[
-            { icon: '🏢', num: '28+', label: 'Partner NGOs', color: '#DCFCE7' },
-            { icon: '🍱', num: '24,800', label: 'Meals Delivered', color: '#FED7AA' },
-            { icon: '📍', num: '12', label: 'Cities Covered', color: '#DBEAFE' },
-          ].map((s, i) => (
-            <div key={i} className="stat-card" style={{ textAlign: 'center' }}>
-              <div className="stat-icon-circle" style={{ background: s.color }}>{s.icon}</div>
-              <span className="stat-num">{s.num}</span>
-              <span className="stat-label">{s.label}</span>
+            { ico:'🍱', bg:'#DCFCE7', n:'23', l:'Incoming Donations' },
+            { ico:'🙏', bg:'#FED7AA', n:'14', l:'Pending Requests' },
+            { ico:'🚴', bg:'#DBEAFE', n:'8', l:'Active Volunteers' },
+            { ico:'✅', bg:'#F0FDF4', n:'1,240', l:'Total Deliveries' },
+          ].map(s => (
+            <div key={s.l} className="mini-stat">
+              <div className="mini-stat-ico" style={{ background:s.bg }}>{s.ico}</div>
+              <div className="mini-stat-n">{s.n}</div>
+              <div className="mini-stat-l">{s.l}</div>
             </div>
           ))}
         </div>
 
-        {/* NGO Cards */}
-        <div className="ngo-grid">
-          {ngos.map((ngo, i) => (
-            <div key={i} className="ngo-card">
-              <div className="ngo-card-top">
-                <div className="ngo-avatar">{ngo.emoji}</div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', marginBottom: '4px' }}>{ngo.name}</p>
-                  {ngo.verified && <span className="ngo-verified">✅ Verified</span>}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:24 }}>
+          {/* Incoming donations */}
+          <div>
+            <p className="poppins f-700 text-lg mb-4">🍱 Incoming Donations</p>
+            {donations.map((d,i) => (
+              <div key={i} style={{ background:'#fff', border:'1px solid #EEF2F7', borderRadius:14, padding:'14px 16px', marginBottom:10, display:'flex', alignItems:'center', justifyContent:'space-between', boxShadow:'var(--sh-xs)' }}>
+                <div>
+                  <p className="poppins f-600 text-sm">{d.donor}</p>
+                  <p className="text-xs clr-soft mt-1">{d.food} · {d.time}</p>
+                </div>
+                <div className="flex items-c gap-2">
+                  <span className={`status-chip ${d.status==='pending'?'s-pending':d.status==='accepted'?'s-accepted':d.status==='pickup'?'s-pickup':'s-delivered'}`}>
+                    {d.status==='pending'?'⏳ Pending':d.status==='accepted'?'✓ Accepted':d.status==='pickup'?'🚴 Picked Up':'✅ Delivered'}
+                  </span>
+                  {d.status==='pending' && <button className="btn btn-primary btn-sm">Accept</button>}
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-soft)', fontSize: '0.85rem', marginBottom: '14px' }}>
-                <MapPin size={14} /> {ngo.area}
-              </div>
-              <div className="ngo-stat-row">
-                <div className="ngo-stat-item">
-                  <span className="ngo-stat-val">{ngo.deliveries}</span>
-                  <span className="ngo-stat-lbl">Deliveries</span>
-                </div>
-                <div className="ngo-stat-item">
-                  <span className="ngo-stat-val">{ngo.volunteers}</span>
-                  <span className="ngo-stat-lbl">Volunteers</span>
-                </div>
-                <div className="ngo-stat-item">
-                  <span className="ngo-stat-val">4.8★</span>
-                  <span className="ngo-stat-lbl">Rating</span>
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button className="btn btn-primary btn-sm" style={{ flex: 1 }}>Connect</button>
-                <button className="btn btn-secondary btn-sm"><Phone size={15} /></button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* Join CTA */}
-        <div style={{ textAlign: 'center', marginTop: '48px', padding: '40px', background: 'var(--green-mint)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
-          <h3 style={{ fontFamily: 'Poppins', fontSize: '1.5rem', fontWeight: 800, marginBottom: '10px' }}>Is Your NGO Ready to Join?</h3>
-          <p style={{ color: 'var(--text-soft)', marginBottom: '24px', maxWidth: '500px', margin: '0 auto 24px' }}>Register as a verified partner and start receiving food donations in your area today.</p>
-          <button className="btn btn-primary">Register Your NGO</button>
+          {/* Urgent requests + volunteers */}
+          <div style={{ display:'flex', flexDirection:'column', gap:24 }}>
+            {/* SOS */}
+            <div>
+              <p className="poppins f-700 text-lg mb-4">🆘 Urgent Hunger Requests</p>
+              {requests.map((r,i) => (
+                <div key={i} style={{ background:r.urgent?'var(--red-soft)':'var(--border-soft)', border:`1px solid ${r.urgent?'var(--red-mid)':'var(--border)'}`, borderRadius:14, padding:'14px 16px', marginBottom:10 }}>
+                  <div className="flex items-c justify-b">
+                    <div>
+                      <p className="poppins f-600 text-sm">{r.name}</p>
+                      <p className="text-xs clr-soft mt-1">📍 {r.loc} · {r.people} people</p>
+                    </div>
+                    <button className={`btn btn-sm ${r.urgent?'btn-red':'btn-outline'}`}>
+                      {r.urgent ? '🆘 Dispatch' : 'Assign →'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Active volunteers */}
+            <div>
+              <p className="poppins f-700 text-lg mb-4">🚴 Active Volunteers Today</p>
+              {[
+                { name:'Karthik R.', status:'On delivery', pickups:3, clr:'#16A34A', bg:'#DCFCE7' },
+                { name:'Meena S.', status:'Available', pickups:1, clr:'#2563EB', bg:'#DBEAFE' },
+                { name:'Pradeep K.', status:'Available', pickups:5, clr:'#2563EB', bg:'#DBEAFE' },
+                { name:'Divya T.', status:'On delivery', pickups:2, clr:'#D97706', bg:'#FEF3C7' },
+              ].map((v,i) => (
+                <div key={i} className="flex items-c justify-b mb-3" style={{ padding:'12px 16px', background:'#fff', border:'1px solid #EEF2F7', borderRadius:13, boxShadow:'var(--sh-xs)' }}>
+                  <div className="flex items-c gap-3">
+                    <div style={{ width:36, height:36, borderRadius:'50%', background:v.bg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1rem' }}>🧑</div>
+                    <div>
+                      <p className="poppins f-600 text-sm">{v.name}</p>
+                      <p style={{ fontSize:'.7rem', color:v.clr, fontWeight:700 }}>{v.status}</p>
+                    </div>
+                  </div>
+                  <span className="text-xs clr-soft">{v.pickups} pickups today</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
