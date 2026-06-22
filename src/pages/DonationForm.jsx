@@ -19,7 +19,13 @@ const DonationForm = () => {
   const estimatedPeople = qty ? Math.floor(parseInt(qty) * 2.5) : 0;
 
   return (
-    <div style={{ background: '#F8FAFC', padding: '80px 0', minHeight: '100vh' }}>
+    <div style={{
+      background: "linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(220, 252, 231, 0.9) 100%), url('/hero-bg.jpg') no-repeat center center",
+      backgroundSize: 'cover',
+      backgroundAttachment: 'fixed',
+      padding: '80px 0',
+      minHeight: '100vh'
+    }}>
       <div className="container" style={{ maxWidth: '800px' }}>
         <div className="section-header" style={{ marginBottom: '40px' }}>
           <div className="section-tag">📦 List Surplus</div>

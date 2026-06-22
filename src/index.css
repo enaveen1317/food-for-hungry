@@ -312,8 +312,7 @@ h1, h2, h3, h4, h5, h6 {
    HERO SECTION
 ============================================ */
 .hero {
-  background: linear-gradient(135deg, rgba(20, 83, 45, 0.95) 0%, rgba(20, 83, 45, 0.9) 35%, rgba(22, 163, 74, 0.4) 100%), url('/hero-bg.jpg') no-repeat center center;
-  background-size: cover;
+  background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-primary) 55%, #4ADE80 100%);
   min-height: 90vh;
   display: flex;
   align-items: center;

@@ -12,13 +12,19 @@ const Emergency = () => {
   };
 
   return (
-    <div style={{ background: '#FFF5F5', padding: '80px 0' }}>
+    <div style={{
+      background: "linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(254, 226, 226, 0.9) 100%), url('/request-bg.png') no-repeat center center",
+      backgroundSize: 'cover',
+      backgroundAttachment: 'fixed',
+      padding: '80px 0',
+      minHeight: '100vh'
+    }}>
       <div className="container">
+        {/* Top Banner */}
         <div style={{
-          background: "linear-gradient(135deg, rgba(220, 38, 38, 0.92) 0%, rgba(153, 27, 27, 0.8) 100%), url('/request-bg.png') no-repeat center center",
-          backgroundSize: 'cover',
+          background: 'linear-gradient(135deg, var(--red-sos), #EF4444)',
           borderRadius: '24px',
-          padding: '48px 40px',
+          padding: '32px 40px',
           marginBottom: '40px',
           color: 'white',
           display: 'flex',
