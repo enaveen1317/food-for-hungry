@@ -1,102 +1,157 @@
 import React, { useState } from 'react';
 
 const tasks = [
-  { id:1, donor:'Hotel Saravana Bhavan', food:'Dal Rice — 30 plates', pickup:'Anna Nagar, Chennai', drop:'Hope Foundation, T Nagar', urgency:'high', dist:'2.3 km', time:'Posted 12 min ago' },
-  { id:2, donor:'Raj Wedding Hall', food:'Veg Biryani — 60 kg', pickup:'Adyar Signal, Chennai', drop:'Feeding India, Velachery', urgency:'critical', dist:'4.1 km', time:'Posted 5 min ago' },
-  { id:3, donor:'Krishna Bakery', food:'Bread & Pav — 200 pcs', pickup:'Velachery Main Rd', drop:'Children Home, KK Nagar', urgency:'low', dist:'1.8 km', time:'Posted 40 min ago' },
+  {
+    id: 1,
+    food: 'Dal rice + sambar — 30 plates',
+    donor: 'Hotel Saravana Bhavan',
+    pickup: 'Anna Nagar, 2nd Ave',
+    drop: 'Annai Night Shelter, T Nagar',
+    people: 28,
+    dist: '3.2 km',
+    timeLeft: 'Pickup by 9:30 PM',
+    urgency: 'high',
+    note: 'Food is at the hotel back entrance. Ask for Murugan.',
+  },
+  {
+    id: 2,
+    food: 'Veg biryani — approx 60 kg',
+    donor: 'Raj Wedding Hall',
+    pickup: 'Adyar Signal area',
+    drop: 'Feeding India Trust, Velachery',
+    people: 55,
+    dist: '4.8 km',
+    timeLeft: 'Urgent — by 8:45 PM',
+    urgency: 'critical',
+    note: 'Bulk pickup. Bring containers if possible. Call Rajan before arriving.',
+  },
+  {
+    id: 3,
+    food: 'Bread, pav, buns — 200 pieces',
+    donor: 'Krishna Bakery',
+    pickup: 'Velachery Main Rd',
+    drop: 'Children Home, KK Nagar',
+    people: 40,
+    dist: '1.9 km',
+    timeLeft: 'Flexible — any time tonight',
+    urgency: 'low',
+    note: 'Bakery closes at 10 PM. Go before that.',
+  },
 ];
 
 const Dashboard = () => {
   const [tab, setTab] = useState('available');
 
   return (
-    <div style={{ background:'var(--cream)', padding:'96px 0' }} id="volunteer-dashboard">
+    <div style={{ background:'var(--beige)', padding:'80px 0' }} id="volunteers">
       <div className="wrap">
-        <div className="sec-head">
-          <div className="sec-tag">🚴 Volunteer Hub</div>
-          <h2 className="sec-title">Volunteer Dashboard</h2>
-          <p className="sec-sub">Accept pickups, complete deliveries, and earn rewards. Real impact — every ride.</p>
+        <div style={{ maxWidth:560, marginBottom:40 }}>
+          <span className="sec-kicker">Volunteer dashboard</span>
+          <h2 style={{ fontSize:'1.6rem', marginBottom:10 }}>Your pickups and deliveries</h2>
+          <p className="cs sm">A simple view of what's near you, what you've accepted, and what you've completed. Every delivery helps someone eat tonight.</p>
         </div>
 
-        {/* Top stat row */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20, marginBottom:40 }}>
+        {/* Stats */}
+        <div className="vol-stats">
           {[
-            { ico:'📦', bg:'#DBEAFE', n:'8', l:'Available Tasks' },
-            { ico:'🚴', bg:'#DCFCE7', n:'3', l:'Accepted Pickups' },
-            { ico:'✅', bg:'#FED7AA', n:'47', l:'Completed' },
-            { ico:'⭐', bg:'#F3E8FF', n:'1,240', l:'Reward Points' },
+            { ico:'📦', n:'8', l:'Available nearby' },
+            { ico:'🚴', n:'3', l:'Accepted by you' },
+            { ico:'✅', n:'47', l:'Completed total' },
+            { ico:'⭐', n:'1,240', l:'Points earned' },
           ].map(s => (
-            <div key={s.l} className="mini-stat">
-              <div className="mini-stat-ico" style={{ background:s.bg }}>{s.ico}</div>
-              <div className="mini-stat-n">{s.n}</div>
-              <div className="mini-stat-l">{s.l}</div>
+            <div key={s.l} className="vol-stat">
+              <span className="vol-stat-ico">{s.ico}</span>
+              <span className="vol-stat-n">{s.n}</span>
+              <span className="vol-stat-l">{s.l}</span>
             </div>
           ))}
         </div>
 
-        {/* Gamification banner */}
-        <div style={{ background:'linear-gradient(135deg,var(--g-deep),var(--g-primary))', borderRadius:20, padding:'24px 28px', marginBottom:32, display:'flex', alignItems:'center', justifyContent:'space-between', color:'#fff', flexWrap:'wrap', gap:16 }}>
-          <div className="flex items-c gap-4">
-            <div style={{ width:60, height:60, background:'rgba(255,255,255,.18)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'2rem' }}>🏆</div>
+        {/* Volunteer level */}
+        <div style={{ background:'var(--green-deep)', borderRadius:'var(--r-lg)', padding:'22px 24px', marginBottom:28, display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:14 }}>
+          <div className="flex ic g4">
+            <div style={{ width:52, height:52, borderRadius:'50%', background:'rgba(255,255,255,.12)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.6rem', flexShrink:0 }}>🏆</div>
             <div>
-              <p style={{ fontFamily:'Poppins', fontWeight:800, fontSize:'1.15rem' }}>Gold Tier Volunteer</p>
-              <p style={{ opacity:.8, fontSize:'.83rem', marginTop:2 }}>Top 5% of volunteers this month · 47 deliveries completed</p>
+              <p className="pops f700 lg cw" style={{ marginBottom:3 }}>Gold Volunteer — Karthik S.</p>
+              <p className="xs cw" style={{ opacity:.65 }}>Top 5% in Chennai this month · 47 deliveries completed</p>
             </div>
           </div>
           <div style={{ textAlign:'right' }}>
-            <p style={{ fontFamily:'Poppins', fontWeight:800, fontSize:'1.4rem' }}>1,240 pts</p>
-            <p style={{ opacity:.7, fontSize:'.75rem', marginBottom:8 }}>260 pts to Platinum tier</p>
-            <div style={{ width:140, height:7, background:'rgba(255,255,255,.2)', borderRadius:999 }}>
-              <div style={{ width:'82%', height:'100%', background:'#4ADE80', borderRadius:999 }} />
+            <p className="pops f800 xl cw mb-2">1,240 pts</p>
+            <p className="xs cw" style={{ opacity:.55, marginBottom:8 }}>260 pts to Platinum</p>
+            <div style={{ width:130, height:6, background:'rgba(255,255,255,.15)', borderRadius:999 }}>
+              <div style={{ width:'82%', height:'100%', background:'#9AE6B4', borderRadius:999 }} />
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div style={{ display:'flex', gap:6, marginBottom:24, background:'var(--border-soft)', padding:'6px', borderRadius:13, width:'fit-content' }}>
+        <div style={{ display:'flex', gap:4, marginBottom:20, background:'var(--beige-dark)', padding:'5px', borderRadius:12, width:'fit-content', border:'1px solid var(--border)' }}>
           {['available','accepted','completed'].map(t => (
-            <button key={t} onClick={() => setTab(t)} style={{ padding:'8px 20px', border:'none', borderRadius:10, fontFamily:'Poppins', fontWeight:600, fontSize:'.83rem', cursor:'pointer', transition:'var(--fast)', background:tab===t?'#fff':'transparent', color:tab===t?'var(--g-primary)':'var(--text-soft)', boxShadow:tab===t?'var(--sh-xs)':'none' }}>
-              {t.charAt(0).toUpperCase()+t.slice(1)} {t==='available'?'(8)':t==='accepted'?'(3)':'(47)'}
+            <button key={t} onClick={() => setTab(t)} style={{
+              padding:'7px 18px', border:'none', borderRadius:9,
+              fontFamily:'Inter,sans-serif', fontWeight:600, fontSize:'.82rem',
+              cursor:'pointer', transition:'var(--t)',
+              background: tab === t ? '#fff' : 'transparent',
+              color: tab === t ? 'var(--green)' : 'var(--soft)',
+              boxShadow: tab === t ? 'var(--sh-xs)' : 'none',
+            }}>
+              {t.charAt(0).toUpperCase() + t.slice(1)}{t === 'available' ? ' (8)' : t === 'accepted' ? ' (3)' : ' (47)'}
             </button>
           ))}
         </div>
 
         {/* Task cards */}
         {tasks.map(task => (
-          <div key={task.id} className="task-card">
-            <div className="flex items-s justify-b flex-wrap gap-4">
-              <div style={{ flex:1 }}>
-                <div className="flex items-c gap-3 mb-3 flex-wrap">
-                  <div style={{ width:42, height:42, borderRadius:12, background:'var(--g-mint)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.3rem', flexShrink:0 }}>🍱</div>
-                  <div>
-                    <p className="poppins f-700 text-md">{task.donor}</p>
-                    <p className="text-sm clr-soft mt-1">{task.food}</p>
-                  </div>
-                  <span className={`urgency ${task.urgency==='critical'?'u-crit':task.urgency==='high'?'u-high':'u-low'}`}>
-                    {task.urgency==='critical'?'🔴 Critical':task.urgency==='high'?'🟠 High Priority':'🟢 Normal'}
-                  </span>
-                  <span className="text-xs clr-soft ml-auto">{task.time}</span>
-                </div>
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:12 }}>
-                  <div style={{ background:'var(--border-soft)', borderRadius:10, padding:'10px 12px' }}>
-                    <p className="text-xs clr-soft mb-1">📦 Pickup</p>
-                    <p className="text-sm f-600">{task.pickup}</p>
-                  </div>
-                  <div style={{ background:'var(--g-soft)', borderRadius:10, padding:'10px 12px' }}>
-                    <p className="text-xs clr-soft mb-1">🏁 Drop</p>
-                    <p className="text-sm f-600">{task.drop}</p>
-                  </div>
-                  <div style={{ background:'var(--orange-soft)', borderRadius:10, padding:'10px 12px' }}>
-                    <p className="text-xs clr-soft mb-1">📍 Distance</p>
-                    <p className="text-sm f-600 clr-orange">{task.dist}</p>
-                  </div>
-                </div>
+          <div key={task.id} className="vol-task">
+            <div className="vol-task-head">
+              <div className="vol-task-ico">🍱</div>
+              <div className="vol-task-info">
+                <div className="vol-task-title">{task.food}</div>
+                <div className="vol-task-sub">{task.donor} · {task.dist} away</div>
               </div>
-              <div className="flex flex-col gap-2" style={{ flexShrink:0 }}>
-                <button className="btn btn-primary btn-sm">✓ Accept Task</button>
-                <button className="btn btn-outline btn-sm">🗺️ View Map</button>
-                <button style={{ background:'none', border:'none', fontSize:'.75rem', color:'var(--text-soft)', cursor:'pointer', fontFamily:'Poppins', fontWeight:600 }}>Skip →</button>
+              <div className="flex ic g2 ml-a">
+                <span className={`urg-chip ${task.urgency === 'critical' ? 'urg-crit' : task.urgency === 'high' ? 'urg-high' : 'urg-low'}`}>
+                  {task.urgency === 'critical' ? '🔴 Urgent' : task.urgency === 'high' ? '🟠 Tonight' : '🟢 Flexible'}
+                </span>
               </div>
+            </div>
+
+            {/* Route */}
+            <div className="vol-route">
+              <div className="vol-route-point">
+                <div className="vol-route-label">📦 Pickup from</div>
+                <div className="vol-route-val">{task.pickup}</div>
+              </div>
+              <div className="vol-route-arrow">→</div>
+              <div className="vol-route-point">
+                <div className="vol-route-label">🏁 Drop to</div>
+                <div className="vol-route-val">{task.drop}</div>
+              </div>
+            </div>
+
+            {/* Details row */}
+            <div className="flex ic jb fw g3" style={{ marginBottom:12 }}>
+              <div className="flex g2 ic">
+                <span className="xs cs">👥</span>
+                <span className="xs cs">Feeds ~{task.people} people</span>
+              </div>
+              <div className="flex g2 ic">
+                <span className="xs cs">⏰</span>
+                <span className="xs" style={{ color: task.urgency === 'critical' ? 'var(--red)' : 'var(--soft)', fontWeight: task.urgency === 'critical' ? 700 : 500 }}>{task.timeLeft}</span>
+              </div>
+            </div>
+
+            {/* Note */}
+            <div style={{ background:'var(--beige)', borderRadius:10, padding:'9px 12px', marginBottom:14, border:'1px solid var(--border-soft)' }}>
+              <p className="xs cs"><strong style={{ color:'var(--text)' }}>Note:</strong> {task.note}</p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex g2">
+              <button className={`btn btn-sm ${task.urgency === 'critical' ? 'btn-red' : 'btn-green'}`} style={{ flex:1 }}>Accept pickup</button>
+              <button className="btn btn-outline btn-sm">🗺️ View route</button>
+              <button style={{ background:'none', border:'none', fontSize:'.75rem', color:'var(--soft)', cursor:'pointer', padding:'0 8px', fontWeight:600 }}>Skip</button>
             </div>
           </div>
         ))}

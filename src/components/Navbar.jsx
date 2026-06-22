@@ -6,39 +6,48 @@ const Navbar = () => {
 
   const go = (id) => {
     const el = document.getElementById(id);
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' });
   };
 
   return (
     <nav className="nav">
-      <div className="wrap nav-inner">
+      <div className="wrap nav-row">
         {/* Logo */}
         <div className="nav-logo" onClick={() => go('home')}>
-          <div className="nav-logo-box">🍽️</div>
-          <span className="nav-logo-text">Food <em>For Hungry</em></span>
+          <div className="nav-logo-leaf">🌿</div>
+          <span className="nav-logo-name">Food <strong>For Hungry</strong></span>
         </div>
 
         {/* Center links */}
         <div className="nav-links">
-          {[['home','Home'],['donate','Donate Food'],['request','Request Food'],['ngo-dashboard','NGOs'],['volunteer-dashboard','Volunteers'],['admin-dashboard','About']].map(([id,label]) => (
-            <button key={id} className="nav-link" onClick={() => go(id)}>{label}</button>
+          {[
+            ['home',      'Home'],
+            ['donate',    'Donate'],
+            ['request',   'Request Food'],
+            ['volunteers','Volunteers'],
+            ['ngo-dashboard','NGOs'],
+            ['stories',   'Stories'],
+            ['about',     'About'],
+          ].map(([id, label]) => (
+            <button key={id} className="nav-lnk" onClick={() => go(id)}>{label}</button>
           ))}
         </div>
 
         {/* Right */}
         <div className="nav-right">
           {/* Language pill */}
-          <div className="lang-pill">
-            {[['ta','தமிழ்'],['en','EN'],['hi','हिंदी']].map(([code,label]) => (
-              <button key={code} className={`lang-opt${language===code?' on':''}`} onClick={() => setLanguage(code)}>{label}</button>
+          <div className="lang-sw">
+            {[['ta','தமிழ்'],['en','EN'],['hi','हि']].map(([code, label]) => (
+              <button
+                key={code}
+                className={`lang-sw-btn${language === code ? ' on' : ''}`}
+                onClick={() => setLanguage(code)}
+              >{label}</button>
             ))}
           </div>
 
-          <button className="nav-bell" title="Notifications">🔔</button>
-
-          <button className="btn btn-primary btn-sm" onClick={() => go('donate')}>
-            Donate Now
-          </button>
+          <button className="nav-login" onClick={() => go('home')}>Login</button>
+          <button className="btn btn-green btn-sm" onClick={() => go('donate')}>Donate Food</button>
         </div>
       </div>
     </nav>
