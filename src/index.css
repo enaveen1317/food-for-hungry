@@ -312,7 +312,7 @@ h1, h2, h3, h4, h5, h6 {
    HERO SECTION
 ============================================ */
 .hero {
-  background: linear-gradient(135deg, rgba(20, 83, 45, 0.95) 0%, rgba(20, 83, 45, 0.9) 35%, rgba(22, 163, 74, 0.4) 100%), url('./assets/hero-bg.jpg') no-repeat center center;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.85) 45%, rgba(15, 23, 42, 0.3) 100%), url('./assets/hero-bg.jpg') no-repeat center center;
   background-size: cover;
   min-height: 90vh;
   display: flex;
@@ -379,7 +379,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-badge-dot {
   width: 8px;
   height: 8px;
-  background: #4ADE80;
+  background: var(--orange);
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
@@ -399,7 +399,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-title span {
-  color: #BBFBCA;
+  color: #FED7AA;
 }
 
 .hero-subtitle {
@@ -422,7 +422,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-btn-primary {
   background: white;
-  color: var(--green-primary);
+  color: var(--orange);
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
   font-size: 1rem;
