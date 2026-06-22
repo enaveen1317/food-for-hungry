@@ -27,7 +27,7 @@ const Navbar = () => {
           <button className="navbar-link" onClick={() => scrollTo('home')}>{t('navHome')}</button>
           <button className="navbar-link" onClick={() => scrollTo('donate')}>{t('navDonate')}</button>
           <button className="navbar-link" onClick={() => scrollTo('request')}>{t('navRequest')}</button>
-          <button className="navbar-link" onClick={() => scrollTo('ngo-dashboard')}>{t('navNGOs')}</button>
+          <button className="navbar-link" onClick={() => scrollTo('ngos')}>{t('navNGOs')}</button>
           <button className="navbar-link" onClick={() => scrollTo('volunteer-dashboard')}>{t('navVolunteers')}</button>
           <button className="navbar-link" onClick={() => scrollTo('admin-dashboard')}>{t('navAbout')}</button>
         </div>

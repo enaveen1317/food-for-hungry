@@ -32,7 +32,7 @@ const Home = () => {
               <button className="hero-btn-primary" onClick={() => scrollTo('donate')}>
                 🍱 Donate Surplus Food
               </button>
-              <button className="hero-btn-secondary" onClick={() => scrollTo('sos-request')}>
+              <button className="hero-btn-secondary" onClick={() => scrollTo('request')}>
                 Request Help <ArrowRight size={18} />
               </button>
             </div>
@@ -215,35 +215,60 @@ const Home = () => {
       </section>
 
       {/* ── SECTION D: VERIFIED NGO NETWORK ────────────────────────────── */}
-      <section className="section section-white">
+      <section className="section section-white" id="ngos">
         <div className="container">
-          <div className="section-header">
-            <div className="section-tag">🏢 Partner Network</div>
-            <h2 className="section-title">Verified NGO Network</h2>
-            <p className="section-sub">We collaborate with trusted organizations to ensure food safety, fair distribution, and maximum impact.</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <div className="section-tag">🏢 Partner Network</div>
+              <h2 className="section-title">Verified NGO Network</h2>
+              <p className="section-sub" style={{ margin: 0 }}>We collaborate with trusted organizations to ensure food safety, fair distribution, and maximum impact.</p>
+            </div>
+            <button className="btn btn-secondary" style={{ height: '46px', padding: '0 24px', borderRadius: '12px' }} onClick={() => alert('NGO Registration Portal Coming Soon!')}>Register your NGO</button>
           </div>
           
-          <div className="action-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
             {[
-              { name: 'Feeding India', area: 'Chennai Central', time: '< 15 mins', del: '1,240' },
-              { name: 'No Food Waste', area: 'Coimbatore', time: '< 20 mins', del: '987' },
-              { name: 'Annai Trust', area: 'Madurai South', time: '< 18 mins', del: '876' },
-              { name: 'Hope Foundation', area: 'Trichy', time: '< 25 mins', del: '643' }
-            ].map((ngo, i) => (
-              <div key={i} className="card card-sm">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-                  <div style={{ width: '40px', height: '40px', background: 'var(--green-mint)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🏛️</div>
-                  <div>
-                    <p style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.95rem' }}>{ngo.name}</p>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--green-primary)', fontWeight: 700 }}>✅ Verified Partner</span>
+              { e:'🏛️', name:'Feeding India — Chennai Chapter', area:'North & Central Chennai', del:1240, vol:34, focus:['Children','Night shelters','Elderly'], rating:'4.9' },
+              { e:'🤝', name:'Annai Trust', area:'Coimbatore · Serves 8 zones', del:876, vol:22, focus:['Women','Street community','Orphans'], rating:'4.8' },
+              { e:'🌱', name:'Hope Foundation', area:'Madurai city & outskirts', del:643, vol:18, focus:['Elderly','Migrants','Disaster relief'], rating:'4.7' },
+              { e:'♻️', name:'No Food Waste NGO', area:'Trichy · 5 distribution points', del:987, vol:29, focus:['Schools','Children','Daily meals'], rating:'4.9' },
+              { e:'❤️', name:'Serve India — Salem Unit', area:'Salem & surrounding areas', del:421, vol:12, focus:['Elderly homes','Shelters'], rating:'4.6' },
+              { e:'🍲', name:'Goonj Tamil Nadu', area:'Tirunelveli · Tuticorin', del:554, vol:16, focus:['Disaster relief','Women','Migrants'], rating:'4.7' },
+            ].map((n, i) => (
+              <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '24px', transition: 'var(--transition)' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                    <div style={{ width: '48px', height: '48px', background: 'var(--green-mint)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>{n.e}</div>
+                    <div>
+                      <p style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-dark)' }}>{n.name}</p>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--green-primary)', fontWeight: 700 }}>✅ Verified Partner</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-soft)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
+                    📍 <span>{n.area}</span>
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '20px' }}>
+                    {n.focus.map((f, idx) => (
+                      <span key={idx} style={{ fontSize: '0.7rem', fontWeight: 600, padding: '4px 10px', borderRadius: '9999px', background: 'var(--cream)', color: 'var(--orange)' }}>{f}</span>
+                    ))}
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '0.8rem', color: 'var(--text-soft)', marginBottom: '16px' }}>
-                  <div><strong>Zone:</strong><br/>{ngo.area}</div>
-                  <div><strong>Response:</strong><br/>{ngo.time}</div>
-                </div>
-                <div style={{ background: '#F8FAFC', padding: '8px', borderRadius: '8px', textAlign: 'center', fontSize: '0.85rem', fontWeight: 600 }}>
-                  {ngo.del} Deliveries Completed
+                
+                <div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderTop: '1px solid var(--border)', paddingTop: '16px', marginBottom: '20px' }}>
+                    <div>
+                      <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-dark)', lineHeight: 1 }}>{n.del}</p>
+                      <p style={{ fontSize: '0.7rem', color: 'var(--text-soft)', textTransform: 'uppercase', fontWeight: 600 }}>Deliveries</p>
+                    </div>
+                    <div>
+                      <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-dark)', lineHeight: 1 }}>{n.vol}</p>
+                      <p style={{ fontSize: '0.7rem', color: 'var(--text-soft)', textTransform: 'uppercase', fontWeight: 600 }}>Volunteers</p>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="btn btn-primary btn-sm" style={{ flex: 1 }} onClick={() => scrollTo('ngo-dashboard')}>Connect</button>
+                    <button className="btn btn-secondary btn-sm" style={{ minWidth: '60px', padding: 0 }}>{n.rating} ★</button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -297,7 +322,7 @@ const Home = () => {
             <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 32px', lineHeight: 1.8 }}>
               If a family, shelter, or street community is starving right now, send an SOS. Our algorithm bypasses normal queues and blasts a priority alert to the nearest available fleet.
             </p>
-            <button className="btn" style={{ background: 'white', color: 'var(--red-sos)', height: '60px', padding: '0 40px', fontSize: '1.1rem' }}>
+            <button className="btn" onClick={() => scrollTo('request')} style={{ background: 'white', color: 'var(--red-sos)', height: '60px', padding: '0 40px', fontSize: '1.1rem' }}>
               🚨 Broadcast SOS Alert Now
             </button>
           </div>
@@ -317,15 +342,15 @@ const Home = () => {
             </div>
             <div>
               <div className="footer-col-title">Platform</div>
-              <button className="footer-link">Donate Food</button>
-              <button className="footer-link">Request Food</button>
-              <button className="footer-link">Track Delivery</button>
+              <button className="footer-link" onClick={() => scrollTo('donate')}>Donate Food</button>
+              <button className="footer-link" onClick={() => scrollTo('request')}>Request Food</button>
+              <button className="footer-link" onClick={() => scrollTo('donor-dashboard')}>Track Delivery</button>
             </div>
             <div>
               <div className="footer-col-title">Community</div>
-              <button className="footer-link">Become Volunteer</button>
-              <button className="footer-link">Partner NGO</button>
-              <button className="footer-link">Success Stories</button>
+              <button className="footer-link" onClick={() => scrollTo('volunteer-dashboard')}>Become Volunteer</button>
+              <button className="footer-link" onClick={() => scrollTo('ngos')}>Partner NGO</button>
+              <button className="footer-link" onClick={() => scrollTo('home')}>Success Stories</button>
             </div>
           </div>
           <div className="footer-bottom">
