@@ -1,141 +1,131 @@
 import React, { useState } from 'react';
+import { BarChart3, Users, Building2, Truck, Package, AlertCircle, Settings, FileText, Activity } from 'lucide-react';
 
 const navItems = [
-  { ico:'📊', label:'Overview' },
-  { ico:'🍱', label:'Donors' },
-  { ico:'🏢', label:'NGOs' },
-  { ico:'🚴', label:'Volunteers' },
-  { ico:'🙏', label:'Requests' },
-  { ico:'🚚', label:'Deliveries' },
-  { ico:'📋', label:'Reports' },
-  { ico:'⚙️', label:'Settings' },
+  { icon: <Activity size={18} />, label: 'Live Operations' },
+  { icon: <Package size={18} />, label: 'Donations' },
+  { icon: <Building2 size={18} />, label: 'NGO Partners' },
+  { icon: <Truck size={18} />, label: 'Volunteer Fleet' },
+  { icon: <AlertCircle size={18} />, label: 'SOS Alerts' },
+  { icon: <BarChart3 size={18} />, label: 'System Metrics' },
 ];
 
 const AdminDashboard = () => {
-  const [active, setActive] = useState('Overview');
+  const [activeNav, setActiveNav] = useState('Live Operations');
 
   return (
-    <div style={{ background:'var(--cream)', padding:'96px 0' }} id="admin-dashboard">
-      <div className="wrap">
-        <div className="sec-head">
-          <div className="sec-tag">🔐 Admin</div>
-          <h2 className="sec-title">Admin Dashboard</h2>
-          <p className="sec-sub">Full platform control — monitor, moderate, and manage all operations.</p>
+    <div style={{ background: '#F1F5F9', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      
+      {/* Top Bar */}
+      <div style={{ background: 'var(--green-deep)', height: '64px', display: 'flex', alignItems: 'center', padding: '0 24px', color: 'white', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ width: '32px', height: '32px', background: 'rgba(255,255,255,0.2)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🛡️</div>
+          <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem' }}>City Admin Console</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <span style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}><span className="ops-match-dot" style={{ background: '#4ADE80' }}></span> System Operational</span>
+          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'white', color: 'var(--green-deep)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '0.8rem' }}>AD</div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flex: 1 }}>
+        {/* Sidebar */}
+        <div style={{ width: '260px', background: 'white', borderRight: '1px solid var(--border)', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em', paddingLeft: '12px', marginBottom: '8px' }}>Menu</p>
+          {navItems.map(item => (
+            <button 
+              key={item.label} 
+              onClick={() => setActiveNav(item.label)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '10px',
+                background: activeNav === item.label ? 'var(--green-mint)' : 'transparent',
+                color: activeNav === item.label ? 'var(--green-deep)' : 'var(--text-soft)',
+                fontFamily: 'Poppins', fontWeight: 600, fontSize: '0.9rem', border: 'none', cursor: 'pointer', transition: 'var(--transition)',
+                textAlign: 'left'
+              }}
+            >
+              {item.icon} {item.label}
+            </button>
+          ))}
         </div>
 
-        <div className="admin-shell">
-          {/* Sidebar */}
-          <div className="admin-side">
-            <div className="admin-side-logo">
-              <div className="flex items-c gap-2 mb-1">
-                <div style={{ width:34, height:34, borderRadius:10, background:'rgba(255,255,255,.15)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.1rem' }}>🛡️</div>
-                <div>
-                  <p style={{ color:'#fff', fontFamily:'Poppins', fontWeight:700, fontSize:'.87rem' }}>Admin Panel</p>
-                  <p style={{ color:'rgba(255,255,255,.4)', fontSize:'.7rem' }}>Food For Hungry</p>
-                </div>
-              </div>
+        {/* Content */}
+        <div style={{ flex: 1, padding: '40px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
+            <div>
+              <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.8rem', color: 'var(--text-dark)', marginBottom: '4px' }}>Live Operations</h2>
+              <p style={{ color: 'var(--text-soft)' }}>Real-time city-wide rescue logistics.</p>
             </div>
-            <div className="a-nav-group">Main Menu</div>
-            {navItems.map(item => (
-              <button key={item.label} className={`a-nav${active===item.label?' on':''}`} onClick={() => setActive(item.label)}>
-                <span>{item.ico}</span> {item.label}
-              </button>
+            <button className="btn btn-secondary btn-sm"><FileText size={16} /> Export Daily Log</button>
+          </div>
+
+          {/* Metric Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '32px' }}>
+            {[
+              { label: 'Donations Today', val: '147', sub: '+12% from yesterday', color: 'var(--green-primary)' },
+              { label: 'Active SOS Alerts', val: '2', sub: 'Requires immediate action', color: 'var(--red-sos)', alert: true },
+              { label: 'On-Duty Fleet', val: '34', sub: 'Out of 124 registered', color: 'var(--orange)' },
+              { label: 'NGOs Receiving', val: '18', sub: 'Currently accepting food', color: '#2563EB' }
+            ].map((s, i) => (
+              <div key={i} className="card" style={{ padding: '20px', borderTop: `4px solid ${s.color}`, background: s.alert ? '#FEF2F2' : 'white' }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-soft)', fontWeight: 600, marginBottom: '8px' }}>{s.label}</p>
+                <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '2rem', color: 'var(--text-dark)', lineHeight: 1.1, marginBottom: '8px' }}>{s.val}</p>
+                <p style={{ fontSize: '0.75rem', color: s.alert ? 'var(--red-sos)' : 'var(--text-soft)', fontWeight: 500 }}>{s.sub}</p>
+              </div>
             ))}
           </div>
 
-          {/* Main */}
-          <div className="admin-main">
-            <div className="flex items-c justify-b mb-6 flex-wrap gap-3">
-              <div>
-                <p className="poppins f-800 text-xl">Platform Overview</p>
-                <p className="clr-soft text-sm mt-1">{new Date().toDateString()}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+            {/* Action Log */}
+            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+              <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)', background: '#F8FAFC' }}>
+                <h4 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem' }}>Recent Platform Activity</h4>
               </div>
-              <div className="flex gap-2">
-                <span className="status-chip s-delivered" style={{ padding:'6px 14px' }}>● System Live</span>
-                <button className="btn btn-primary btn-sm">+ Add Donor</button>
+              <div style={{ padding: '0 24px' }}>
+                {[
+                  { time: '14:32', type: 'MATCH', text: 'Donation DON-8492 automatically matched to Hope Shelter.' },
+                  { time: '14:28', type: 'DONATION', text: 'New donation of 40 portions listed by A1 Mahal.' },
+                  { time: '14:15', type: 'DELIVERY', text: 'Volunteer Suresh completed delivery to Annai Trust.' },
+                  { time: '14:05', type: 'SOS', text: 'SOS alert raised from Central Station (25 people).' },
+                  { time: '13:50', type: 'USER', text: 'New NGO "Feeding Hearts" registration pending approval.' }
+                ].map((log, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '16px', padding: '16px 0', borderBottom: '1px solid #EEF2F7' }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-soft)', fontWeight: 600, width: '40px' }}>{log.time}</div>
+                    <div style={{ width: '80px' }}>
+                      <span className={`badge ${log.type === 'SOS' ? 'badge-red' : log.type === 'DELIVERY' ? 'badge-green' : log.type === 'MATCH' ? 'badge-blue' : 'badge-orange'}`} style={{ fontSize: '0.65rem', padding: '2px 8px' }}>
+                        {log.type}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-dark)', flex: 1 }}>{log.text}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Stats grid */}
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:14, marginBottom:24 }}>
-              {[
-                { ico:'🍱', bg:'#DCFCE7', n:'147', l:"Today's Donations", delta:'+12%', pos:true },
-                { ico:'🙏', bg:'#FED7AA', n:'83', l:'Active Requests', delta:'+7', pos:true },
-                { ico:'🚴', bg:'#DBEAFE', n:'34', l:'Online Volunteers', delta:'+5', pos:true },
-                { ico:'🆘', bg:'#FEE2E2', n:'6', l:'SOS Pending', delta:'Urgent', pos:false },
-              ].map(s => (
-                <div key={s.l} className="mini-stat">
-                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
-                    <div className="mini-stat-ico" style={{ background:s.bg, margin:0 }}>{s.ico}</div>
-                    <span className="mini-stat-delta" style={{ background:s.pos?'#DCFCE7':'#FEE2E2', color:s.pos?'var(--g-primary)':'var(--red)' }}>{s.delta}</span>
-                  </div>
-                  <div className="mini-stat-n">{s.n}</div>
-                  <div className="mini-stat-l">{s.l}</div>
+            {/* Quick Actions & Status */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div className="card" style={{ padding: '24px' }}>
+                <h4 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', marginBottom: '16px' }}>Pending Approvals</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '0.9rem', color: 'var(--text-dark)' }}>NGO Registrations</span>
+                  <span className="badge badge-orange">3 Pending</span>
                 </div>
-              ))}
-            </div>
-
-            {/* Chart area */}
-            <div style={{ background:'#fff', border:'1px solid #EEF2F7', borderRadius:16, padding:20, marginBottom:20 }}>
-              <p className="poppins f-700 mb-4">📈 Weekly Delivery Trend</p>
-              <div style={{ display:'flex', alignItems:'flex-end', gap:10, height:100 }}>
-                {[65,80,55,90,72,95,88].map((h,i) => (
-                  <div key={i} style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:6 }}>
-                    <div style={{ width:'100%', height:`${h}%`, background:`linear-gradient(to top,var(--g-primary),var(--g-light))`, borderRadius:'6px 6px 0 0', opacity:.85+i*.02 }} />
-                    <span className="text-xs clr-soft">{['M','T','W','T','F','S','S'][i]}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Bottom 2-col */}
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
-              {/* Recent donations */}
-              <div style={{ background:'#fff', borderRadius:14, padding:18, border:'1px solid #EEF2F7' }}>
-                <p className="poppins f-700 mb-4">🍱 Recent Donations</p>
-                {[
-                  { name:'Hotel Saravana Bhavan', food:'30 plates rice', time:'5 min', s:'pending' },
-                  { name:'Raj Catering', food:'60 kg biryani', time:'22 min', s:'accepted' },
-                  { name:'Krishna Bakery', food:'200 buns', time:'1 hr', s:'pickup' },
-                  { name:'Ananya Home', food:'15 kg dal', time:'2 hrs', s:'delivered' },
-                ].map((d,i,arr) => (
-                  <div key={i} className="flex items-c justify-b py-2" style={{ borderBottom:i<arr.length-1?'1px solid var(--border-soft)':'none' }}>
-                    <div>
-                      <p className="poppins f-600 text-sm">{d.name}</p>
-                      <p className="text-xs clr-soft mt-1">{d.food} · {d.time} ago</p>
-                    </div>
-                    <span className={`status-chip ${d.s==='pending'?'s-pending':d.s==='accepted'?'s-accepted':d.s==='pickup'?'s-pickup':'s-delivered'}`} style={{ fontSize:'.68rem' }}>
-                      {d.s==='pending'?'Pending':d.s==='accepted'?'Accepted':d.s==='pickup'?'Picked Up':'Delivered'}
-                    </span>
-                  </div>
-                ))}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.9rem', color: 'var(--text-dark)' }}>Volunteer KYC</span>
+                  <span className="badge badge-orange">12 Pending</span>
+                </div>
+                <button className="btn btn-secondary btn-sm" style={{ width: '100%', marginTop: '20px' }}>Review All</button>
               </div>
 
-              {/* SOS */}
-              <div style={{ background:'#fff', borderRadius:14, padding:18, border:'1px solid #EEF2F7' }}>
-                <p className="poppins f-700 mb-4">🆘 SOS — Pending Dispatch</p>
-                {[
-                  { name:'Ravi Kumar', loc:'Dharavi, Chennai', ppl:'8 people', hot:true },
-                  { name:'Anbu Shelter', loc:'Adyar, Chennai', ppl:'25 people', hot:true },
-                  { name:'Old Age Home', loc:'T Nagar', ppl:'40 elderly', hot:false },
-                ].map((s,i) => (
-                  <div key={i} style={{ background:s.hot?'var(--red-soft)':'var(--border-soft)', border:`1px solid ${s.hot?'var(--red-mid)':'var(--border)'}`, borderRadius:12, padding:'12px 14px', marginBottom:10 }}>
-                    <div className="flex items-c justify-b">
-                      <div>
-                        <p className="poppins f-600 text-sm">{s.name}</p>
-                        <p className="text-xs clr-soft mt-1">📍 {s.loc} · {s.ppl}</p>
-                      </div>
-                      <button className={`btn btn-sm ${s.hot?'btn-red':'btn-outline'}`}>Dispatch</button>
-                    </div>
-                  </div>
-                ))}
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:10, marginTop:14 }}>
-                  {[['Chennai','45 del'],['Coimbatore','22 del'],['Madurai','18 del']].map(([c,n]) => (
-                    <div key={c} style={{ background:'var(--g-soft)', border:'1px solid #BBF7D0', borderRadius:10, padding:'10px 12px', textAlign:'center' }}>
-                      <p className="poppins f-700 text-sm clr-green">{n}</p>
-                      <p className="text-xs clr-soft">{c}</p>
-                    </div>
-                  ))}
+              <div className="card" style={{ padding: '24px', background: 'var(--green-deep)', color: 'white' }}>
+                <h4 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem', marginBottom: '8px' }}>System Health</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.85rem' }}>
+                  <span style={{ opacity: 0.8 }}>Matching Algorithm</span>
+                  <span style={{ fontWeight: 600, color: '#4ADE80' }}>Optimal</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                  <span style={{ opacity: 0.8 }}>API Latency</span>
+                  <span style={{ fontWeight: 600 }}>42ms</span>
                 </div>
               </div>
             </div>

@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import NGODashboard from './pages/NGODashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import HungerHeatmap from './pages/HungerHeatmap';
+import DonorDashboard from './pages/DonorDashboard';
 
 function App() {
   return (
@@ -14,17 +15,12 @@ function App() {
       <Navbar />
       <main style={{ flex: 1 }}>
         <div id="home"><Home /></div>
-        <div className="section-divider"></div>
         <div id="donate"><DonationForm /></div>
-        <div className="section-divider"></div>
+        <div id="donor-dashboard"><DonorDashboard /></div>
         <div id="request"><Emergency /></div>
-        <div className="section-divider"></div>
         <div id="ngo-dashboard"><NGODashboard /></div>
-        <div className="section-divider"></div>
         <div id="volunteer-dashboard"><Dashboard /></div>
-        <div className="section-divider"></div>
         <div id="heatmap"><HungerHeatmap /></div>
-        <div className="section-divider"></div>
         <div id="admin-dashboard"><AdminDashboard /></div>
       </main>
     </div>

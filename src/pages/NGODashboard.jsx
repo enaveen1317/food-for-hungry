@@ -1,134 +1,154 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { MapPin, Phone, AlertCircle, Package, Users, Truck } from 'lucide-react';
 
-const donations = [
-  { donor:'Hotel Saravana Bhavan', food:'30 plates rice & dal', time:'8 min ago', status:'pending' },
-  { donor:'Raj Catering Services', food:'60 kg veg biryani', time:'24 min ago', status:'accepted' },
-  { donor:'Krishna Bakery', food:'200 buns + bread', time:'1 hr ago', status:'pickup' },
-  { donor:'Ananya Home Kitchen', food:'15 kg sambar rice', time:'2 hrs ago', status:'delivered' },
-  { donor:'Green Bowl Restaurant', food:'40 plates pasta salad', time:'3 hrs ago', status:'delivered' },
-];
+const NGODashboard = () => {
+  const [tab, setTab] = useState('incoming');
 
-const requests = [
-  { name:'Ravi & Family', loc:'Dharavi Colony, Chennai', ppl:8, urgent:true },
-  { name:'Anbu Night Shelter', loc:'Adyar Bridge Camp', ppl:25, urgent:true },
-  { name:'Old Age Home, T Nagar', loc:'T Nagar West', ppl:40, urgent:false },
-];
-
-const volunteers = [
-  { name:'Karthik R.', area:'Anna Nagar', status:'On delivery', deliveries:3 },
-  { name:'Meena S.', area:'Adyar', status:'Available', deliveries:1 },
-  { name:'Pradeep K.', area:'Velachery', status:'Available', deliveries:5 },
-  { name:'Divya T.', area:'T Nagar', status:'On delivery', deliveries:2 },
-];
-
-const StatusDot = ({ s }) => {
-  const map = { pending:'dot-pending', accepted:'dot-accepted', pickup:'dot-pickup', delivered:'dot-done' };
-  const label = { pending:'Pending', accepted:'Accepted', pickup:'Picked up', delivered:'Delivered' };
-  return <span style={{ fontSize:'.74rem', fontWeight:700, color:'var(--soft)' }}><span className={`status-dot ${map[s]}`} />{label[s]}</span>;
-};
-
-const NGODashboard = () => (
-  <div style={{ background:'var(--beige)', padding:'80px 0' }} id="ngo-dashboard">
-    <div className="wrap">
-      <div style={{ maxWidth:560, marginBottom:40 }}>
-        <span className="sec-kicker">NGO Dashboard</span>
-        <h2 style={{ fontSize:'1.6rem', marginBottom:10 }}>Feeding India Trust — Chennai</h2>
-        <p className="cs sm">Manage incoming food offers, respond to requests, and coordinate your volunteers from one place.</p>
-      </div>
-
-      {/* Summary */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16, marginBottom:36 }}>
-        {[
-          { ico:'🍱', n:'23', l:'Incoming today', bg:'var(--green-tint)', bdr:'var(--green-soft)' },
-          { ico:'🙏', n:'14', l:'Pending requests', bg:'var(--orange-tint)', bdr:'#FDDCB5' },
-          { ico:'🚴', n:'8', l:'Volunteers active', bg:'#EFF6FF', bdr:'#BFDBFE' },
-          { ico:'✅', n:'1,240', l:'Total deliveries', bg:'var(--beige-dark)', bdr:'var(--border)' },
-        ].map(s => (
-          <div key={s.l} style={{ background:s.bg, border:`1px solid ${s.bdr}`, borderRadius:'var(--r-lg)', padding:'20px 18px', boxShadow:'var(--sh-xs)' }}>
-            <span style={{ fontSize:'1.4rem', display:'block', marginBottom:10 }}>{s.ico}</span>
-            <span className="pops f800" style={{ fontSize:'1.7rem', color:'var(--text)', display:'block', lineHeight:1, marginBottom:4 }}>{s.n}</span>
-            <span className="xs cs">{s.l}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="ngo-dash-grid">
-        {/* Incoming donations */}
-        <div>
-          <div className="ngo-panel">
-            <div className="ngo-panel-h">🍱 Incoming donations today</div>
-            {donations.map((d,i) => (
-              <div key={i} className="donate-row">
-                <div>
-                  <p className="sm f600">{d.donor}</p>
-                  <p className="xs cs mt2">{d.food} · {d.time}</p>
-                </div>
-                <div className="flex ic g2">
-                  <StatusDot s={d.status} />
-                  {d.status === 'pending' && <button className="btn btn-green btn-sm">Accept</button>}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Pending requests */}
-          <div className="ngo-panel mt4">
-            <div className="ngo-panel-h">🆘 Urgent food requests</div>
-            {requests.map((r,i) => (
-              <div key={i} style={{ background: r.urgent ? 'var(--red-soft)' : 'var(--beige)', border:`1px solid ${r.urgent ? 'var(--red-tint)' : 'var(--border)'}`, borderRadius:12, padding:'12px 14px', marginBottom:10 }}>
-                <div className="flex ic jb">
-                  <div>
-                    <p className="sm f600">{r.name}</p>
-                    <p className="xs cs mt2">📍 {r.loc} · {r.ppl} people</p>
-                  </div>
-                  <button className={`btn btn-sm ${r.urgent ? 'btn-red' : 'btn-outline'}`}>
-                    {r.urgent ? '🆘 Dispatch' : 'Assign →'}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+  return (
+    <div style={{ background: '#F8FAFC', padding: '80px 0', minHeight: '100vh' }}>
+      <div className="container">
+        <div className="section-header">
+          <div className="section-tag">🏢 Partner Portal</div>
+          <h2 className="section-title">NGO Operations</h2>
+          <p className="section-sub">Manage incoming food donations, urgent SOS requests, and distribution logs.</p>
         </div>
 
-        {/* Volunteers + history */}
-        <div>
-          <div className="ngo-panel">
-            <div className="ngo-panel-h">🚴 Volunteers on duty today</div>
-            {volunteers.map((v,i) => (
-              <div key={i} className="flex ic jb mb-4">
-                <div className="flex ic g3">
-                  <div style={{ width:34, height:34, borderRadius:'50%', background:'var(--green-soft)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'.95rem' }}>🧑</div>
+        {/* Top Summary */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '32px' }}>
+          {[
+            { label: 'Incoming Today', val: '12', icon: '📦', color: '#1E3A8A', bg: '#DBEAFE' },
+            { label: 'SOS Alerts', val: '2', icon: '🚨', color: '#991B1B', bg: '#FEE2E2' },
+            { label: 'Distributed', val: '450', icon: '🍱', color: '#14532D', bg: '#DCFCE7' },
+            { label: 'Volunteers Active', val: '8', icon: '🚴', color: '#78350F', bg: '#FEF3C7' }
+          ].map((s, i) => (
+            <div key={i} className="card" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>{s.icon}</div>
+              <div>
+                <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.4rem', color: s.color, lineHeight: 1.1 }}>{s.val}</p>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-soft)', fontWeight: 600 }}>{s.label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '24px' }}>
+          {/* Main Area */}
+          <div>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: '#E2E8F0', padding: '6px', borderRadius: '14px', width: 'fit-content' }}>
+              {['incoming', 'sos alerts', 'history'].map(t => (
+                <button key={t} onClick={() => setTab(t.split(' ')[0])} style={{
+                  padding: '8px 20px', border: 'none', borderRadius: '10px', fontFamily: 'Poppins', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer', transition: 'var(--transition)',
+                  background: tab === t.split(' ')[0] ? 'white' : 'transparent',
+                  color: tab === t.split(' ')[0] ? 'var(--green-primary)' : 'var(--text-soft)',
+                  boxShadow: tab === t.split(' ')[0] ? 'var(--shadow-sm)' : 'none',
+                  textTransform: 'capitalize'
+                }}>
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            {tab === 'incoming' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="card" style={{ borderLeft: '4px solid var(--green-primary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                   <div>
-                    <p className="sm f600">{v.name}</p>
-                    <p className="xs cs">{v.area}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                      <span className="badge badge-green">En Route</span>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-soft)', fontWeight: 600 }}>ETA: 12 mins</span>
+                    </div>
+                    <h4 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem' }}>Wedding Meals & Curry</h4>
+                    <p style={{ color: 'var(--text-soft)', fontSize: '0.9rem', marginBottom: '8px' }}>40 Portions • Donated by A1 Mahal</p>
+                    <p style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Truck size={14} color="var(--green-primary)" /> Volunteer Rahul S. is delivering
+                    </p>
+                  </div>
+                  <button className="btn btn-primary btn-sm">Acknowledge Receipt</button>
+                </div>
+                
+                <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                      <span className="badge badge-orange">Matched - Pending Pickup</span>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-soft)', fontWeight: 600 }}>2.4 km away</span>
+                    </div>
+                    <h4 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem' }}>Bakery Surplus</h4>
+                    <p style={{ color: 'var(--text-soft)', fontSize: '0.9rem', marginBottom: '8px' }}>15 kg Bread • Donated by Grand Bakery</p>
+                    <p style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <AlertCircle size={14} color="var(--orange)" /> Requires volunteer assignment
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button className="btn btn-secondary btn-sm">Decline</button>
+                    <button className="btn btn-primary btn-sm">Accept Donation</button>
                   </div>
                 </div>
-                <div className="flex ic g2">
-                  <span className="xs cs">{v.deliveries} today</span>
-                  <span style={{ fontSize:'.7rem', fontWeight:700, padding:'2px 9px', borderRadius:999, background: v.status === 'Available' ? 'var(--green-tint)' : 'var(--orange-tint)', color: v.status === 'Available' ? 'var(--green)' : 'var(--orange)' }}>{v.status}</span>
+              </div>
+            )}
+
+            {tab === 'sos' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="card" style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderLeft: '4px solid var(--red-sos)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                        <span className="badge badge-red" style={{ animation: 'pulse 2s infinite' }}>🚨 CRITICAL SOS</span>
+                        <span style={{ fontSize: '0.8rem', color: '#991B1B', fontWeight: 600 }}>Just Now</span>
+                      </div>
+                      <h4 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.2rem', color: '#7F1D1D', marginBottom: '8px' }}>Stranded Laborers - Need Dinner</h4>
+                      <p style={{ color: '#991B1B', fontSize: '0.9rem', marginBottom: '12px' }}>Approx. 25 people • No food since morning.</p>
+                      <p style={{ fontSize: '0.85rem', color: '#7F1D1D', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}>
+                        <MapPin size={16} /> Near Central Railway Station
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', minWidth: '160px' }}>
+                      <button className="btn btn-danger btn-sm" style={{ width: '100%' }}>Dispatch Food</button>
+                      <button className="btn btn-secondary btn-sm" style={{ width: '100%', borderColor: '#FCA5A5', color: '#991B1B' }}><Phone size={14} /> Contact Caller</button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            ))}
+            )}
           </div>
 
-          {/* Food rescue history */}
-          <div className="ngo-panel mt4">
-            <div className="ngo-panel-h">📋 This week at a glance</div>
-            {[['Meals delivered this week', '647'],['Active donor partners', '18'],['Volunteer hours logged', '92 hrs'],['SOS cases resolved', '6/6']].map(([l,v]) => (
-              <div key={l} className="flex ic jb mb-3">
-                <p className="sm cs">{l}</p>
-                <p className="sm f700 ct">{v}</p>
+          {/* Sidebar */}
+          <div>
+            <div className="card" style={{ padding: '24px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+                <div style={{ width: '60px', height: '60px', background: 'var(--cream)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', border: '1px solid var(--border)' }}>🏛️</div>
+                <div>
+                  <h3 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.1rem' }}>Hope Shelter</h3>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-soft)' }}>Verified Partner</p>
+                </div>
               </div>
-            ))}
-            <div style={{ marginTop:14, padding:'12px 14px', background:'var(--green-tint)', border:'1px solid var(--green-soft)', borderRadius:12 }}>
-              <p className="xs f700 cg mb-1">This week's highlight</p>
-              <p className="xs cs">Coordinated emergency delivery for 200 flood-displaced residents in Tambaram on June 4th — within 4 hours of the alert.</p>
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '0.9rem' }}>
+                  <span style={{ color: 'var(--text-soft)' }}>Capacity</span>
+                  <span style={{ fontWeight: 600 }}>120 People</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '0.9rem' }}>
+                  <span style={{ color: 'var(--text-soft)' }}>Inventory</span>
+                  <span style={{ fontWeight: 600, color: 'var(--orange)' }}>Low (Needs Dinner)</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                  <span style={{ color: 'var(--text-soft)' }}>Zone</span>
+                  <span style={{ fontWeight: 600 }}>T Nagar, Chennai</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="card" style={{ padding: '24px', background: 'var(--green-deep)', color: 'white' }}>
+              <h4 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', marginBottom: '16px' }}>Need More Food?</h4>
+              <p style={{ fontSize: '0.85rem', opacity: 0.8, marginBottom: '20px', lineHeight: 1.6 }}>Broadcast a requirement to donors in your zone.</p>
+              <button className="btn" style={{ background: 'rgba(255,255,255,0.2)', width: '100%', color: 'white', border: '1px solid rgba(255,255,255,0.4)', borderRadius: '12px' }}>
+                Broadcast Need
+              </button>
             </div>
           </div>
         </div>
+
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default NGODashboard;

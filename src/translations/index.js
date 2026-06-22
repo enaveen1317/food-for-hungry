@@ -3,10 +3,11 @@ export const translations = {
     // Navbar
     navHome: "Home",
     navDonate: "Donate",
-    navDashboard: "Dashboard",
-    navLeaderboard: "Leaderboard",
-    navFridge: "Fridge Map",
-    navSOS: "SOS Hunger",
+    navRequest: "Request",
+    navNGOs: "NGOs",
+    navVolunteers: "Volunteers",
+    navAbout: "About",
+    btnDonateNow: "Donate Now",
 
     // Home Hero
     heroBadge: "🌱 Join the movement",
@@ -81,10 +82,11 @@ export const translations = {
     // Navbar
     navHome: "முகப்பு",
     navDonate: "நன்கொடை",
-    navDashboard: "டேஷ்போர்டு",
-    navLeaderboard: "முன்னிலை",
-    navFridge: "சமூக ஃப்ரிட்ஜ்",
-    navSOS: "பசி அவசரம்",
+    navRequest: "தேவை",
+    navNGOs: "அறக்கட்டளை",
+    navVolunteers: "தன்னார்வலர்",
+    navAbout: "எங்களை பற்றி",
+    btnDonateNow: "உணவு தானம் செய்",
 
     // Home Hero
     heroBadge: "🌱 இயக்கத்தில் சேரவும்",
@@ -159,10 +161,11 @@ export const translations = {
     // Navbar
     navHome: "होम",
     navDonate: "दान करें",
-    navDashboard: "डैशबोर्ड",
-    navLeaderboard: "लीडरबोर्ड",
-    navFridge: "कम्युनिटी फ्रिज",
-    navSOS: "आपातकालीन भूख",
+    navRequest: "अनुरोध",
+    navNGOs: "एनजीओ",
+    navVolunteers: "स्वयंसेवक",
+    navAbout: "हमारे बारे में",
+    btnDonateNow: "अभी दान करें",
 
     // Home Hero
     heroBadge: "🌱 हमारे अभियान से जुड़ें",

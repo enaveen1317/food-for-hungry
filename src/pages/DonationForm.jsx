@@ -1,246 +1,222 @@
 import React, { useState } from 'react';
+import { Upload, Mic, Camera, MapPin, AlertCircle, CheckCircle, Clock, ArrowRight } from 'lucide-react';
 
 const DonationForm = () => {
-  const [veg, setVeg] = useState('veg');
-  const [temp, setTemp] = useState('hot');
-  const [volunteerNeeded, setVolunteerNeeded] = useState(true);
-  const [done, setDone] = useState(false);
+  const [step, setStep] = useState(1);
+  const [qty, setQty] = useState('');
 
-  const submit = (e) => {
-    e.preventDefault();
-    setDone(true);
-    setTimeout(() => setDone(false), 6000);
-  };
+  const nextStep = () => setStep(s => Math.min(5, s + 1));
+  const prevStep = () => setStep(s => Math.max(1, s - 1));
+
+  const steps = [
+    { num: 1, label: 'Food Info' },
+    { num: 2, label: 'Freshness' },
+    { num: 3, label: 'Pickup' },
+    { num: 4, label: 'Packaging' },
+    { num: 5, label: 'Review' }
+  ];
+
+  const estimatedPeople = qty ? Math.floor(parseInt(qty) * 2.5) : 0;
 
   return (
-    <div style={{ background:'var(--beige)', padding:'80px 0', minHeight:'100vh' }} id="donate">
-      <div className="wrap">
-
-        {/* Header */}
-        <div style={{ maxWidth:600, marginBottom:40 }}>
-          <span className="sec-kicker">Donate Food</span>
-          <h2 style={{ fontSize:'1.65rem', marginBottom:10 }}>Share your surplus food</h2>
-          <p className="cs" style={{ fontSize:'.93rem', lineHeight:1.75 }}>
-            Leftover food from a wedding, hotel, home kitchen, or event? It takes under 2 minutes to list it. We coordinate pickup and delivery — you just need to keep the food ready.
-          </p>
+    <div style={{ background: '#F8FAFC', padding: '80px 0', minHeight: '100vh' }}>
+      <div className="container" style={{ maxWidth: '800px' }}>
+        <div className="section-header" style={{ marginBottom: '40px' }}>
+          <div className="section-tag">📦 List Surplus</div>
+          <h2 className="section-title">Rescue Your Food</h2>
+          <p className="section-sub">Join thousands of donors fighting hunger. It takes just 2 minutes to list your surplus.</p>
         </div>
 
-        {done && (
-          <div style={{ background:'var(--green-tint)', border:'1px solid var(--green-soft)', borderRadius:14, padding:'16px 20px', display:'flex', alignItems:'center', gap:12, marginBottom:24 }}>
-            <span style={{ fontSize:'1.4rem' }}>🎉</span>
-            <div>
-              <p className="f700 sm cg">Your food has been listed — thank you!</p>
-              <p className="xs cs mt2">Nearby NGOs and volunteers have been notified. Someone will be in touch shortly.</p>
+        {/* Stepper */}
+        <div className="stepper-container">
+          {steps.map(s => (
+            <div key={s.num} className={`stepper-step ${step >= s.num ? 'active' : ''} ${step > s.num ? 'completed' : ''}`}>
+              <div className="stepper-circle">{step > s.num ? '✓' : s.num}</div>
+              <span className="stepper-label">{s.label}</span>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
 
-        <form onSubmit={submit}>
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:20 }}>
-
-            {/* LEFT COLUMN */}
-            <div>
-              {/* Food details */}
-              <div className="form-block">
-                <div className="form-block-title">🍛 What food do you have?</div>
-
-                <div className="form-gr">
-                  <label className="form-lbl">Food name or description *</label>
-                  <input className="form-inp" placeholder="e.g. Rice and dal, Wedding feast leftovers, Hotel breakfast surplus" required />
-                  <span className="form-hint">Be specific — helps volunteers identify it quickly</span>
-                </div>
-
-                <div className="form-row2">
-                  <div className="form-gr">
-                    <label className="form-lbl">Food category</label>
-                    <select className="form-sel">
-                      <option>Cooked meals</option>
-                      <option>Bakery / Bread</option>
-                      <option>Raw groceries</option>
-                      <option>Packed / sealed</option>
-                      <option>Fruits / Vegetables</option>
-                      <option>Event / Catering surplus</option>
-                    </select>
-                  </div>
-                  <div className="form-gr">
-                    <label className="form-lbl">Quantity *</label>
-                    <input className="form-inp" placeholder="e.g. 5 kg, 20 plates, 3 boxes" required />
-                  </div>
-                </div>
-
-                <div className="form-gr">
-                  <label className="form-lbl">Veg or non-veg?</label>
-                  <div className="chip-set">
-                    {[['veg','🌿 Vegetarian'],['nonveg','🍗 Non-Veg'],['mixed','🍱 Mixed'],['vegan','🌱 Vegan']].map(([v,l]) => (
-                      <span key={v} className={`chip-item${veg===v?' on':''}`} onClick={() => setVeg(v)}>{l}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="form-row2">
-                  <div className="form-gr">
-                    <label className="form-lbl">Serves how many people?</label>
-                    <input className="form-inp" type="number" placeholder="~20 people" />
-                  </div>
-                  <div className="form-gr">
-                    <label className="form-lbl">Donor type</label>
-                    <select className="form-sel">
-                      <option>Home / Individual</option>
-                      <option>Restaurant</option>
-                      <option>Hotel</option>
-                      <option>Wedding / Event</option>
-                      <option>Catering company</option>
-                      <option>Community kitchen</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-row2">
-                  <div className="form-gr">
-                    <label className="form-lbl">Prepared at <span className="form-lbl-hint">(time)</span></label>
-                    <input className="form-inp" type="datetime-local" required />
-                  </div>
-                  <div className="form-gr">
-                    <label className="form-lbl">Best before <span className="form-lbl-hint">(approx)</span></label>
-                    <input className="form-inp" type="datetime-local" required />
-                  </div>
-                </div>
+        {/* Form Container */}
+        <div className="card" style={{ padding: '40px' }}>
+          {step === 1 && (
+            <div className="fade-in">
+              <h3 style={{ fontFamily: 'Poppins', fontSize: '1.4rem', fontWeight: 700, marginBottom: '24px' }}>What are you donating?</h3>
+              
+              <div className="form-group">
+                <label className="form-label">Food Title <span style={{ color: 'var(--red-sos)' }}>*</span></label>
+                <input type="text" className="form-input" placeholder="e.g. Leftover Wedding Meals (Rice & Curry)" />
               </div>
 
-              {/* Packaging + safety */}
-              <div className="form-block">
-                <div className="form-block-title">🛡️ Packaging &amp; safety</div>
-
-                <div className="form-gr">
-                  <label className="form-lbl">Packaging status</label>
-                  <select className="form-sel">
-                    <option>Properly sealed and labelled</option>
-                    <option>Covered but not sealed</option>
-                    <option>Loosely packed — volunteer may need containers</option>
-                    <option>Not packed yet — needs help</option>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Category</label>
+                  <select className="form-input">
+                    <option>Cooked Meals</option>
+                    <option>Raw Ingredients</option>
+                    <option>Baked Goods / Bread</option>
+                    <option>Packaged Food</option>
                   </select>
                 </div>
-
-                <div className="form-gr">
-                  <label className="form-lbl">Food temperature</label>
-                  <div className="chip-set">
-                    {[['hot','🔥 Hot / freshly cooked'],['room','🌡️ Room temperature'],['cold','❄️ Refrigerated']].map(([v,l]) => (
-                      <span key={v} className={`chip-item${temp===v?' on':''}`} onClick={() => setTemp(v)}>{l}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="form-gr">
-                  <label className="form-lbl">Upload a food photo <span className="form-lbl-hint">(optional but helpful)</span></label>
-                  <div className="upload-area">
-                    <div style={{ fontSize:'2rem', marginBottom:8 }}>📷</div>
-                    <p className="sm f600" style={{ marginBottom:4 }}>Click to upload a photo</p>
-                    <p className="xs cs">Helps volunteers identify the food when they arrive. PNG or JPG, under 10 MB.</p>
-                  </div>
-                </div>
-
-                <div className="form-gr">
-                  <label className="form-lbl">Notes for the volunteer</label>
-                  <textarea className="form-ta" placeholder="Any special handling notes — allergy info, gate access, how the food is stored, anything else they should know..." />
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Quantity (kg/portions)</label>
+                  <input type="number" className="form-input" placeholder="e.g. 20" value={qty} onChange={e => setQty(e.target.value)} />
                 </div>
               </div>
-            </div>
 
-            {/* RIGHT COLUMN */}
-            <div>
-              {/* Pickup details */}
-              <div className="form-block">
-                <div className="form-block-title">📍 Pickup details</div>
-
-                <div className="form-gr">
-                  <label className="form-lbl">Pickup address *</label>
-                  <textarea className="form-ta" style={{ minHeight:80 }} placeholder="House / flat number, street, area — be as clear as possible" required />
-                </div>
-                <div className="form-gr">
-                  <label className="form-lbl">Landmark <span className="form-lbl-hint">(helps volunteer find you)</span></label>
-                  <input className="form-inp" placeholder="Near SBOA School / Opposite SBI ATM / Behind the park..." />
-                </div>
-                <div className="form-row2">
-                  <div className="form-gr">
-                    <label className="form-lbl">Your name *</label>
-                    <input className="form-inp" placeholder="Contact person name" required />
-                  </div>
-                  <div className="form-gr">
-                    <label className="form-lbl">Contact number *</label>
-                    <input className="form-inp" type="tel" placeholder="+91 98765 43210" required />
-                  </div>
-                </div>
-                <div className="form-row2">
-                  <div className="form-gr">
-                    <label className="form-lbl">Pickup available from</label>
-                    <input className="form-inp" type="time" defaultValue="18:00" />
-                  </div>
-                  <div className="form-gr">
-                    <label className="form-lbl">Pickup available until</label>
-                    <input className="form-inp" type="time" defaultValue="21:30" />
-                  </div>
-                </div>
-                <p className="form-hint">Volunteer will arrive within this window. Give a reasonable time margin.</p>
-              </div>
-
-              {/* Logistics */}
-              <div className="form-block">
-                <div className="form-block-title">🚴 Logistics</div>
-
-                <div className="flex ic jb" style={{ background:'var(--beige)', borderRadius:12, padding:'14px 16px', border:'1px solid var(--border)', marginBottom:16 }}>
+              {qty && parseInt(qty) > 0 && (
+                <div style={{ background: 'var(--green-mint)', border: '1px solid #BBF7D0', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                  <div style={{ fontSize: '1.5rem' }}>❤️</div>
                   <div>
-                    <p className="sm f700">I need a volunteer to come pick this up</p>
-                    <p className="xs cs mt2">We'll assign a nearby volunteer to collect from your address</p>
+                    <p style={{ fontFamily: 'Poppins', fontWeight: 700, color: 'var(--green-deep)' }}>Estimated Impact</p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--green-primary)', fontWeight: 600 }}>This donation can serve approximately {estimatedPeople} people.</p>
                   </div>
-                  <label className="sw">
-                    <input type="checkbox" checked={volunteerNeeded} onChange={() => setVolunteerNeeded(!volunteerNeeded)} />
-                    <span className="sw-track" />
-                  </label>
                 </div>
+              )}
+            </div>
+          )}
 
-                <div className="form-gr">
-                  <label className="form-lbl">Preferred NGO or shelter <span className="form-lbl-hint">(optional)</span></label>
-                  <select className="form-sel">
-                    <option>Any verified partner near me (recommended)</option>
-                    <option>Feeding India Chennai</option>
-                    <option>Annai Trust</option>
-                    <option>Hope Foundation</option>
-                    <option>No Food Waste NGO</option>
+          {step === 2 && (
+            <div className="fade-in">
+              <h3 style={{ fontFamily: 'Poppins', fontSize: '1.4rem', fontWeight: 700, marginBottom: '24px' }}>Freshness & Quality</h3>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Time Prepared</label>
+                  <input type="time" className="form-input" defaultValue="14:00" />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Best Before</label>
+                  <input type="time" className="form-input" defaultValue="20:00" />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Current Storage Condition</label>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button className="btn btn-secondary btn-sm active" style={{ flex: 1 }}>Hot / Warm</button>
+                  <button className="btn btn-secondary btn-sm" style={{ flex: 1, borderColor: 'var(--border)', color: 'var(--text-soft)', background: '#F8FAFC' }}>Room Temp</button>
+                  <button className="btn btn-secondary btn-sm" style={{ flex: 1, borderColor: 'var(--border)', color: 'var(--text-soft)', background: '#F8FAFC' }}>Refrigerated</button>
+                </div>
+              </div>
+
+              <div style={{ background: '#FFF7ED', border: '1px solid var(--orange-light)', borderRadius: '12px', padding: '16px', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <AlertCircle color="var(--orange)" size={20} style={{ marginTop: '2px' }} />
+                <div>
+                  <p style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#9A3412', fontSize: '0.9rem' }}>Priority Pickup Recommended</p>
+                  <p style={{ fontSize: '0.8rem', color: '#C2410C', marginTop: '4px' }}>Cooked meals kept warm should be distributed within 4 hours of preparation.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="fade-in">
+              <h3 style={{ fontFamily: 'Poppins', fontSize: '1.4rem', fontWeight: 700, marginBottom: '24px' }}>Pickup Details</h3>
+              
+              <div className="form-group">
+                <label className="form-label">Pickup Address</label>
+                <div style={{ position: 'relative' }}>
+                  <input type="text" className="form-input" placeholder="Search address..." style={{ paddingLeft: '40px' }} />
+                  <MapPin size={18} color="var(--text-soft)" style={{ position: 'absolute', left: '14px', top: '16px' }} />
+                </div>
+                <div style={{ height: '120px', background: '#E2E8F0', borderRadius: '12px', marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
+                  <span style={{ color: 'var(--text-soft)', fontSize: '0.85rem', fontWeight: 600 }}>🗺️ Location Preview Loaded</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                <div className="form-group">
+                  <label className="form-label">Contact Number</label>
+                  <input type="tel" className="form-input" placeholder="+91 98765 43210" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Available Window</label>
+                  <select className="form-input">
+                    <option>Next 1 Hour</option>
+                    <option>Next 2 Hours</option>
+                    <option>Evening (4 PM - 8 PM)</option>
                   </select>
-                  <span className="form-hint">Leave as recommended unless you have a preference</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="fade-in">
+              <h3 style={{ fontFamily: 'Poppins', fontSize: '1.4rem', fontWeight: 700, marginBottom: '24px' }}>Packaging & Proof</h3>
+              
+              <div className="form-group">
+                <label className="form-label">Food Photo (For AI Quality Check)</label>
+                <div style={{ border: '2px dashed #CBD5E1', borderRadius: '16px', padding: '40px 20px', textAlign: 'center', background: '#F8FAFC', cursor: 'pointer', transition: 'var(--transition)' }}>
+                  <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: 'var(--shadow-sm)' }}>
+                    <Camera size={24} color="var(--green-primary)" />
+                  </div>
+                  <p style={{ fontFamily: 'Poppins', fontWeight: 600, fontSize: '1rem', color: 'var(--text-dark)' }}>Click to upload food photo</p>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-soft)', marginTop: '6px' }}>Show packaging clearly for faster NGO approval.</p>
                 </div>
               </div>
 
-              {/* Tips */}
-              <div style={{ background:'var(--green-tint)', border:'1px solid var(--green-soft)', borderRadius:'var(--r-lg)', padding:20 }}>
-                <p className="sm f700 cg mb-3">A few things that help</p>
-                {[
-                  'List food within 30 minutes of cooking — fresher is better',
-                  'A clear photo helps volunteers identify the food when they arrive',
-                  'If there\'s a gate or security, leave their number in the notes',
-                  'Note any allergens — nuts, dairy, or gluten — if you know them',
-                ].map(t => (
-                  <div key={t} className="flex ib g2 mb-3">
-                    <span className="cg" style={{ marginTop:2, flexShrink:0 }}>–</span>
-                    <p className="sm cs">{t}</p>
-                  </div>
-                ))}
+              <div className="form-group">
+                <label className="form-label">Packaging Type</label>
+                <select className="form-input">
+                  <option>Packed in individual boxes</option>
+                  <option>Bulk containers (needs serving)</option>
+                  <option>Loose / requires packaging</option>
+                </select>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Submit bar */}
-          <div className="form-bar mt6">
-            <div>
-              <p className="f700 md">Ready to share your food?</p>
-              <p className="xs cs mt2">Once submitted, nearby NGOs and volunteers are notified within seconds.</p>
+          {step === 5 && (
+            <div className="fade-in">
+              <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--green-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                  <CheckCircle size={32} color="var(--green-primary)" />
+                </div>
+                <h3 style={{ fontFamily: 'Poppins', fontSize: '1.6rem', fontWeight: 800 }}>Ready to Rescue!</h3>
+                <p style={{ color: 'var(--text-soft)' }}>Review your details before dispatching to our network.</p>
+              </div>
+              
+              <div style={{ background: '#F8FAFC', borderRadius: '16px', padding: '24px', border: '1px solid var(--border)', marginBottom: '32px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '12px' }}>
+                  <span style={{ color: 'var(--text-soft)', fontSize: '0.9rem' }}>Food Type</span>
+                  <span style={{ fontWeight: 600 }}>Wedding Meals (Cooked)</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '12px' }}>
+                  <span style={{ color: 'var(--text-soft)', fontSize: '0.9rem' }}>Quantity</span>
+                  <span style={{ fontWeight: 600 }}>20 Portions</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '12px', marginBottom: '12px' }}>
+                  <span style={{ color: 'var(--text-soft)', fontSize: '0.9rem' }}>Pickup Area</span>
+                  <span style={{ fontWeight: 600 }}>Anna Nagar, Chennai</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-soft)', fontSize: '0.9rem' }}>Estimated Impact</span>
+                  <span style={{ fontWeight: 700, color: 'var(--green-primary)' }}>~50 Meals Rescued</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--blue-soft)', padding: '16px', borderRadius: '12px', color: '#1E40AF', fontSize: '0.85rem', marginBottom: '24px' }}>
+                <AlertCircle size={20} />
+                <span>By submitting, you confirm the food is safe for human consumption and was handled safely.</span>
+              </div>
             </div>
-            <div className="flex g3">
-              <button type="button" className="btn btn-outline">Save draft</button>
-              <button type="submit" className="btn btn-green btn-lg">Submit donation →</button>
-            </div>
+          )}
+
+          {/* Navigation Buttons */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--border)' }}>
+            {step > 1 ? (
+              <button className="btn btn-secondary" onClick={prevStep}>Back</button>
+            ) : <div></div>}
+            
+            {step < 5 ? (
+              <button className="btn btn-primary" onClick={nextStep}>Next Step <ArrowRight size={18} /></button>
+            ) : (
+              <button className="btn btn-primary" onClick={() => alert('Donation Submitted to the Network!')}>Confirm & Dispatch</button>
+            )}
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
