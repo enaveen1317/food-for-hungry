@@ -1,78 +1,81 @@
-import React from 'react';
-import { Package, Clock, Users, MapPin } from 'lucide-react';
-import { activeDonations, emergencyRequests } from '../services/mockData';
+import React, { useState } from 'react';
+import { MapPin, CheckCircle, Phone } from 'lucide-react';
+
+const ngos = [
+  { name: 'Feeding India Chennai', area: 'Chennai, TN', deliveries: 1240, volunteers: 34, emoji: '🏛️', verified: true },
+  { name: 'Annai Trust', area: 'Coimbatore, TN', deliveries: 876, volunteers: 22, emoji: '🤝', verified: true },
+  { name: 'Hope Foundation', area: 'Madurai, TN', deliveries: 643, volunteers: 18, emoji: '🌱', verified: true },
+  { name: 'Serve India', area: 'Salem, TN', deliveries: 421, volunteers: 12, emoji: '❤️', verified: true },
+  { name: 'No Food Waste NGO', area: 'Trichy, TN', deliveries: 987, volunteers: 29, emoji: '♻️', verified: true },
+  { name: 'Goonj Tamil Nadu', area: 'Tirunelveli, TN', deliveries: 554, volunteers: 16, emoji: '🌟', verified: true },
+];
 
 const NGODashboard = () => {
   return (
-    <div className="container mt-12 mb-20">
-      <div className="flex justify-between items-center mb-8 border-b pb-4">
-        <div>
-          <h2 className="text-3xl font-bold">NGO / Trust Dashboard</h2>
-          <p className="text-muted">Welcome back, Hope Foundation!</p>
+    <div style={{ background: 'white', padding: '80px 0' }}>
+      <div className="container">
+        <div className="section-header">
+          <div className="section-tag">🏢 NGO Network</div>
+          <h2 className="section-title">Our Verified NGO Partners</h2>
+          <p className="section-sub">Join 28+ trusted hunger relief organizations making a real difference across Tamil Nadu.</p>
         </div>
-        <div className="badge badge-success" style={{ padding: '0.5rem 1rem', fontSize: '1rem' }}>
-          Verified Partner
-        </div>
-      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-        <div className="card glass-panel flex flex-col items-center">
-          <Package className="text-primary mb-2" size={32} />
-          <h3 className="text-3xl font-bold">12</h3>
-          <p className="text-muted text-sm text-center">Incoming Donations</p>
+        {/* Summary */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '48px' }}>
+          {[
+            { icon: '🏢', num: '28+', label: 'Partner NGOs', color: '#DCFCE7' },
+            { icon: '🍱', num: '24,800', label: 'Meals Delivered', color: '#FED7AA' },
+            { icon: '📍', num: '12', label: 'Cities Covered', color: '#DBEAFE' },
+          ].map((s, i) => (
+            <div key={i} className="stat-card" style={{ textAlign: 'center' }}>
+              <div className="stat-icon-circle" style={{ background: s.color }}>{s.icon}</div>
+              <span className="stat-num">{s.num}</span>
+              <span className="stat-label">{s.label}</span>
+            </div>
+          ))}
         </div>
-        <div className="card glass-panel flex flex-col items-center">
-          <MapPin className="text-secondary mb-2" size={32} />
-          <h3 className="text-3xl font-bold">5</h3>
-          <p className="text-muted text-sm text-center">Hunger Alerts Nearby</p>
-        </div>
-        <div className="card glass-panel flex flex-col items-center">
-          <Clock className="text-blue-600 mb-2" size={32} />
-          <h3 className="text-3xl font-bold">3</h3>
-          <p className="text-muted text-sm text-center">Pending Pickups</p>
-        </div>
-        <div className="card glass-panel flex flex-col items-center">
-          <Users className="text-purple-600 mb-2" size={32} />
-          <h3 className="text-3xl font-bold">18</h3>
-          <p className="text-muted text-sm text-center">Available Volunteers</p>
-        </div>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
-        <div>
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Package className="text-primary"/> Nearby Meal Rescues</h3>
-          <div className="flex flex-col gap-4">
-            {activeDonations.map(d => (
-              <div key={d.id} className="card border-l-4" style={{ borderLeftColor: 'var(--primary)' }}>
-                <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-bold">{d.donor}</h4>
-                  <span className="badge badge-success text-xs">5km away</span>
-                </div>
-                <p className="text-sm text-muted mb-1">{d.type} - {d.quantity}</p>
-                <div className="flex gap-2 mt-4">
-                  <button className="btn btn-primary text-sm flex-1">Accept & Assign Volunteer</button>
-                  <button className="btn btn-outline text-sm">View Details</button>
+        {/* NGO Cards */}
+        <div className="ngo-grid">
+          {ngos.map((ngo, i) => (
+            <div key={i} className="ngo-card">
+              <div className="ngo-card-top">
+                <div className="ngo-avatar">{ngo.emoji}</div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', marginBottom: '4px' }}>{ngo.name}</p>
+                  {ngo.verified && <span className="ngo-verified">✅ Verified</span>}
                 </div>
               </div>
-            ))}
-          </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-soft)', fontSize: '0.85rem', marginBottom: '14px' }}>
+                <MapPin size={14} /> {ngo.area}
+              </div>
+              <div className="ngo-stat-row">
+                <div className="ngo-stat-item">
+                  <span className="ngo-stat-val">{ngo.deliveries}</span>
+                  <span className="ngo-stat-lbl">Deliveries</span>
+                </div>
+                <div className="ngo-stat-item">
+                  <span className="ngo-stat-val">{ngo.volunteers}</span>
+                  <span className="ngo-stat-lbl">Volunteers</span>
+                </div>
+                <div className="ngo-stat-item">
+                  <span className="ngo-stat-val">4.8★</span>
+                  <span className="ngo-stat-lbl">Rating</span>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button className="btn btn-primary btn-sm" style={{ flex: 1 }}>Connect</button>
+                <button className="btn btn-secondary btn-sm"><Phone size={15} /></button>
+              </div>
+            </div>
+          ))}
         </div>
 
-        <div>
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><MapPin className="text-secondary"/> Emergency Hunger Alerts</h3>
-          <div className="flex flex-col gap-4">
-            {emergencyRequests.map(r => (
-              <div key={r.id} className="card border-l-4" style={{ borderLeftColor: 'var(--secondary)' }}>
-                <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-bold">{r.organization}</h4>
-                  <span className="badge badge-danger text-xs">{r.urgency}</span>
-                </div>
-                <p className="text-sm text-muted mb-1">Needs: {r.need}</p>
-                <p className="text-sm text-muted mb-3"><MapPin size={12} className="inline"/> {r.location}</p>
-                <button className="btn btn-secondary text-sm w-full">Fulfill Request</button>
-              </div>
-            ))}
-          </div>
+        {/* Join CTA */}
+        <div style={{ textAlign: 'center', marginTop: '48px', padding: '40px', background: 'var(--green-mint)', borderRadius: '24px', border: '1px solid #BBF7D0' }}>
+          <h3 style={{ fontFamily: 'Poppins', fontSize: '1.5rem', fontWeight: 800, marginBottom: '10px' }}>Is Your NGO Ready to Join?</h3>
+          <p style={{ color: 'var(--text-soft)', marginBottom: '24px', maxWidth: '500px', margin: '0 auto 24px' }}>Register as a verified partner and start receiving food donations in your area today.</p>
+          <button className="btn btn-primary">Register Your NGO</button>
         </div>
       </div>
     </div>

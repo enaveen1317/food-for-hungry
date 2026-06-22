@@ -1,85 +1,104 @@
-import React from 'react';
-import { activeDonations } from '../services/mockData';
-import { MapPin, Clock, Package, Star, Award, CheckCircle, XCircle, Map } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import React, { useState } from 'react';
+import { MapPin, Package, CheckCircle, Star, Trophy, Zap } from 'lucide-react';
+
+const tasks = [
+  { id: 1, donor: 'Hotel Saravana Bhavan', food: 'Rice & Dal — 30 plates', pickup: 'Anna Nagar, Chennai', drop: 'Hope NGO, T Nagar', urgency: 'high', time: '2 hrs ago' },
+  { id: 2, donor: 'Raj Wedding Hall', food: 'Mixed Veg Biryani — 50 kg', pickup: 'Adyar, Chennai', drop: 'Feeding India Trust', urgency: 'critical', time: '30 min ago' },
+  { id: 3, donor: 'Krishna Bakery', food: 'Bread & Buns — 200 pcs', pickup: 'Velachery', drop: 'Children Shelter, KK Nagar', urgency: 'medium', time: '4 hrs ago' },
+];
 
 const Dashboard = () => {
-  const { t } = useLanguage();
+  const [tab, setTab] = useState('available');
 
   return (
-    <div className="container mt-12 mb-20">
-      <div className="flex justify-between items-center mb-8 border-b pb-4">
-        <div>
-          <h2 className="text-3xl font-bold">Volunteer Dashboard</h2>
-          <p className="text-muted">Rescue meals, earn points, climb the leaderboard.</p>
+    <div style={{ background: 'var(--cream)', padding: '80px 0' }}>
+      <div className="container">
+        <div className="section-header">
+          <div className="section-tag">🚴 Volunteer Hub</div>
+          <h2 className="section-title">Volunteer Dashboard</h2>
+          <p className="section-sub">Pick up food from donors and deliver to people in need. Every delivery counts.</p>
         </div>
-        <div className="badge flex items-center" style={{ backgroundColor: '#fef08a', color: '#854d0e', padding: '0.5rem 1rem', fontSize: '1rem' }}>
-          <Star size={18} className="mr-1" fill="#854d0e"/> 4.9 Super Volunteer
+
+        {/* Top Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '40px' }}>
+          {[
+            { icon: '📦', num: '8', label: 'Available Tasks', color: '#DBEAFE' },
+            { icon: '🚴', num: '3', label: 'Accepted Pickups', color: '#DCFCE7' },
+            { icon: '✅', num: '47', label: 'Completed', color: '#FED7AA' },
+            { icon: '⭐', num: '1,240', label: 'Reward Points', color: '#F3E8FF' },
+          ].map((s, i) => (
+            <div key={i} className="stat-card">
+              <div className="stat-icon-circle" style={{ background: s.color }}>{s.icon}</div>
+              <span className="stat-num">{s.num}</span>
+              <span className="stat-label">{s.label}</span>
+            </div>
+          ))}
         </div>
-      </div>
-      
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* Left Column: Active Pickups */}
-        <div className="md:col-span-2">
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><MapPin className="text-secondary"/> Nearby Pickup Tasks</h3>
-          <div className="flex flex-col gap-6">
-            {activeDonations.map(donation => (
-              <div key={donation.id} className="card flex flex-col md:flex-row justify-between gap-4 border-2" style={{ borderColor: donation.status === 'Claimed' ? 'var(--primary)' : 'var(--border)' }}>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="text-lg font-bold">{donation.donor}</h4>
-                    <span className="badge bg-gray-100 text-gray-700 text-xs">2.5 km away</span>
+
+        {/* Gamification Banner */}
+        <div style={{ background: 'linear-gradient(135deg, var(--green-deep), var(--green-primary))', borderRadius: '20px', padding: '24px 28px', marginBottom: '32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: 'white' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ width: '60px', height: '60px', background: 'rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>🏆</div>
+            <div>
+              <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.2rem' }}>Gold Tier Volunteer</p>
+              <p style={{ opacity: 0.8, fontSize: '0.875rem' }}>You're in the top 5% of volunteers this month!</p>
+            </div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.5rem' }}>1,240 pts</p>
+            <p style={{ opacity: 0.75, fontSize: '0.8rem' }}>260 pts to Platinum</p>
+            <div style={{ width: '140px', height: '8px', background: 'rgba(255,255,255,0.2)', borderRadius: '9999px', marginTop: '8px' }}>
+              <div style={{ width: '82%', height: '100%', background: '#4ADE80', borderRadius: '9999px' }}></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', background: '#F3F4F6', padding: '6px', borderRadius: '14px', width: 'fit-content' }}>
+          {['available', 'accepted', 'completed'].map(t => (
+            <button key={t} onClick={() => setTab(t)} style={{
+              padding: '8px 20px', border: 'none', borderRadius: '10px', fontFamily: 'Poppins', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', transition: 'var(--transition)',
+              background: tab === t ? 'white' : 'transparent',
+              color: tab === t ? 'var(--green-primary)' : 'var(--text-soft)',
+              boxShadow: tab === t ? 'var(--shadow-sm)' : 'none',
+            }}>
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {/* Task Cards */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {tasks.map(task => (
+            <div key={task.id} className="vol-task-card">
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--green-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🍱</div>
+                    <div>
+                      <p style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem' }}>{task.donor}</p>
+                      <p style={{ color: 'var(--text-soft)', fontSize: '0.85rem' }}>{task.food}</p>
+                    </div>
+                    <span className={`urgency-chip ${task.urgency === 'critical' ? 'urgency-high' : task.urgency === 'high' ? 'urgency-med' : 'urgency-low'}`}>
+                      {task.urgency === 'critical' ? '🔴 Critical' : task.urgency === 'high' ? '🟠 High' : '🟢 Normal'}
+                    </span>
                   </div>
-                  <p className="text-muted text-sm flex items-center gap-2 mt-1">
-                    <Package size={14}/> {donation.type} ({donation.quantity})
-                  </p>
-                  <p className="text-muted text-sm flex items-center gap-2 mt-1">
-                    <MapPin size={14}/> {donation.location}
-                  </p>
-                  <p className="text-muted text-sm flex items-center gap-2 mt-1">
-                    <Clock size={14}/> Posted: {donation.timePosted}
-                  </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-soft)', fontSize: '0.85rem' }}>
+                      <MapPin size={15} color="var(--orange)" /> <span><strong style={{ color: 'var(--text-dark)' }}>Pickup:</strong> {task.pickup}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-soft)', fontSize: '0.85rem' }}>
+                      <MapPin size={15} color="var(--green-primary)" /> <span><strong style={{ color: 'var(--text-dark)' }}>Drop:</strong> {task.drop}</span>
+                    </div>
+                  </div>
                 </div>
-                
-                <div className="flex flex-col gap-2 items-end justify-center w-full md:w-auto border-t md:border-t-0 md:border-l pl-0 md:pl-4 pt-4 md:pt-0">
-                  {donation.status !== 'Claimed' ? (
-                    <>
-                      <button className="btn btn-primary text-sm w-full flex items-center justify-center gap-1"><CheckCircle size={16}/> Accept Task</button>
-                      <button className="btn btn-outline text-sm w-full flex items-center justify-center gap-1 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-600"><XCircle size={16}/> Reject</button>
-                    </>
-                  ) : (
-                    <>
-                      <span className="badge badge-success mb-2 w-full text-center">Claimed by You</span>
-                      <button className="btn btn-secondary text-sm w-full flex items-center justify-center gap-1"><Map size={16}/> Start Navigation</button>
-                    </>
-                  )}
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <button style={{ padding: '8px 16px', borderRadius: '10px', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 600, color: 'var(--red-sos)', fontFamily: 'Poppins' }}>Reject</button>
+                  <button className="btn btn-primary btn-sm">Accept Task</button>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Column: Stats & Gamification */}
-        <div>
-          <h3 className="text-xl font-bold mb-4 flex items-center gap-2"><Award className="text-primary"/> Your Impact</h3>
-          
-          <div className="card text-center mb-6 flex flex-col items-center shadow-lg border-2 border-primary">
-            <Award size={56} className="text-primary mb-2" />
-            <h4 className="text-5xl font-bold text-main mb-1">1,250</h4>
-            <p className="text-primary font-bold tracking-widest uppercase text-sm">Impact Points</p>
-            <p className="text-sm text-muted mt-4 bg-gray-100 px-3 py-1 rounded-full">Rank: <strong>Gold Tier</strong></p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="card text-center p-4 bg-surface shadow-sm">
-              <h4 className="text-3xl font-bold text-secondary">14</h4>
-              <p className="text-xs text-muted uppercase font-bold tracking-wide mt-1">Deliveries</p>
             </div>
-            <div className="card text-center p-4 bg-surface shadow-sm">
-              <h4 className="text-3xl font-bold text-primary">320kg</h4>
-              <p className="text-xs text-muted uppercase font-bold tracking-wide mt-1">Transported</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

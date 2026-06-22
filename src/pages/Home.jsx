@@ -1,186 +1,264 @@
-import React from 'react';
-import { ArrowRight, Utensils, Users, Building, Truck, CheckCircle } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import React, { useState } from 'react';
+import { Heart, Users, Building2, Truck, ArrowRight, MapPin, CheckCircle } from 'lucide-react';
 
 const Home = () => {
-  const { t } = useLanguage();
-
   const scrollTo = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const top = element.getBoundingClientRect().top + window.scrollY - 80;
+    const el = document.getElementById(id);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 90;
       window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="container mt-16 mb-24 flex flex-col md:flex-row items-center gap-12" style={{ minHeight: '70vh' }}>
-        <div className="flex-1">
-          <div className="badge badge-success mb-6" style={{ padding: '0.6rem 1.2rem', fontSize: '0.95rem' }}>
-            🌟 Joining hands to end hunger
+      {/* ── HERO ─────────────────────────────────────── */}
+      <section className="hero">
+        <div className="container hero-inner">
+          {/* Left */}
+          <div>
+            <div className="hero-badge">
+              <span className="hero-badge-dot"></span>
+              Live: 34 donations active right now
+            </div>
+            <h1 className="hero-title">
+              Share Surplus Food.<br />
+              <span>Feed Hungry Lives.</span>
+            </h1>
+            <p className="hero-subtitle">
+              A trusted platform that connects homes, restaurants, events, and hotels with nearby NGOs, volunteers, and people in need — reducing food waste and delivering meals with dignity.
+            </p>
+            <div className="hero-btns">
+              <button className="hero-btn-primary" onClick={() => scrollTo('donate')}>
+                🍱 Donate Food
+              </button>
+              <button className="hero-btn-secondary" onClick={() => scrollTo('request')}>
+                Request Help <ArrowRight size={18} />
+              </button>
+            </div>
+            <div className="trust-badges">
+              <span className="trust-badge">✅ Verified NGOs</span>
+              <span className="trust-badge">🚴 Safe Delivery</span>
+              <span className="trust-badge">📍 Nearby Pickup</span>
+              <span className="trust-badge">🗣️ Tamil / English</span>
+            </div>
           </div>
-          <h1 className="text-5xl md:text-7xl mb-6 font-bold leading-tight" style={{ color: 'var(--text-main)' }}>
-            Don’t Waste Food. <br/> <span className="text-gradient">Feed a Life.</span>
-          </h1>
-          <p className="text-lg text-muted mb-12 max-w-2xl" style={{ fontSize: '1.2rem', lineHeight: '1.8' }}>
-            Surplus food from homes, restaurants, events, and hotels can be delivered safely to nearby people in need through NGOs, volunteers, and trusted community partners.
-          </p>
-          <div className="flex gap-4">
-            <button onClick={() => scrollTo('donate')} className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
-              Donate Food Now
+
+          {/* Right — Glass Card */}
+          <div className="hero-visual">
+            <div className="hero-glass-card">
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '14px' }}>
+                Who we connect
+              </p>
+              <div className="hero-grid-4">
+                <div className="hero-mini-card" onClick={() => scrollTo('donate')}>
+                  <span className="icon">🍽️</span>
+                  <p>Donors</p>
+                </div>
+                <div className="hero-mini-card" onClick={() => scrollTo('volunteer-dashboard')}>
+                  <span className="icon">🚴</span>
+                  <p>Volunteers</p>
+                </div>
+                <div className="hero-mini-card" onClick={() => scrollTo('ngo-dashboard')}>
+                  <span className="icon">🏢</span>
+                  <p>NGOs</p>
+                </div>
+                <div className="hero-mini-card" onClick={() => scrollTo('request')}>
+                  <span className="icon">👨‍👩‍👧</span>
+                  <p>Families</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Live stats bar */}
+            <div className="hero-live-stats">
+              <div className="hero-stat">
+                <span className="hero-stat-num">2,480</span>
+                <span className="hero-stat-label">Meals Today</span>
+              </div>
+              <div className="hero-stat">
+                <span className="hero-stat-num">28</span>
+                <span className="hero-stat-label">NGO Partners</span>
+              </div>
+              <div className="hero-stat">
+                <span className="hero-stat-num">340</span>
+                <span className="hero-stat-label">Volunteers</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── LIVE IMPACT STATS ───────────────────────── */}
+      <section className="section section-white">
+        <div className="container">
+          <div className="section-header">
+            <div className="section-tag">📊 Live Impact</div>
+            <h2 className="section-title">Together We're Making a Difference</h2>
+            <p className="section-sub">Real-time numbers from our growing community of donors, volunteers, and NGO partners.</p>
+          </div>
+          <div className="stat-grid">
+            <div className="stat-card">
+              <div className="stat-icon-circle" style={{ background: '#DCFCE7' }}>🍱</div>
+              <span className="stat-num">24,800</span>
+              <span className="stat-label">Meals Shared</span>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon-circle" style={{ background: '#FED7AA' }}>👨‍👩‍👧</div>
+              <span className="stat-num">5,120</span>
+              <span className="stat-label">Families Supported</span>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon-circle" style={{ background: '#DBEAFE' }}>🏢</div>
+              <span className="stat-num">28</span>
+              <span className="stat-label">Partner NGOs</span>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon-circle" style={{ background: '#F3E8FF' }}>🚚</div>
+              <span className="stat-num">8,340</span>
+              <span className="stat-label">Deliveries Completed</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── QUICK ACTIONS ───────────────────────────── */}
+      <section className="section section-cream">
+        <div className="container">
+          <div className="section-header">
+            <div className="section-tag">🚀 Get Started</div>
+            <h2 className="section-title">How Would You Like to Help?</h2>
+          </div>
+          <div className="action-grid">
+            <div className="action-card action-card-green" onClick={() => scrollTo('donate')}>
+              <div className="action-card-icon" style={{ background: '#BBF7D0' }}>🍱</div>
+              <div className="action-card-title">Donate Food</div>
+              <div className="action-card-desc">Have extra food from home, event, hotel or restaurant? Share it now.</div>
+              <button className="action-card-arrow">Start Donating <ArrowRight size={16} /></button>
+            </div>
+            <div className="action-card action-card-orange" onClick={() => scrollTo('request')}>
+              <div className="action-card-icon" style={{ background: '#FED7AA' }}>🙏</div>
+              <div className="action-card-title">Request Food</div>
+              <div className="action-card-desc">Need meals for family, shelter or elderly people? Submit a request.</div>
+              <button className="action-card-arrow" style={{ color: 'var(--orange)' }}>Request Now <ArrowRight size={16} /></button>
+            </div>
+            <div className="action-card action-card-blue" onClick={() => scrollTo('volunteer-dashboard')}>
+              <div className="action-card-icon" style={{ background: '#BFDBFE' }}>🚴</div>
+              <div className="action-card-title">Become Volunteer</div>
+              <div className="action-card-desc">Help pick up and deliver food in your area. Make a daily difference.</div>
+              <button className="action-card-arrow" style={{ color: '#2563EB' }}>Join as Volunteer <ArrowRight size={16} /></button>
+            </div>
+            <div className="action-card action-card-cream" onClick={() => scrollTo('ngo-dashboard')}>
+              <div className="action-card-icon" style={{ background: '#DCFCE7' }}>🏢</div>
+              <div className="action-card-title">Partner as NGO</div>
+              <div className="action-card-desc">Join as a verified hunger relief organization and scale your impact.</div>
+              <button className="action-card-arrow">Register NGO <ArrowRight size={16} /></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── HOW IT WORKS ────────────────────────────── */}
+      <section className="section section-white">
+        <div className="container">
+          <div className="section-header">
+            <div className="section-tag">⚙️ Process</div>
+            <h2 className="section-title">How Food For Hungry Works</h2>
+            <p className="section-sub">From donation to delivery in 4 simple steps.</p>
+          </div>
+          <div className="timeline-grid">
+            <div className="timeline-card">
+              <div className="timeline-num">1</div>
+              <span className="timeline-icon">📦</span>
+              <div className="timeline-title">Donor Uploads Food</div>
+              <div className="timeline-desc">Add food type, quantity, location, and pickup time in under 2 minutes.</div>
+            </div>
+            <div className="timeline-card">
+              <div className="timeline-num">2</div>
+              <span className="timeline-icon">🔔</span>
+              <div className="timeline-title">NGO / Volunteer Alerted</div>
+              <div className="timeline-desc">Smart matching sends instant alerts to nearby verified partners.</div>
+            </div>
+            <div className="timeline-card">
+              <div className="timeline-num">3</div>
+              <span className="timeline-icon">🚴</span>
+              <div className="timeline-title">Pickup & Delivery</div>
+              <div className="timeline-desc">Volunteer collects food and transports it safely to people in need.</div>
+            </div>
+            <div className="timeline-card">
+              <div className="timeline-num">4</div>
+              <span className="timeline-icon">❤️</span>
+              <div className="timeline-title">Food Reaches Families</div>
+              <div className="timeline-desc">Delivery proof and impact update sent. Your kindness is tracked.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SOS EMERGENCY ───────────────────────────── */}
+      <section className="section section-cream">
+        <div className="container">
+          <div className="sos-section">
+            <div className="sos-badge">
+              🆘 Emergency Alert
+            </div>
+            <h2 style={{ fontFamily: 'Poppins', fontSize: '2.2rem', fontWeight: 800, color: 'var(--red-sos)', marginBottom: '12px' }}>
+              Need Food Urgently?
+            </h2>
+            <p style={{ color: 'var(--text-soft)', fontSize: '1.05rem', maxWidth: '500px', margin: '0 auto 32px', lineHeight: 1.8 }}>
+              Are you or someone nearby starving right now? Send an SOS request and our volunteers will respond within minutes.
+            </p>
+            <button className="btn btn-danger btn-lg" onClick={() => {
+              const el = document.getElementById('request');
+              if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+            }}>
+              🆘 Send SOS Request
             </button>
-            <button onClick={() => scrollTo('request')} className="btn btn-outline" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
-              Request Food Help
-            </button>
-          </div>
-        </div>
-        <div className="flex-1 hidden md:block relative">
-          {/* Symmetrical Grid Layout Graphic with Floating Animation */}
-          <div className="grid grid-cols-2 gap-8 p-6 relative z-10">
-            <div onClick={() => scrollTo('donate')} className="card glass-panel shadow-xl p-8 flex flex-col items-center justify-center transform hover:-translate-y-3 transition duration-300 cursor-pointer animate-float" style={{ borderColor: 'var(--border)' }}>
-              <span className="text-6xl mb-6" style={{ fontSize: '4rem' }}>🍽️</span>
-              <p className="font-bold text-xl">Donors</p>
-            </div>
-            <div onClick={() => scrollTo('volunteer-dashboard')} className="card glass-panel shadow-xl p-8 flex flex-col items-center justify-center transform hover:-translate-y-3 transition duration-300 cursor-pointer animate-float delay-100" style={{ borderColor: 'var(--secondary)' }}>
-              <Truck size={64} className="text-secondary mb-6" />
-              <p className="font-bold text-xl text-secondary">Volunteers</p>
-            </div>
-            <div onClick={() => scrollTo('ngo-dashboard')} className="card glass-panel shadow-xl p-8 flex flex-col items-center justify-center transform hover:-translate-y-3 transition duration-300 cursor-pointer animate-float delay-200" style={{ borderColor: 'var(--primary)' }}>
-              <Building size={64} className="text-primary mb-6" />
-              <p className="font-bold text-xl text-primary">NGOs</p>
-            </div>
-            <div onClick={() => scrollTo('request')} className="card glass-panel shadow-xl p-8 flex flex-col items-center justify-center transform hover:-translate-y-3 transition duration-300 cursor-pointer animate-float delay-300" style={{ borderColor: 'var(--border)' }}>
-              <span className="text-6xl mb-6" style={{ fontSize: '4rem' }}>👨‍👩‍👧‍👦</span>
-              <p className="font-bold text-xl text-main">Hungry Families</p>
-            </div>
-          </div>
-          {/* Decorative background glow */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary opacity-30 rounded-full blur-3xl -z-10"></div>
-        </div>
-      </section>
-
-      {/* Live Impact Cards */}
-      <section className="container mb-24">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div className="card" style={{ padding: '2rem 1rem' }}>
-            <div className="w-16 h-16 mx-auto bg-green-100 text-primary rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: '#d1fae5' }}>
-              <Utensils size={28} />
-            </div>
-            <h3 className="text-4xl font-bold mb-2 text-main">2,480</h3>
-            <p className="text-muted font-bold text-sm uppercase tracking-wider">Meals Shared</p>
-          </div>
-          <div className="card" style={{ padding: '2rem 1rem' }}>
-            <div className="w-16 h-16 mx-auto bg-orange-100 text-secondary rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: '#ffedd5' }}>
-              <Users size={28} />
-            </div>
-            <h3 className="text-4xl font-bold mb-2 text-main">1,120</h3>
-            <p className="text-muted font-bold text-sm uppercase tracking-wider">People Fed</p>
-          </div>
-          <div className="card" style={{ padding: '2rem 1rem' }}>
-            <div className="w-16 h-16 mx-auto bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: '#dbeafe', color: '#2563eb' }}>
-              <Building size={28} />
-            </div>
-            <h3 className="text-4xl font-bold mb-2 text-main">28</h3>
-            <p className="text-muted font-bold text-sm uppercase tracking-wider">Partner NGOs</p>
-          </div>
-          <div className="card" style={{ padding: '2rem 1rem' }}>
-            <div className="w-16 h-16 mx-auto bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: '#f3e8ff', color: '#9333ea' }}>
-              <Truck size={28} />
-            </div>
-            <h3 className="text-4xl font-bold mb-2 text-main">340</h3>
-            <p className="text-muted font-bold text-sm uppercase tracking-wider">Active Volunteers</p>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="container mb-24">
-        <h2 className="text-4xl font-bold text-center mb-16">How It Works</h2>
-        <div className="grid md:grid-cols-2 gap-12">
-          
-          {/* For Donor Flow */}
-          <div className="card glass-panel border-2" style={{ padding: '3rem 2rem', borderColor: 'var(--primary)' }}>
-            <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
-              <span className="w-12 h-12 bg-primary text-white rounded-lg flex items-center justify-center text-xl">🤝</span>
-              For Donors
-            </h3>
-            <div className="flex flex-col gap-6">
-              <div className="flex items-start gap-4">
-                <CheckCircle className="text-primary mt-1" />
-                <div>
-                  <h4 className="font-bold text-lg">Add food details</h4>
-                  <p className="text-muted">Type of food, quantity, and whether it's veg or non-veg.</p>
-                </div>
+      {/* ── FOOTER ──────────────────────────────────── */}
+      <footer className="footer">
+        <div className="container">
+          <div className="footer-grid">
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <div className="navbar-logo-icon">🍽️</div>
+                <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.2rem', color: 'white' }}>Food For Hungry</span>
               </div>
-              <div className="flex items-start gap-4">
-                <CheckCircle className="text-primary mt-1" />
-                <div>
-                  <h4 className="font-bold text-lg">Choose pickup time</h4>
-                  <p className="text-muted">Set when the food will be ready for pickup.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <CheckCircle className="text-primary mt-1" />
-                <div>
-                  <h4 className="font-bold text-lg">Nearby NGO/Volunteer gets alert</h4>
-                  <p className="text-muted">Our smart system pings nearby verified partners instantly.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <CheckCircle className="text-primary mt-1" />
-                <div>
-                  <h4 className="font-bold text-lg">Food delivered to needy people</h4>
-                  <p className="text-muted">Food reaches the hungry before it spoils.</p>
-                </div>
+              <p className="footer-tagline">"No food should go to waste when someone nearby is hungry."</p>
+              <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+                {['📘', '📸', '🐦', '▶️'].map((icon, i) => (
+                  <button key={i} style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', fontSize: '1rem', transition: 'var(--transition)' }}>{icon}</button>
+                ))}
               </div>
             </div>
-            <button onClick={() => scrollTo('donate')} className="btn btn-primary mt-8 w-full">Start Donating</button>
-          </div>
-
-          {/* For Hungry Person Flow */}
-          <div className="card glass-panel border-2" style={{ padding: '3rem 2rem', borderColor: 'var(--secondary)' }}>
-            <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
-              <span className="w-12 h-12 bg-secondary text-white rounded-lg flex items-center justify-center text-xl">❤️</span>
-              For Hungry Person / Trust
-            </h3>
-            <div className="flex flex-col gap-6">
-              <div className="flex items-start gap-4">
-                <CheckCircle className="text-secondary mt-1" />
-                <div>
-                  <h4 className="font-bold text-lg">Request food</h4>
-                  <p className="text-muted">Submit an emergency or regular food request.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <CheckCircle className="text-secondary mt-1" />
-                <div>
-                  <h4 className="font-bold text-lg">Add number of people / location</h4>
-                  <p className="text-muted">Let us know exactly how many are hungry and where.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <CheckCircle className="text-secondary mt-1" />
-                <div>
-                  <h4 className="font-bold text-lg">System finds nearby donor</h4>
-                  <p className="text-muted">We automatically match you with active donors.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <CheckCircle className="text-secondary mt-1" />
-                <div>
-                  <h4 className="font-bold text-lg">Delivery arranged</h4>
-                  <p className="text-muted">A volunteer brings the meals directly to your door.</p>
-                </div>
-              </div>
+            <div>
+              <div className="footer-col-title">Platform</div>
+              {['Donate Food', 'Request Food', 'Track Delivery', 'Hunger Heatmap'].map(l => (
+                <button key={l} className="footer-link">{l}</button>
+              ))}
             </div>
-            <button onClick={() => scrollTo('request')} className="btn btn-secondary mt-8 w-full">Request Food</button>
+            <div>
+              <div className="footer-col-title">Community</div>
+              {['Become Volunteer', 'Partner NGO', 'Corporate CSR', 'Success Stories'].map(l => (
+                <button key={l} className="footer-link">{l}</button>
+              ))}
+            </div>
+            <div>
+              <div className="footer-col-title">Contact</div>
+              {['About Us', 'Privacy Policy', 'Terms of Use', 'Support'].map(l => (
+                <button key={l} className="footer-link">{l}</button>
+              ))}
+            </div>
           </div>
-          
+          <div className="footer-bottom">
+            <p className="footer-copy">© 2024 Food For Hungry. All rights reserved.</p>
+            <p className="footer-copy">Made with ❤️ to fight hunger</p>
+          </div>
         </div>
-      </section>
-
+      </footer>
     </div>
   );
 };
