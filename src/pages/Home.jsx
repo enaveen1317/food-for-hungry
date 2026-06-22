@@ -15,8 +15,8 @@ const Home = () => {
       {/* ── HERO ─────────────────────────────────────── */}
       <section className="hero">
         <div className="container hero-inner">
-          {/* Left Content */}
-          <div>
+          {/* Centered Content */}
+          <div className="hero-content">
             <div className="hero-badge">
               <span className="hero-badge-dot"></span>
               City-Scale Food Rescue Operations
@@ -40,63 +40,6 @@ const Home = () => {
               <span className="trust-badge">✅ Verified NGO Network</span>
               <span className="trust-badge">🚴 Live GPS Routing</span>
               <span className="trust-badge">📍 Local Impact</span>
-            </div>
-          </div>
-
-          {/* Right — Live Rescue Operations Panel */}
-          <div className="hero-visual">
-            <div className="ops-panel">
-              <p style={{ color: 'var(--text-soft)', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '24px' }}>
-                🔴 Active Rescue Right Now
-              </p>
-              
-              <div className="ops-stat-row">
-                <div className="ops-stat">
-                  <span className="ops-stat-num">34</span>
-                  <span className="ops-stat-label">Live Donations</span>
-                </div>
-                <div className="ops-stat">
-                  <span className="ops-stat-num">12</span>
-                  <span className="ops-stat-label">Volunteers Near</span>
-                </div>
-                <div className="ops-stat">
-                  <span className="ops-stat-num">8</span>
-                  <span className="ops-stat-label">Active Requests</span>
-                </div>
-              </div>
-
-              <div className="ops-live-match">
-                <div className="ops-live-match-header">
-                  <span className="ops-match-pulse"><span className="ops-match-dot"></span> Volunteer Assigned</span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-soft)' }}>Just now</span>
-                </div>
-                <h4 className="ops-match-title">Wedding Meals & Curry</h4>
-                <p className="ops-match-desc" style={{ marginBottom: '12px' }}>Rescuing 40 meals from A1 Mahal</p>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-dark)' }}>
-                    <MapPin size={14} color="var(--orange)" /> <span><strong>Pickup:</strong> Anna Nagar</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-dark)' }}>
-                    <Navigation size={14} color="var(--green-primary)" /> <span><strong>Drop:</strong> Children's Shelter</span>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
-                <div style={{ background: '#F8FAFC', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
-                  <span style={{ display: 'block', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-dark)' }}>2,480</span>
-                  <span style={{ fontSize: '0.65rem', color: 'var(--text-soft)', textTransform: 'uppercase', fontWeight: 600 }}>Meals Today</span>
-                </div>
-                <div style={{ background: '#F8FAFC', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
-                  <span style={{ display: 'block', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-dark)' }}>28</span>
-                  <span style={{ fontSize: '0.65rem', color: 'var(--text-soft)', textTransform: 'uppercase', fontWeight: 600 }}>NGO Partners</span>
-                </div>
-                <div style={{ background: '#F8FAFC', padding: '12px', borderRadius: '12px', textAlign: 'center' }}>
-                  <span style={{ display: 'block', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-dark)' }}>124</span>
-                  <span style={{ fontSize: '0.65rem', color: 'var(--text-soft)', textTransform: 'uppercase', fontWeight: 600 }}>Active Fleet</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>

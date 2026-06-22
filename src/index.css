@@ -347,10 +347,18 @@ h1, h2, h3, h4, h5, h6 {
 .hero-inner {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .hero-badge {
@@ -399,7 +407,9 @@ h1, h2, h3, h4, h5, h6 {
   color: rgba(255,255,255,0.82);
   line-height: 1.8;
   margin-bottom: 36px;
-  max-width: 480px;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-btns {
@@ -407,6 +417,7 @@ h1, h2, h3, h4, h5, h6 {
   gap: 14px;
   flex-wrap: wrap;
   margin-bottom: 32px;
+  justify-content: center;
 }
 
 .hero-btn-primary {
@@ -461,6 +472,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .trust-badge {
