@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import logoImg from '../assets/logo.jpg';
 
 const Navbar = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -17,9 +18,9 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="container navbar-inner">
         {/* Logo */}
-        <div className="navbar-logo" onClick={() => scrollTo('home')}>
-          <div className="navbar-logo-icon">🍽️</div>
-          <span className="navbar-logo-text">Food <span>For Hungry</span></span>
+        <div className="navbar-logo" onClick={() => scrollTo('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img src={logoImg} alt="Food For Hungry Logo" style={{ height: '72px', width: 'auto', objectFit: 'contain' }} />
+          <span className="navbar-logo-text" style={{ fontSize: '1.4rem' }}>Food <span>For Hungry</span></span>
         </div>
 
         {/* Center Nav Links */}
@@ -27,27 +28,40 @@ const Navbar = () => {
           <button className="navbar-link" onClick={() => scrollTo('home')}>{t('navHome')}</button>
           <button className="navbar-link" onClick={() => scrollTo('donate')}>{t('navDonate')}</button>
           <button className="navbar-link" onClick={() => scrollTo('request')}>{t('navRequest')}</button>
-          <button className="navbar-link" onClick={() => scrollTo('ngos')}>{t('navNGOs')}</button>
           <button className="navbar-link" onClick={() => scrollTo('volunteer-dashboard')}>{t('navVolunteers')}</button>
-          <button className="navbar-link" onClick={() => scrollTo('admin-dashboard')}>{t('navAbout')}</button>
         </div>
 
         {/* Right Actions */}
         <div className="navbar-actions">
-          {/* Language Pill Toggle */}
-          <div className="lang-toggle">
-            <button
-              className={`lang-btn ${language === 'ta' ? 'active' : ''}`}
-              onClick={() => setLanguage('ta')}
-            >தமிழ்</button>
-            <button
-              className={`lang-btn ${language === 'en' ? 'active' : ''}`}
-              onClick={() => setLanguage('en')}
-            >English</button>
-            <button
-              className={`lang-btn ${language === 'hi' ? 'active' : ''}`}
-              onClick={() => setLanguage('hi')}
-            >हिंदी</button>
+          {/* Language Dropdown */}
+          <div className="lang-select-wrapper" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <span style={{ position: 'absolute', left: '12px', fontSize: '1.2rem', pointerEvents: 'none' }}>🌐</span>
+            <select
+              className="lang-select"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              style={{
+                appearance: 'none',
+                background: '#ECFDF5',
+                border: '1px solid #D1FAE5',
+                borderRadius: '9999px',
+                padding: '8px 36px 8px 40px',
+                fontFamily: 'Poppins',
+                fontWeight: '600',
+                color: 'var(--green-deep)',
+                cursor: 'pointer',
+                outline: 'none',
+                transition: 'var(--transition)'
+              }}
+            >
+              <option value="en">English</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+              <option value="hi">हिंदी (Hindi)</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="ml">മലയാളം (Malayalam)</option>
+              <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            </select>
+            <span style={{ position: 'absolute', right: '14px', fontSize: '0.8rem', pointerEvents: 'none', color: 'var(--green-primary)' }}>▼</span>
           </div>
 
           <button className="bell-btn">

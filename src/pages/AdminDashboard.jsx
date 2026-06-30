@@ -28,9 +28,9 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div className="admin-body-layout">
         {/* Sidebar */}
-        <div style={{ width: '260px', background: 'white', borderRight: '1px solid var(--border)', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div className="admin-sidebar-responsive">
           <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em', paddingLeft: '12px', marginBottom: '8px' }}>Menu</p>
           {navItems.map(item => (
             <button 
@@ -50,7 +50,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1, padding: '40px' }}>
+        <div className="admin-main-responsive" style={{ flex: 1, padding: '40px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
             <div>
               <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.8rem', color: 'var(--text-dark)', marginBottom: '4px' }}>Live Operations</h2>
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Metric Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '32px' }}>
+          <div className="grid-4-col" style={{ gap: '20px', marginBottom: '32px' }}>
             {[
               { label: 'Donations Today', val: '147', sub: '+12% from yesterday', color: 'var(--green-primary)' },
               { label: 'Active SOS Alerts', val: '2', sub: 'Requires immediate action', color: 'var(--red-sos)', alert: true },
@@ -75,7 +75,7 @@ const AdminDashboard = () => {
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+          <div className="grid-2to1">
             {/* Action Log */}
             <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
               <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)', background: '#F8FAFC' }}>

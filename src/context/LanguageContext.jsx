@@ -7,7 +7,7 @@ export const LanguageProvider = ({ children }) => {
   const [language, setLanguage] = useState('en');
 
   const t = (key) => {
-    return translations[language][key] || translations['en'][key] || key;
+    return translations[language]?.[key] || translations['en']?.[key] || key;
   };
 
   return (

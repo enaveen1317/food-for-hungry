@@ -11,7 +11,7 @@ const hotspots = [
 
 const HungerHeatmap = () => {
   return (
-    <div style={{ background: 'var(--cream)', padding: '80px 0' }}>
+    <div className="screen-fit-section" style={{ background: 'var(--cream)' }}>
       <div className="container">
         <div className="section-header">
           <div className="section-tag">🗺️ Live Heatmap</div>
@@ -19,7 +19,7 @@ const HungerHeatmap = () => {
           <p className="section-sub">See real-time hunger hotspots, donor availability, and active delivery zones near you.</p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '24px', alignItems: 'start' }}>
+        <div className="grid-main-aside" style={{ alignItems: 'start' }}>
           {/* Map Visual */}
           <div className="heatmap-container">
             <div className="heatmap-header">
@@ -32,28 +32,53 @@ const HungerHeatmap = () => {
                 <span className="badge badge-green">🟢 Donor Active</span>
               </div>
             </div>
-            <div className="heatmap-map">
-              {/* Decorative map with blobs */}
-              <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {/* Hotspot blobs */}
-                {[
-                  { top: '20%', left: '30%', size: 80, color: 'rgba(220,38,38,0.3)', label: 'Dharavi' },
-                  { top: '50%', left: '60%', size: 60, color: 'rgba(249,115,22,0.3)', label: 'Adyar' },
-                  { top: '70%', left: '25%', size: 50, color: 'rgba(22,163,74,0.3)', label: 'Velachery' },
-                  { top: '35%', left: '70%', size: 40, color: 'rgba(37,99,235,0.25)', label: 'Anna Nagar' },
-                  { top: '60%', left: '45%', size: 35, color: 'rgba(22,163,74,0.25)', label: 'T Nagar' },
-                ].map((blob, i) => (
-                  <div key={i} style={{ position: 'absolute', top: blob.top, left: blob.left, width: blob.size, height: blob.size, borderRadius: '50%', background: blob.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 700, color: '#333', animation: 'pulse 3s infinite', animationDelay: `${i * 0.5}s` }}>
-                    📍
-                  </div>
-                ))}
-                <div style={{ background: 'rgba(255,255,255,0.9)', borderRadius: '16px', padding: '16px 24px', textAlign: 'center', backdropFilter: 'blur(10px)', boxShadow: 'var(--shadow-lg)' }}>
-                  <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-dark)' }}>🗺️ Live Hunger Map</p>
-                  <p style={{ color: 'var(--text-soft)', fontSize: '0.8rem' }}>Tamil Nadu — 12 Cities</p>
-                  <div style={{ display: 'flex', gap: '16px', marginTop: '10px', justifyContent: 'center' }}>
-                    <span style={{ fontSize: '0.75rem', color: '#DC2626', fontWeight: 700 }}>● 5 Critical Zones</span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--green-primary)', fontWeight: 700 }}>● 18 Donors Active</span>
-                  </div>
+            <div
+              className="heatmap-map"
+              style={{
+                padding: 0,
+                overflow: 'hidden',
+                borderRadius: '0 0 20px 20px',
+                position: 'relative',
+                minHeight: '380px',
+              }}
+            >
+              {/* ✅ Real Google Maps Embed — Chennai, Tamil Nadu */}
+              <iframe
+                title="Live Hunger Map — Chennai & Tamil Nadu"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d497706.5!2d80.27071814355469!3d13.082697828125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5265ea4f7d3361%3A0x6e61a70b6863d433!2sChennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1719641000000!5m2!1sen!2sin"
+                width="100%"
+                height="380"
+                style={{ border: 'none', display: 'block' }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+
+              {/* Floating info badge over the map */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '20px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(255,255,255,0.95)',
+                  borderRadius: '16px',
+                  padding: '14px 24px',
+                  textAlign: 'center',
+                  backdropFilter: 'blur(12px)',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+                  pointerEvents: 'none',
+                  minWidth: '220px',
+                  zIndex: 10,
+                }}
+              >
+                <p style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1rem', color: 'var(--text-dark)' }}>
+                  🗺️ Live Hunger Map
+                </p>
+                <p style={{ color: 'var(--text-soft)', fontSize: '0.78rem', marginTop: '2px' }}>Tamil Nadu — 12 Cities</p>
+                <div style={{ display: 'flex', gap: '16px', marginTop: '8px', justifyContent: 'center' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#DC2626', fontWeight: 700 }}>● 5 Critical Zones</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--green-primary)', fontWeight: 700 }}>● 18 Donors Active</span>
                 </div>
               </div>
             </div>
