@@ -21,13 +21,34 @@ function Spark({ data, color }) {
 }
 
 /* ── Progress Steps ──────────────────────────────────────────── */
-const STEPS = [
-  { label: 'Submitted', time: '9:15 AM', icon: '📋' },
-  { label: 'Accepted',  time: '9:28 AM', icon: '✅' },
-  { label: 'Picked Up', time: '9:41 AM', icon: '📦' },
-  { label: 'In Transit',time: '10:10 AM',icon: '🚚' },
-  { label: 'Delivered', time: 'Pending', icon: '🏠' },
+const STEP_LABELS = [
+  { label: 'Submitted', icon: '📋' },
+  { label: 'Accepted',  icon: '✅' },
+  { label: 'Picked Up', icon: '📦' },
+  { label: 'In Transit',icon: '🚚' },
+  { label: 'Delivered', icon: '🏠' },
 ];
+
+const getDynamicSteps = (progress) => {
+  const now = new Date();
+  const formatTime = (d) => d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  
+  const offsets = [-28, -15, -4, 0, 22];
+  const currentStepIndex = Math.max(0, Math.min(progress - 1, 4));
+  const currentOffset = offsets[currentStepIndex];
+
+  return STEP_LABELS.map((step, i) => {
+    if (progress > i) {
+      return { ...step, time: formatTime(new Date(now.getTime() + (offsets[i] - currentOffset) * 60000)) };
+    }
+    return { ...step, time: 'Pending' };
+  });
+};
+
+const getEstimatedDelivery = (progress) => {
+  const steps = getDynamicSteps(progress);
+  return steps[4].time !== 'Pending' ? steps[4].time : new Date(Date.now() + 22 * 60000).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+};
 
 const DonorDashboard = () => {
   const [tab, setTab] = useState('active');
@@ -167,7 +188,8 @@ const DonorDashboard = () => {
         )}
         {tab === 'active' && activeDonations.length > 0 && activeDonations.slice(0,1).map((don) => {
           const prog = don.progress || 4;
-          const pct = ((prog - 1) / (STEPS.length - 1)) * 100;
+          const dynamicSteps = getDynamicSteps(prog);
+          const pct = ((prog - 1) / (STEP_LABELS.length - 1)) * 100;
           return (
             <div key={don.id} className="dd-in" style={{
               flex: 1, background: 'rgba(11,31,20,0.85)', backdropFilter: 'blur(20px)',
@@ -222,8 +244,8 @@ const DonorDashboard = () => {
                     {/* Progress rail */}
                     <div style={{ position: 'relative', height: '3px', background: 'rgba(255,255,255,0.08)', borderRadius: '9999px', marginBottom: '10px' }}>
                       <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', borderRadius: '9999px', width: `${pct}%`, background: 'linear-gradient(90deg,#22C55E,#4ADE80)', boxShadow: '0 0 6px rgba(34,197,94,0.6)', transition: 'width 1s ease' }} />
-                      {STEPS.map((_, si) => {
-                        const lp = (si / (STEPS.length - 1)) * 100;
+                      {STEP_LABELS.map((_, si) => {
+                        const lp = (si / (STEP_LABELS.length - 1)) * 100;
                         const done = prog > si, curr = prog === si + 1;
                         return (
                           <div key={si} style={{ position: 'absolute', top: '50%', left: `${lp}%`, transform: 'translate(-50%,-50%)', width: curr ? '14px' : '10px', height: curr ? '14px' : '10px', borderRadius: '50%', background: done || curr ? '#22C55E' : 'rgba(255,255,255,0.12)', border: done || curr ? '2px solid #4ADE80' : '1.5px solid rgba(255,255,255,0.1)', zIndex: 2, boxShadow: curr ? '0 0 0 4px rgba(34,197,94,0.2)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}>
@@ -234,7 +256,7 @@ const DonorDashboard = () => {
                     </div>
                     {/* Step labels */}
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      {STEPS.map((s, si) => {
+                      {dynamicSteps.map((s, si) => {
                         const done = prog > si, curr = prog === si + 1;
                         return (
                           <div key={si} style={{ textAlign: 'center', flex: 1 }}>
@@ -255,11 +277,13 @@ const DonorDashboard = () => {
                       <Clock size={10} color="#4ADE80" />
                       <span style={{ fontSize: '0.6rem', color: '#4ADE80', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Estimated Delivery</span>
                     </div>
-                    <p style={{ fontFamily: 'Poppins', fontWeight: 900, fontSize: '1rem', color: 'white' }}>10:42 AM</p>
+                    <p style={{ fontFamily: 'Poppins', fontWeight: 900, fontSize: '1rem', color: 'white' }}>{getEstimatedDelivery(prog)}</p>
                   </div>
                   {/* Volunteer */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg,#FCD34D,#F59E0B)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Poppins', fontWeight: 900, fontSize: '0.7rem', color: 'white', flexShrink: 0 }}>AK</div>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg,#FCD34D,#F59E0B)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Poppins', fontWeight: 900, fontSize: '0.7rem', color: 'white', flexShrink: 0 }}>
+                      {don.volunteer.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() || 'V'}
+                    </div>
                     <div>
                       <p style={{ fontSize: '0.6rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Volunteer</p>
                       <p style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.78rem', color: 'white' }}>{don.volunteer}</p>

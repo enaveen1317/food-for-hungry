@@ -258,6 +258,43 @@ const FleetLiveMap = ({
         maxZoom: 19, subdomains: 'abcd',
       }).addTo(map);
 
+      /* Fetch Tamil Nadu GeoJSON to mask outside regions */
+      fetch('https://nominatim.openstreetmap.org/search?state=Tamil%20Nadu&country=India&polygon_geojson=1&format=json')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data[0] && data[0].geojson) {
+            const geom = data[0].geojson;
+            const worldRing = [
+              [90, -180], [90, 180], [-90, 180], [-90, -180]
+            ];
+            const rings = [worldRing];
+            
+            const flip = (coords) => coords.map(c => [c[1], c[0]]);
+
+            if (geom.type === 'Polygon') {
+              rings.push(flip(geom.coordinates[0]));
+            } else if (geom.type === 'MultiPolygon') {
+              geom.coordinates.forEach(poly => {
+                rings.push(flip(poly[0]));
+              });
+            }
+
+            // The inverted mask to completely hide neighboring states
+            L.polygon(rings, {
+              color: '#f8fafc',
+              fillColor: '#f8fafc',
+              fillOpacity: 1, // Completely opaque to hide all other states
+              stroke: false
+            }).addTo(map);
+
+            // The Tamil Nadu border
+            L.geoJSON(geom, {
+              style: { color: '#16a34a', weight: 2.5, opacity: 0.5, fill: false }
+            }).addTo(map);
+          }
+        })
+        .catch(err => console.log('Mask error:', err));
+
       /* Route polyline (pickup → destination) */
       if (pickupCoords && dropCoords) {
         L.polyline([pickupCoords, dropCoords], {

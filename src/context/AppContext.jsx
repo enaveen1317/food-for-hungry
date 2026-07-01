@@ -131,7 +131,12 @@ export const AppProvider = ({ children }) => {
     { name: 'Karthik R.', area: 'Anna Nagar', status: 'Available', deliveries: 3, points: 120, avatar: '🚴', tier: 'Silver' },
     { name: 'Meena S.', area: 'Adyar', status: 'Available', deliveries: 1, points: 40, avatar: '🚴', tier: 'Silver' },
     { name: 'Pradeep K.', area: 'Velachery', status: 'Available', deliveries: 5, points: 200, avatar: '🚴', tier: 'Silver' },
-    { name: 'Divya T.', area: 'T Nagar', status: 'Break', deliveries: 2, points: 80, avatar: '🚴', tier: 'Silver' }
+    { name: 'Divya T.', area: 'T Nagar', status: 'Break', deliveries: 2, points: 80, avatar: '🚴', tier: 'Silver' },
+    { name: 'Suresh V.', area: 'Chromepet', status: 'Available', deliveries: 15, points: 450, avatar: '🚴', tier: 'Silver' },
+    { name: 'Manoj P.', area: 'Guindy', status: 'Delivering', deliveries: 89, points: 2150, avatar: '🚴', tier: 'Platinum' },
+    { name: 'Anjali N.', area: 'Mylapore', status: 'Available', deliveries: 120, points: 3050, avatar: '🚴', tier: 'Diamond' },
+    { name: 'Vikram B.', area: 'Porur', status: 'Available', deliveries: 12, points: 340, avatar: '🚴', tier: 'Silver' },
+    { name: 'Senthil M.', area: 'Tambaram', status: 'Break', deliveries: 55, points: 1400, avatar: '🚴', tier: 'Gold' }
   ]);
 
   // ── Tasks ──────────────────────────────────────────────────────────────────

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Upload, Mic, Camera, MapPin, AlertCircle, CheckCircle, Clock, ArrowRight } from 'lucide-react';
 import requestBg from '../assets/request-bg.png';
 import { useLanguage } from '../context/LanguageContext';
@@ -22,6 +22,15 @@ const DonationForm = () => {
   const [photo, setPhoto] = useState(null);
   const [packaging, setPackaging] = useState('Packed in individual boxes');
   const [submittedDonationId, setSubmittedDonationId] = useState(null);
+
+  const fileInputRef = useRef(null);
+
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPhoto(URL.createObjectURL(file));
+    }
+  };
 
   const nextStep = () => setStep(s => Math.min(5, s + 1));
   const prevStep = () => setStep(s => Math.max(1, s - 1));
@@ -137,10 +146,29 @@ const DonationForm = () => {
                 <input
                   type="text"
                   className="form-input"
+                  list="food-titles"
                   placeholder="e.g. Leftover Wedding Meals (Rice & Curry)"
                   value={foodTitle}
                   onChange={e => setFoodTitle(e.target.value)}
                 />
+                <datalist id="food-titles">
+                  <option value="Leftover Wedding Meals (Rice & Curry)" />
+                  <option value="Buffet Leftovers (Mixed Dishes)" />
+                  <option value="Rice & Sambar / Rasam" />
+                  <option value="Biryani / Pulao" />
+                  <option value="Roti / Chapati / Naan" />
+                  <option value="Dal / Lentil Soup" />
+                  <option value="Vegetable Curry / Stir-fry" />
+                  <option value="Fresh Fruits (Bananas, Apples, etc.)" />
+                  <option value="Raw Vegetables" />
+                  <option value="Bakery Items (Bread, Buns, Pastries)" />
+                  <option value="Sandwiches / Burgers" />
+                  <option value="Packaged Biscuits / Snacks" />
+                  <option value="Groceries (Rice, Dal, Oil)" />
+                  <option value="Prepared Meals (Lunchboxes)" />
+                  <option value="Dairy Products (Milk, Curd, Paneer)" />
+                  <option value="Sweets / Desserts" />
+                </datalist>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
@@ -246,11 +274,39 @@ const DonationForm = () => {
                   <input
                     type="text"
                     className="form-input"
+                    list="address-suggestions"
                     placeholder="Search address..."
                     style={{ paddingLeft: '40px' }}
                     value={address}
                     onChange={e => setAddress(e.target.value)}
                   />
+                  <datalist id="address-suggestions">
+                    <option value="Adyar, Chennai" />
+                    <option value="Anna Nagar, Chennai" />
+                    <option value="Ashok Nagar, Chennai" />
+                    <option value="Besant Nagar, Chennai" />
+                    <option value="Chengalpattu, Chennai" />
+                    <option value="Chromepet, Chennai" />
+                    <option value="Egmore, Chennai" />
+                    <option value="Guindy, Chennai" />
+                    <option value="K.K. Nagar, Chennai" />
+                    <option value="Kodambakkam, Chennai" />
+                    <option value="Madipakkam, Chennai" />
+                    <option value="Medavakkam, Chennai" />
+                    <option value="Mylapore, Chennai" />
+                    <option value="Nungambakkam, Chennai" />
+                    <option value="OMR, Chennai" />
+                    <option value="Pallavaram, Chennai" />
+                    <option value="Perambur, Chennai" />
+                    <option value="Porur, Chennai" />
+                    <option value="Saidapet, Chennai" />
+                    <option value="Sholinganallur, Chennai" />
+                    <option value="T. Nagar, Chennai" />
+                    <option value="Tambaram, Chennai" />
+                    <option value="Thiruvanmiyur, Chennai" />
+                    <option value="Vadapalani, Chennai" />
+                    <option value="Velachery, Chennai" />
+                  </datalist>
                   <MapPin size={18} color="var(--text-soft)" style={{ position: 'absolute', left: '14px', top: '16px' }} />
                 </div>
                 <div style={{ height: '120px', background: '#E2E8F0', borderRadius: '12px', marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
@@ -295,12 +351,19 @@ const DonationForm = () => {
                 <label className="form-label">Food Photo (For AI Quality Check)</label>
                 <div
                   style={{ border: '2px dashed #CBD5E1', borderRadius: '16px', padding: '40px 20px', textAlign: 'center', background: '#F8FAFC', cursor: 'pointer', transition: 'var(--transition)' }}
-                  onClick={() => setPhoto('uploaded')}
+                  onClick={() => fileInputRef.current && fileInputRef.current.click()}
                 >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    style={{ display: 'none' }}
+                    onChange={handlePhotoUpload}
+                  />
                   {photo ? (
                     <div>
-                      <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'var(--green-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                        <CheckCircle size={28} color="var(--green-primary)" />
+                      <div style={{ width: '80px', height: '80px', margin: '0 auto 16px', borderRadius: '12px', overflow: 'hidden', border: '2px solid var(--green-mint)' }}>
+                        <img src={photo} alt="Food uploaded" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <p style={{ fontFamily: 'Poppins', fontWeight: 600, fontSize: '1rem', color: 'var(--text-dark)' }}>Photo Uploaded Successfully!</p>
                       <p style={{ fontSize: '0.85rem', color: 'var(--green-primary)', marginTop: '6px' }}>Verified with AI Freshness check.</p>

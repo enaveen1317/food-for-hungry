@@ -59,7 +59,7 @@ function Pill({ children, color, bg, border, dot }) {
 }
 
 /* ── Driver Profile Card ─────────────────────────────────────────────────────── */
-function DriverCard({ v, driverStatus, onStatus }) {
+function DriverCard({ v, driverStatus, onStatus, hasActiveTask }) {
   const tier = getTier(v.points);
   const tc   = TIER_CFG[tier.name] || TIER_CFG.Gold;
   const sc   = STATUS_CFG[driverStatus] || STATUS_CFG.Offline;
@@ -127,26 +127,44 @@ function DriverCard({ v, driverStatus, onStatus }) {
         </div>
 
         {/* Status switcher */}
-        <p style={{ fontSize:'0.72rem', color:'#94a3b8', fontWeight:600, textTransform:'uppercase',
-          letterSpacing:'0.07em', marginBottom:'8px' }}>Set Status</p>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'6px' }}>
-          {Object.entries(STATUS_CFG).map(([key, c]) => {
-            const active = driverStatus === key;
-            return (
-              <button key={key} onClick={() => onStatus(key)} style={{
-                padding:'8px 4px', borderRadius:'10px', border:'none', cursor:'pointer',
-                fontFamily:'Poppins', fontWeight:700, fontSize:'0.74rem',
-                background: active ? c.color : '#f1f5f9',
-                color: active ? 'white' : c.color,
-                boxShadow: active ? `0 4px 14px ${c.color}55` : 'none',
-                transform: active ? 'scale(1.03)' : 'scale(1)',
-                transition:'all 0.2s ease',
-              }}>
-                {key === 'Available' ? '🟢' : key === 'Delivering' ? '🚴' : key === 'Break' ? '☕' : '⚫'} {key}
-              </button>
-            );
-          })}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom:'8px' }}>
+          <p style={{ fontSize:'0.72rem', color:'#94a3b8', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.07em', margin: 0 }}>
+            Set Status
+          </p>
+          <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 700, background: '#dcfce7', padding: '2px 6px', borderRadius: '4px' }}>
+            AUTO
+          </span>
         </div>
+        
+        {hasActiveTask ? (
+          <div style={{
+            background:'#fff7ed', border:'1px solid #fed7aa', borderRadius:'10px',
+            padding:'10px', color:'#ea580c', fontSize:'0.75rem', fontWeight:600, fontFamily:'Poppins',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px'
+          }}>
+            🚴 Status is automatically managed
+          </div>
+        ) : (
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'6px' }}>
+            {['Available', 'Break', 'Offline'].map((key) => {
+              const c = STATUS_CFG[key];
+              const active = driverStatus === key;
+              return (
+                <button key={key} onClick={() => onStatus(key)} style={{
+                  padding:'8px 4px', borderRadius:'10px', border:'none', cursor:'pointer',
+                  fontFamily:'Poppins', fontWeight:700, fontSize:'0.74rem',
+                  background: active ? c.color : '#f1f5f9',
+                  color: active ? 'white' : c.color,
+                  boxShadow: active ? `0 4px 14px ${c.color}55` : 'none',
+                  transform: active ? 'scale(1.03)' : 'scale(1)',
+                  transition:'all 0.2s ease',
+                }}>
+                  {key === 'Available' ? '🟢' : key === 'Break' ? '☕' : '⚫'} {key}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -664,7 +682,7 @@ const Dashboard = () => {
           {/* Left column */}
           <div style={{ display:'flex', flexDirection:'column', gap:'16px' }}>
             <div className="fd-anim fd-anim-1">
-              <DriverCard v={rahul} driverStatus={driverStatus} onStatus={setStatus} />
+              <DriverCard v={rahul} driverStatus={driverStatus} onStatus={setStatus} hasActiveTask={!!activeTask} />
             </div>
             <div className="fd-anim fd-anim-2">
               <ShiftCard distanceKm={distanceKm} shiftState={shiftState} v={rahul} shiftActions={shiftActions} />

@@ -156,6 +156,45 @@ function lerp(a, b, t) {
   return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
 }
 
+// ─── Apply Inverted Mask for Tamil Nadu ───────────────────────────────────
+function applyTamilNaduMask(L, map) {
+  fetch('https://nominatim.openstreetmap.org/search?state=Tamil%20Nadu&country=India&polygon_geojson=1&format=json')
+    .then(res => res.json())
+    .then(data => {
+      if (data && data[0] && data[0].geojson) {
+        const geom = data[0].geojson;
+        const worldRing = [
+          [90, -180], [90, 180], [-90, 180], [-90, -180]
+        ];
+        const rings = [worldRing];
+        
+        const flip = (coords) => coords.map(c => [c[1], c[0]]);
+
+        if (geom.type === 'Polygon') {
+          rings.push(flip(geom.coordinates[0]));
+        } else if (geom.type === 'MultiPolygon') {
+          geom.coordinates.forEach(poly => {
+            rings.push(flip(poly[0]));
+          });
+        }
+
+        // The inverted mask to completely hide neighboring states
+        L.polygon(rings, {
+          color: '#f8fafc',
+          fillColor: '#f8fafc',
+          fillOpacity: 1, // Completely opaque
+          stroke: false
+        }).addTo(map);
+
+        // The Tamil Nadu border
+        L.geoJSON(geom, {
+          style: { color: '#16a34a', weight: 2.5, opacity: 0.5, fill: false }
+        }).addTo(map);
+      }
+    })
+    .catch(err => console.log('Mask error:', err));
+}
+
 // ─── Main LiveMap component ───────────────────────────────────────────────
 const LiveMap = ({
   pickupLocation,
@@ -223,6 +262,8 @@ const LiveMap = ({
           maxZoom: 19,
         }).addTo(map);
 
+        applyTamilNaduMask(L, map);
+
         volunteers.forEach((v) => {
           const coords = getCoords(v.area);
           const icon = makeFleetIcon(L, v.name, v.status);
@@ -259,6 +300,8 @@ const LiveMap = ({
         maxZoom: 19,
         subdomains: 'abcd',
       }).addTo(map);
+
+      applyTamilNaduMask(L, map);
 
       // Route polyline (dashed green)
       const routeLine = L.polyline([pickupCoords, dropCoords], {

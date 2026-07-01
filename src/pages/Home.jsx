@@ -10,6 +10,9 @@ import heroBg from '../assets/hero-bg.png';
 import cardDinnerChildren from '../assets/card-dinner-children.png';
 import cardSurplusRice from '../assets/card-surplus-rice.png';
 import cardElderlyMeals from '../assets/card-elderly-meals.png';
+import storyMonsoon from '../assets/story-monsoon.png';
+import storyCorporate from '../assets/story-corporate.png';
+import emergencyHeroBg from '../assets/emergency-hero-bg.png';
 
 const Home = () => {
   const { t, language } = useLanguage();
@@ -26,11 +29,36 @@ const Home = () => {
   const [favourites, setFavourites] = useState({});
   const toggleFav = (key) => setFavourites(prev => ({ ...prev, [key]: !prev[key] }));
 
+  // Map live requests to cards
+  const dynamicSOSCards = requests.filter(r => !r.dispatched).map((r, i) => ({
+    key: `sos-${r.id || i}`,
+    category: 'Food Requests',
+    priority: r.urgent ? 'SOS PRIORITY' : 'HIGH PRIORITY',
+    priorityColor: r.urgent ? '#DC2626' : '#EF4444',
+    priorityShadow: r.urgent ? 'rgba(220,38,38,0.4)' : 'rgba(239,68,68,0.4)',
+    btnBg: 'linear-gradient(135deg,#F97316,#EA580C)',
+    btnShadow: 'rgba(249,115,22,0.35)',
+    img: emergencyHeroBg,
+    icon: '🆘',
+    title: r.name ? `SOS Request: ${r.name}` : 'Emergency Food Request',
+    location: r.loc,
+    meta1: `👥 Serves ~${r.ppl} People`,
+    meta2color: r.urgent ? '#DC2626' : '#EF4444',
+    meta2: '⏰ ASAP',
+    foodType: '🍲 Any Food',
+    btnLabel: 'btnFulfill',
+    modalType: 'Fulfill Request',
+    modalTarget: 'donate'
+  }));
+
   // Card definitions so filters can show/hide them
   const CARDS = [
+    ...dynamicSOSCards,
     { key: 'dinner',  category: 'Food Requests',       priority: 'HIGH PRIORITY',      priorityColor: '#EF4444', priorityShadow: 'rgba(239,68,68,0.4)',   btnBg: 'linear-gradient(135deg,#F97316,#EA580C)', btnShadow: 'rgba(249,115,22,0.35)', img: cardDinnerChildren, icon: '👨\u200d👩\u200d👧', title: 'Dinner for 18 Children', location: 'Hope Shelter, Perambur', meta1: '👨\u200d👩\u200d👧 Serves ~18 Children', meta2color: '#EF4444', meta2: '⏰ Needed today', foodType: '🥗 Veg Dinner', btnLabel: 'btnFulfill', modalType: 'Fulfill Request', modalTarget: 'donate' },
     { key: 'rice',    category: 'Volunteer Needed',     priority: 'VOLUNTEER NEEDED',   priorityColor: '#16A34A', priorityShadow: 'rgba(22,163,74,0.4)',    btnBg: 'linear-gradient(135deg,#16A34A,#15803D)', btnShadow: 'rgba(22,163,74,0.35)',  img: cardSurplusRice,    icon: '🍲',              title: 'Surplus Rice & Dal (30 kg)', location: 'Grand Hotel, Velachery', meta1: '📦 30 kg Available', meta2color: '#16A34A', meta2: '🚚 Pickup Today', foodType: '🥗 Veg', btnLabel: 'btnAccept', modalType: 'Accept Pickup', modalTarget: 'volunteer-dashboard' },
     { key: 'elderly', category: 'Food Requests',       priority: 'MEDIUM PRIORITY',    priorityColor: '#F59E0B', priorityShadow: 'rgba(245,158,11,0.4)',   btnBg: 'linear-gradient(135deg,#F97316,#EA580C)', btnShadow: 'rgba(249,115,22,0.35)', img: cardElderlyMeals,   icon: '🏠',              title: 'Packed Meals for Elderly', location: 'Old Age Home, T Nagar', meta1: '👴 Serves ~25 People', meta2color: '#F59E0B', meta2: '⏰ Needed by 6 PM', foodType: '🥗 Veg Meals', btnLabel: 'btnFulfill', modalType: 'Fulfill Request', modalTarget: 'donate' },
+    { key: 'daily1',  category: 'Daily Updates',       priority: 'LATEST UPDATE',      priorityColor: '#3B82F6', priorityShadow: 'rgba(59,130,246,0.4)',   btnBg: 'linear-gradient(135deg,#3B82F6,#1D4ED8)', btnShadow: 'rgba(59,130,246,0.35)', img: storyMonsoon, icon: '📰', title: 'Monsoon Relief Food Camp', location: 'Chennai Central', meta1: '👥 150+ Served', meta2color: '#3B82F6', meta2: '🕒 1 hr ago', foodType: '🍲 Hot Meals', btnLabel: 'Read More', modalType: 'Info', modalTarget: 'none' },
+    { key: 'daily2',  category: 'Daily Updates',       priority: 'NGO HIGHLIGHT',      priorityColor: '#8B5CF6', priorityShadow: 'rgba(139,92,246,0.4)',   btnBg: 'linear-gradient(135deg,#8B5CF6,#6D28D9)', btnShadow: 'rgba(139,92,246,0.35)', img: storyCorporate, icon: '🏢', title: 'Corporate Mega Drive', location: 'OMR IT Park', meta1: '📦 500 kg Rescued', meta2color: '#8B5CF6', meta2: '🕒 4 hrs ago', foodType: '🍱 Mixed Surplus', btnLabel: 'Read More', modalType: 'Info', modalTarget: 'none' },
   ];
   const visibleCards = activeFilter === 'All' ? CARDS : CARDS.filter(c => c.category === activeFilter);
   const [activeModal, setActiveModal] = useState(null);
@@ -351,6 +379,7 @@ const Home = () => {
                 { icon: '🍱', label: 'Food Requests' },
                 { icon: '🤝', label: 'Volunteer Needed' },
                 { icon: '🐾', label: 'Pet Food Support' },
+                { icon: '📰', label: 'Daily Updates' },
               ].map((f, i) => {
                 const isActive = activeFilter === f.label;
                 return (

@@ -20,7 +20,7 @@ const Emergency = () => {
   const [phone, setPhone]             = useState('');
   const [notes, setNotes]             = useState('');
   const [submitted, setSubmitted]     = useState(false);
-
+  const [saved, setSaved]             = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     submitSOS({ name, org, category, peopleCount, mealType, urgency, preferredTime, address, landmark, phone, notes });
@@ -30,6 +30,11 @@ const Emergency = () => {
     setPreferredTime(''); setAddress(''); setLandmark('');
     setPhone(''); setNotes('');
     setTimeout(() => setSubmitted(false), 6000);
+  };
+
+  const handleSaveDraft = () => {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
   };
 
   return (
@@ -156,6 +161,25 @@ const Emergency = () => {
           </div>
         )}
 
+        {/* ── SAVED DRAFT TOAST ─────────────────────────────────── */}
+        {saved && (
+          <div className="sos-in" style={{
+            background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '16px',
+            padding: '18px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '14px',
+            boxShadow: '0 4px 20px rgba(59,130,246,0.15)',
+          }}>
+            <BookmarkIcon size={26} color="#2563EB" />
+            <div>
+              <p style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#1E3A8A', fontSize: '0.95rem', marginBottom: '3px' }}>
+                💾 Request Saved
+              </p>
+              <p style={{ fontSize: '0.82rem', color: '#1E40AF' }}>
+                Your request has been saved as a draft locally.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* ── FORM ──────────────────────────────────────────────── */}
         <form onSubmit={handleSubmit}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(440px,1fr))', gap: '20px', marginBottom: '20px', alignItems: 'stretch' }}>
@@ -190,13 +214,14 @@ const Emergency = () => {
                 {/* Category */}
                 <div>
                   <label style={lbl}>Category of Need *</label>
-                  <select className="sos-input sos-select" style={inp} value={category} onChange={e => setCategory(e.target.value)}>
-                    <option value="Individual / Family">🏠 Individual / Family</option>
-                    <option value="Shelter / Orphanage">🏫 Shelter / Orphanage</option>
-                    <option value="Old Age Home">👴 Old Age Home</option>
-                    <option value="Street Community">🏘️ Street Community</option>
-                    <option value="Disaster Relief">🆘 Disaster Relief</option>
-                  </select>
+                  <input className="sos-input" style={inp} type="text" list="category-options" placeholder="Select or type..." value={category} onChange={e => setCategory(e.target.value)} required />
+                  <datalist id="category-options">
+                    <option value="🏠 Individual / Family" />
+                    <option value="🏫 Shelter / Orphanage" />
+                    <option value="👴 Old Age Home" />
+                    <option value="🏘️ Street Community" />
+                    <option value="🆘 Disaster Relief" />
+                  </datalist>
                 </div>
 
                 {/* People + Meal */}
@@ -205,19 +230,28 @@ const Emergency = () => {
                     <label style={lbl}>Number of People *</label>
                     <div style={{ position: 'relative' }}>
                       <Users size={14} color="#9CA3AF" style={{ position: 'absolute', left: '13px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                      <input className="sos-input" style={{ ...inp, paddingLeft: '36px' }} type="number" placeholder="e.g. 10" required value={peopleCount} onChange={e => setPeopleCount(e.target.value)} />
+                      <input className="sos-input" style={{ ...inp, paddingLeft: '36px' }} type="number" list="people-options" placeholder="e.g. 10" required value={peopleCount} onChange={e => setPeopleCount(e.target.value)} />
+                      <datalist id="people-options">
+                        <option value="5" />
+                        <option value="10" />
+                        <option value="20" />
+                        <option value="50" />
+                        <option value="100" />
+                        <option value="500" />
+                      </datalist>
                     </div>
                   </div>
                   <div>
                     <label style={lbl}>Meal Type</label>
                     <div style={{ position: 'relative' }}>
                       <Utensils size={14} color="#9CA3AF" style={{ position: 'absolute', left: '13px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                      <select className="sos-input sos-select" style={{ ...inp, paddingLeft: '36px' }} value={mealType} onChange={e => setMealType(e.target.value)}>
-                        <option value="Any food">Any food</option>
-                        <option value="Cooked Meal">Cooked Meal</option>
-                        <option value="Dry Groceries">Dry Groceries</option>
-                        <option value="Baby Food">Baby Food</option>
-                      </select>
+                      <input className="sos-input" style={{ ...inp, paddingLeft: '36px' }} type="text" list="meal-type-options" placeholder="Select or type..." value={mealType} onChange={e => setMealType(e.target.value)} />
+                      <datalist id="meal-type-options">
+                        <option value="Any food" />
+                        <option value="Cooked Meal" />
+                        <option value="Dry Groceries" />
+                        <option value="Baby Food" />
+                      </datalist>
                     </div>
                   </div>
                 </div>
@@ -253,7 +287,7 @@ const Emergency = () => {
                   <label style={lbl}>Preferred Time</label>
                   <div style={{ position: 'relative' }}>
                     <Clock size={14} color="#9CA3AF" style={{ position: 'absolute', left: '13px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                    <input className="sos-input" style={{ ...inp, paddingLeft: '36px' }} type="datetime-local" value={preferredTime} onChange={e => setPreferredTime(e.target.value)} />
+                    <input className="sos-input" style={{ ...inp, paddingLeft: '36px' }} type="time" value={preferredTime} onChange={e => setPreferredTime(e.target.value)} />
                   </div>
                 </div>
               </div>
@@ -350,7 +384,7 @@ const Emergency = () => {
               </div>
             </div>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <button type="button" className="sos-btn-secondary" onClick={() => alert('Request saved as draft locally.')} style={{
+              <button type="button" className="sos-btn-secondary" onClick={handleSaveDraft} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 padding: '12px 22px', borderRadius: '12px',
                 border: '2px solid #16A34A', background: 'white',
