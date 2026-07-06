@@ -21,7 +21,9 @@ const DonationForm = () => {
   const [windowTime, setWindowTime] = useState('Next 2 Hours');
   const [photo, setPhoto] = useState(null);
   const [packaging, setPackaging] = useState('Packed in individual boxes');
+  const [selectedNgo, setSelectedNgo] = useState('Any (Auto-assign)');
   const [submittedDonationId, setSubmittedDonationId] = useState(null);
+  const [formError, setFormError] = useState('');
 
   const fileInputRef = useRef(null);
 
@@ -32,8 +34,22 @@ const DonationForm = () => {
     }
   };
 
-  const nextStep = () => setStep(s => Math.min(5, s + 1));
-  const prevStep = () => setStep(s => Math.max(1, s - 1));
+  const nextStep = () => {
+    setFormError('');
+    if (step === 1 && (!foodTitle || !qty)) {
+      setFormError('Please fill in Food Title and Quantity before proceeding.');
+      return;
+    }
+    if (step === 3 && (!address || !contact)) {
+      setFormError('Please fill in Pickup Address and Contact Number before proceeding.');
+      return;
+    }
+    setStep(s => Math.min(5, s + 1));
+  };
+  const prevStep = () => {
+    setFormError('');
+    setStep(s => Math.max(1, s - 1));
+  };
 
   const steps = [
     { num: 1, label: t('dfStep1') || 'Food Info' },
@@ -67,7 +83,7 @@ const DonationForm = () => {
       contact: contact || '+91 98765 43210',
       window: windowTime,
       packaging,
-      ngo: 'Hope Shelter'
+      ngo: selectedNgo === 'Any (Auto-assign)' ? 'System Assigned NGO' : selectedNgo
     });
     setSubmittedDonationId(donationId);
   };
@@ -85,13 +101,14 @@ const DonationForm = () => {
     setWindowTime('Next 2 Hours');
     setPhoto(null);
     setPackaging('Packed in individual boxes');
+    setSelectedNgo('Any (Auto-assign)');
     setSubmittedDonationId(null);
     setStep(1);
   };
 
   if (submittedDonationId) {
     return (
-      <div className="screen-fit-section" style={{ background: `url(${requestBg}) no-repeat center center`, backgroundSize: 'cover' }}>
+      <div className="screen-fit-section" style={{ backgroundImage: `url(${requestBg})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'center center', backgroundSize: 'cover', width: '100%' }}>
         <div className="container" style={{ maxWidth: '600px' }}>
           <div className="card" style={{ padding: '40px', textAlign: 'center' }}>
             <div className="success-checkmark-circle" style={{ margin: '0 auto 24px', background: 'var(--green-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', borderRadius: '50%' }}>
@@ -117,7 +134,7 @@ const DonationForm = () => {
   }
 
   return (
-    <div className="screen-fit-section" style={{ background: `url(${requestBg}) no-repeat center center`, backgroundSize: 'cover' }}>
+    <div className="screen-fit-section" style={{ backgroundImage: `url(${requestBg})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'center center', backgroundSize: 'cover', width: '100%' }}>
       <div className="container" style={{ maxWidth: '800px' }}>
         <div className="section-header" style={{ marginBottom: '40px' }}>
           <div className="section-tag">📦 List Surplus</div>
@@ -137,6 +154,11 @@ const DonationForm = () => {
 
         {/* Form Container */}
         <div className="card" style={{ padding: '40px' }}>
+          {formError && (
+            <div style={{ background: '#FEF2F2', color: '#DC2626', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', fontWeight: 600 }}>
+              <AlertCircle size={18} /> {formError}
+            </div>
+          )}
           {step === 1 && (
             <div className="fade-in">
               <h3 style={{ fontFamily: 'Poppins', fontSize: '1.4rem', fontWeight: 700, marginBottom: '24px' }}>{t('dfWhatDonating') || 'What are you donating?'}</h3>
@@ -390,6 +412,21 @@ const DonationForm = () => {
                   <option value="Packed in individual boxes">Packed in individual boxes</option>
                   <option value="Bulk containers (needs serving)">Bulk containers (needs serving)</option>
                   <option value="Loose / requires packaging">Loose / requires packaging</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">{t('dfTargetNGO') || 'Preferred NGO (Optional)'}</label>
+                <select
+                  className="form-input"
+                  value={selectedNgo}
+                  onChange={e => setSelectedNgo(e.target.value)}
+                >
+                  <option value="Any (Auto-assign)">Any (Auto-assign closest)</option>
+                  <option value="Feeding India Trust">Feeding India Trust</option>
+                  <option value="No Food Waste">No Food Waste</option>
+                  <option value="Robin Hood Army">Robin Hood Army</option>
+                  <option value="Annalakshmi Foundation">Annalakshmi Foundation</option>
                 </select>
               </div>
             </div>

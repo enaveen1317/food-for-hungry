@@ -21,21 +21,80 @@ const Emergency = () => {
   const [notes, setNotes]             = useState('');
   const [submitted, setSubmitted]     = useState(false);
   const [saved, setSaved]             = useState(false);
+  const [submittedId, setSubmittedId] = useState(null);
+
+  // Load draft on mount
+  React.useEffect(() => {
+    const draft = localStorage.getItem('sos_draft');
+    if (draft) {
+      try {
+        const d = JSON.parse(draft);
+        setName(d.name || ''); setOrg(d.org || ''); setCategory(d.category || 'Individual / Family');
+        setPeopleCount(d.peopleCount || ''); setMealType(d.mealType || 'Any food'); setUrgency(d.urgency || 'high');
+        setPreferredTime(d.preferredTime || ''); setAddress(d.address || ''); setLandmark(d.landmark || '');
+        setPhone(d.phone || ''); setNotes(d.notes || '');
+      } catch (e) {}
+    }
+  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
-    submitSOS({ name, org, category, peopleCount, mealType, urgency, preferredTime, address, landmark, phone, notes });
+    const id = submitSOS({ name, org, category, peopleCount, mealType, urgency, preferredTime, address, landmark, phone, notes });
+    setSubmittedId(id || `SOS-${Math.floor(1000 + Math.random() * 9000)}`);
     setSubmitted(true);
+    
+    // Clear form and draft
+    localStorage.removeItem('sos_draft');
     setName(''); setOrg(''); setCategory('Individual / Family');
     setPeopleCount(''); setMealType('Any food'); setUrgency('high');
     setPreferredTime(''); setAddress(''); setLandmark('');
     setPhone(''); setNotes('');
-    setTimeout(() => setSubmitted(false), 6000);
   };
 
   const handleSaveDraft = () => {
+    localStorage.setItem('sos_draft', JSON.stringify({
+      name, org, category, peopleCount, mealType, urgency, preferredTime, address, landmark, phone, notes
+    }));
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
+
+  if (submitted && submittedId) {
+    return (
+      <div style={{ background: '#FFF5F5', minHeight: '100vh', fontFamily: "'Inter','Poppins',sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+        <div className="sos-in" style={{ background: 'white', padding: '48px', borderRadius: '24px', textAlign: 'center', maxWidth: '600px', width: '100%', boxShadow: '0 20px 50px rgba(220,38,38,0.1)' }}>
+          <div style={{ width: '80px', height: '80px', background: '#FEF2F2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+            <CheckCircle size={40} color="#DC2626" />
+          </div>
+          <h2 style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '2rem', color: '#0F172A', marginBottom: '12px' }}>
+            Emergency Request Sent
+          </h2>
+          <p style={{ color: '#64748B', fontSize: '1.05rem', marginBottom: '8px' }}>
+            Your SOS request <strong style={{ color: '#0F172A' }}>#{submittedId}</strong> has been prioritized.
+          </p>
+          <p style={{ color: '#64748B', fontSize: '0.95rem', marginBottom: '32px' }}>
+            We have broadcasted this to verified NGOs and volunteers nearby. You will receive a confirmation call within <strong>15-30 minutes</strong>.
+          </p>
+          
+          <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '20px', textAlign: 'left', marginBottom: '32px' }}>
+            <h4 style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: '#0F172A', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Shield size={18} color="#10B981" /> Verified & Safe
+            </h4>
+            <p style={{ fontSize: '0.85rem', color: '#475569', lineHeight: 1.6 }}>
+              Please keep your phone active. A responder will contact you at <strong>{phone || 'your number'}</strong> to coordinate the delivery.
+            </p>
+          </div>
+
+          <button onClick={() => { setSubmitted(false); setSubmittedId(null); }} style={{
+            background: '#DC2626', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '12px',
+            fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', cursor: 'pointer',
+            boxShadow: '0 8px 25px rgba(220,38,38,0.35)'
+          }}>
+            Return to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ background: '#FFF5F5', minHeight: '100vh', fontFamily: "'Inter','Poppins',sans-serif", paddingTop: '20px' }}>
@@ -142,24 +201,7 @@ const Emergency = () => {
           </div>
         </div>
 
-        {/* ── SUCCESS TOAST ─────────────────────────────────────── */}
-        {submitted && (
-          <div className="sos-in" style={{
-            background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '16px',
-            padding: '18px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '14px',
-            boxShadow: '0 4px 20px rgba(34,197,94,0.15)',
-          }}>
-            <CheckCircle size={26} color="#16A34A" />
-            <div>
-              <p style={{ fontFamily: 'Poppins', fontWeight: 700, color: '#14532D', fontSize: '0.95rem', marginBottom: '3px' }}>
-                🙏 SOS Request Sent! Help is coming.
-              </p>
-              <p style={{ fontSize: '0.82rem', color: '#166534' }}>
-                Nearby volunteers have been notified. You'll receive a call within 30 minutes.
-              </p>
-            </div>
-          </div>
-        )}
+        {/* ── SUCCESS TOAST MOVED TO FULL SCREEN VIEW ─────────────────────────────────────── */}
 
         {/* ── SAVED DRAFT TOAST ─────────────────────────────────── */}
         {saved && (
@@ -208,20 +250,35 @@ const Emergency = () => {
                 {/* Organization */}
                 <div>
                   <label style={lbl}>Organization (Optional)</label>
-                  <input className="sos-input" style={inp} placeholder="Shelter, Orphanage, Old-age Home..." value={org} onChange={e => setOrg(e.target.value)} />
+                  <input className="sos-input" style={inp} type="text" list="org-options" placeholder="Shelter, Orphanage, Old-age Home..." value={org} onChange={e => setOrg(e.target.value)} />
+                  <datalist id="org-options">
+                    <option value="None (Individual)" />
+                    <option value="Shelter" />
+                    <option value="Orphanage" />
+                    <option value="Old Age Home" />
+                    <option value="Community Center" />
+                    <option value="School / College" />
+                    <option value="Hospital" />
+                    <option value="Local NGO" />
+                  </datalist>
                 </div>
 
                 {/* Category */}
                 <div>
                   <label style={lbl}>Category of Need *</label>
-                  <input className="sos-input" style={inp} type="text" list="category-options" placeholder="Select or type..." value={category} onChange={e => setCategory(e.target.value)} required />
-                  <datalist id="category-options">
-                    <option value="🏠 Individual / Family" />
-                    <option value="🏫 Shelter / Orphanage" />
-                    <option value="👴 Old Age Home" />
-                    <option value="🏘️ Street Community" />
-                    <option value="🆘 Disaster Relief" />
-                  </datalist>
+                  <select 
+                    className="sos-input sos-select" 
+                    style={inp} 
+                    value={category} 
+                    onChange={e => setCategory(e.target.value)} 
+                    required
+                  >
+                    <option value="Individual / Family">🏠 Individual / Family</option>
+                    <option value="Shelter / Orphanage">🏫 Shelter / Orphanage</option>
+                    <option value="Old Age Home">👴 Old Age Home</option>
+                    <option value="Street Community">🏘️ Street Community</option>
+                    <option value="Disaster Relief">🆘 Disaster Relief</option>
+                  </select>
                 </div>
 
                 {/* People + Meal */}
@@ -245,13 +302,17 @@ const Emergency = () => {
                     <label style={lbl}>Meal Type</label>
                     <div style={{ position: 'relative' }}>
                       <Utensils size={14} color="#9CA3AF" style={{ position: 'absolute', left: '13px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                      <input className="sos-input" style={{ ...inp, paddingLeft: '36px' }} type="text" list="meal-type-options" placeholder="Select or type..." value={mealType} onChange={e => setMealType(e.target.value)} />
-                      <datalist id="meal-type-options">
-                        <option value="Any food" />
-                        <option value="Cooked Meal" />
-                        <option value="Dry Groceries" />
-                        <option value="Baby Food" />
-                      </datalist>
+                      <select 
+                        className="sos-input sos-select" 
+                        style={{ ...inp, paddingLeft: '36px' }} 
+                        value={mealType} 
+                        onChange={e => setMealType(e.target.value)}
+                      >
+                        <option value="Any food">Any food</option>
+                        <option value="Cooked Meal">Cooked Meal</option>
+                        <option value="Dry Groceries">Dry Groceries</option>
+                        <option value="Baby Food">Baby Food</option>
+                      </select>
                     </div>
                   </div>
                 </div>

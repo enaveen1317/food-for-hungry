@@ -1,7 +1,29 @@
-import React, { createContext, useState, useContext, useRef, useCallback } from 'react';
+import React, { createContext, useState, useContext, useRef, useCallback, useEffect } from 'react';
 import { haversineKm } from '../utils/haversine';
 
 const AppContext = createContext();
+
+function useLocalStorage(key, initialValue) {
+  const [value, setValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.warn(`Error reading localStorage key "${key}":`, error);
+      return initialValue;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.warn(`Error setting localStorage key "${key}":`, error);
+    }
+  }, [key, value]);
+
+  return [value, setValue];
+}
 
 // ─── Tier helpers ─────────────────────────────────────────────────────────────
 export function getTier(points) {
@@ -64,160 +86,49 @@ export function getCoords(locationStr) {
 
 export const AppProvider = ({ children }) => {
   // ── Statistics ─────────────────────────────────────────────────────────────
-  const [stats, setStats] = useState({
-    mealsToday: 24850,
-    familiesServed: 5120,
-    avgPickupMins: 18,
-    activeZones: 12
+  const [stats, setStats] = useLocalStorage('ffh_stats', {
+    mealsToday: 0,
+    familiesServed: 0,
+    avgPickupMins: 0,
+    activeZones: 0
   });
 
   // ── Donations State ────────────────────────────────────────────────────────
-  const [donations, setDonations] = useState([
-    {
-      id: 'DON-8492',
-      donor: 'A1 Mahal (Wedding)',
-      food: 'Leftover Wedding Meals (Rice & Curry)',
-      qty: '40 Portions',
-      category: 'Cooked Meals',
-      prepTime: '14:00',
-      bestBefore: '20:00',
-      storage: 'Hot / Warm',
-      address: 'Anna Nagar, Chennai',
-      contact: '+91 98765 43210',
-      window: 'Next 2 Hours',
-      packaging: 'Packed in individual boxes',
-      status: 'Volunteer Assigned',
-      progress: 3,
-      eta: '12 mins',
-      volunteer: 'Rahul S.',
-      ngo: 'Hope Shelter',
-      time: '14:30 PM',
-      date: 'Today'
-    },
-    {
-      id: 'DON-8211',
-      donor: 'Krishna Bakery',
-      food: 'Bakery Surplus (Breads)',
-      qty: '15 kg',
-      category: 'Baked Goods',
-      status: 'delivered',
-      progress: 5,
-      ngo: 'Annai Trust',
-      date: 'Yesterday'
-    },
-    {
-      id: 'DON-7934',
-      donor: 'Hotel Saravana Bhavan',
-      food: 'Corporate Event Meals',
-      qty: '120 Portions',
-      category: 'Cooked Meals',
-      status: 'delivered',
-      progress: 5,
-      ngo: 'Green Bowl Restaurant',
-      date: 'Last Week'
-    }
-  ]);
+  const [donations, setDonations] = useLocalStorage('ffh_donations', []);
 
   // ── Urgent Requests ────────────────────────────────────────────────────────
-  const [requests, setRequests] = useState([
-    { id: 1, name: 'Ravi & Family', loc: 'Dharavi Colony, Chennai', ppl: 8, urgent: true, dispatched: false, volunteer: null },
-    { id: 2, name: 'Anbu Night Shelter', loc: 'Adyar Bridge Camp', ppl: 25, urgent: true, dispatched: false, volunteer: null },
-    { id: 3, name: 'Old Age Home, T Nagar', loc: 'T Nagar West', ppl: 40, urgent: false, dispatched: false, volunteer: null }
-  ]);
+  const [requests, setRequests] = useLocalStorage('ffh_requests', []);
 
   // ── Volunteers State ───────────────────────────────────────────────────────
-  const [volunteers, setVolunteers] = useState([
-    { name: 'Rahul S.', area: 'T Nagar', status: 'Delivering', deliveries: 48, points: 1285, avatar: '🚴', tier: 'Gold' },
+  const [volunteers, setVolunteers] = useLocalStorage('ffh_volunteers', [
+    { name: 'Rahul S.', area: 'T Nagar', status: 'Available', deliveries: 48, points: 1285, avatar: '🚴', tier: 'Gold' },
     { name: 'Karthik R.', area: 'Anna Nagar', status: 'Available', deliveries: 3, points: 120, avatar: '🚴', tier: 'Silver' },
     { name: 'Meena S.', area: 'Adyar', status: 'Available', deliveries: 1, points: 40, avatar: '🚴', tier: 'Silver' },
     { name: 'Pradeep K.', area: 'Velachery', status: 'Available', deliveries: 5, points: 200, avatar: '🚴', tier: 'Silver' },
     { name: 'Divya T.', area: 'T Nagar', status: 'Break', deliveries: 2, points: 80, avatar: '🚴', tier: 'Silver' },
     { name: 'Suresh V.', area: 'Chromepet', status: 'Available', deliveries: 15, points: 450, avatar: '🚴', tier: 'Silver' },
-    { name: 'Manoj P.', area: 'Guindy', status: 'Delivering', deliveries: 89, points: 2150, avatar: '🚴', tier: 'Platinum' },
+    { name: 'Manoj P.', area: 'Guindy', status: 'Available', deliveries: 89, points: 2150, avatar: '🚴', tier: 'Platinum' },
     { name: 'Anjali N.', area: 'Mylapore', status: 'Available', deliveries: 120, points: 3050, avatar: '🚴', tier: 'Diamond' },
     { name: 'Vikram B.', area: 'Porur', status: 'Available', deliveries: 12, points: 340, avatar: '🚴', tier: 'Silver' },
     { name: 'Senthil M.', area: 'Tambaram', status: 'Break', deliveries: 55, points: 1400, avatar: '🚴', tier: 'Gold' }
   ]);
 
   // ── Tasks ──────────────────────────────────────────────────────────────────
-  const [tasks, setTasks] = useState([
-    {
-      id: 'TSK-992',
-      donor: 'A1 Mahal (Wedding)',
-      food: 'Rice & Veg Curry — 40 portions',
-      pickup: 'Anna Nagar',
-      drop: 'Hope Shelter, T Nagar',
-      urgency: 'high',
-      distanceKm: 3.2,
-      distanceRemaining: 2.4,
-      payout: '45 pts',
-      status: 'active',
-      pickupTime: 'Ready now',
-      dropTime: 'Deliver by 15:30',
-      proofUploaded: false,
-      donationId: 'DON-8492',
-      eta: 12,
-      assignedAt: Date.now() - 15 * 60 * 1000, // started 15 min ago
-    },
-    {
-      id: 'TSK-995',
-      donor: 'Grand Bakery',
-      food: 'Bread & Buns — 200 pcs',
-      pickup: 'Velachery',
-      drop: 'Children Home, KK Nagar',
-      urgency: 'medium',
-      distanceKm: 6.5,
-      distanceRemaining: 6.5,
-      payout: '60 pts',
-      status: 'available',
-      pickupTime: 'Ready at 16:00',
-      dropTime: 'Deliver by 18:00',
-      proofUploaded: false,
-      donationId: null,
-      eta: 22,
-      assignedAt: null,
-    },
-    {
-      id: 'TSK-988',
-      donor: 'Saravana Stores Canteen',
-      food: 'Idli & Sambar — 60 portions',
-      pickup: 'Nungambakkam',
-      drop: 'Hope Shelter, Egmore',
-      urgency: 'medium',
-      distanceKm: 2.8,
-      distanceRemaining: 2.8,
-      payout: '38 pts',
-      status: 'available',
-      pickupTime: 'Ready at 16:30',
-      dropTime: 'Deliver by 18:30',
-      proofUploaded: false,
-      donationId: null,
-      eta: 10,
-      assignedAt: null,
-    }
-  ]);
+  const [tasks, setTasks] = useLocalStorage('ffh_tasks', []);
 
   // ── Activity Logs ──────────────────────────────────────────────────────────
-  const [logs, setLogs] = useState([
-    { time: '14:32', type: 'MATCH', text: 'Donation DON-8492 automatically matched to Hope Shelter.' },
-    { time: '14:28', type: 'DONATION', text: 'New donation of 40 portions listed by A1 Mahal.' },
-    { time: '14:15', type: 'DELIVERY', text: 'Volunteer Suresh completed delivery to Annai Trust.' },
-    { time: '14:05', type: 'SOS', text: 'SOS alert raised from Central Station (25 people).' },
-    { time: '13:50', type: 'USER', text: 'New NGO "Feeding Hearts" registration pending approval.' }
-  ]);
+  const [logs, setLogs] = useLocalStorage('ffh_logs', []);
 
   // ── GPS & Shift State (NEW) ────────────────────────────────────────────────
-  const [gpsHistory, setGpsHistory] = useState([
-    { lat: 13.0418, lng: 80.2341, ts: Date.now() - 120000 }
-  ]);
-  const [distanceKm, setDistanceKm] = useState(14.2); // seeded with shift distance so far
-  const [driverPos, setDriverPos]   = useState({ lat: 13.0650, lng: 80.2250 }); // current live position
-  const [driverStatus, setDriverStatus] = useState('Delivering'); // 'Available'|'Delivering'|'Offline'|'Break'
+  const [gpsHistory, setGpsHistory] = useState([]);
+  const [distanceKm, setDistanceKm] = useState(0); 
+  const [driverPos, setDriverPos]   = useState({ lat: 13.0650, lng: 80.2250 }); 
+  const [driverStatus, setDriverStatus] = useState('Available'); 
 
   // Shift timer
   const [shiftState, setShiftState] = useState({
-    isRunning: true,
-    startTime: Date.now() - (3 * 3600 + 15 * 60) * 1000, // seeded 3h15m ago
+    isRunning: false,
+    startTime: null,
     pausedAt: null,
     totalPausedMs: 0,
   });
@@ -302,35 +213,16 @@ export const AppProvider = ({ children }) => {
       contact: details.contact || '+91 98765 43210',
       window: details.window || 'Next 2 Hours',
       packaging: details.packaging || 'Loose / requires packaging',
-      status: 'Volunteer Assigned',
-      progress: 3,
+      status: 'Listed',
+      progress: 1,
       time: 'Just now',
       date: 'Today',
       volunteer: 'Rahul S.',
       ngo: details.ngo || 'Hope Shelter'
     };
     
-    const newTask = {
-      id: 'TSK-' + Math.floor(1000 + Math.random() * 9000),
-      donor: newDon.donor,
-      food: `${newDon.food} — ${newDon.qty}`,
-      pickup: newDon.address,
-      drop: newDon.ngo,
-      urgency: 'high',
-      distanceKm: 4.5,
-      distanceRemaining: 4.5,
-      payout: '50 pts',
-      status: 'active',
-      pickupTime: 'Ready now',
-      dropTime: 'Deliver in 1 hour',
-      proofUploaded: false,
-      donationId: randomId,
-      eta: 15,
-      assignedAt: Date.now()
-    };
-
     setDonations(prev => [newDon, ...prev]);
-    setTasks(prev => [newTask, ...prev.map(t => t.status === 'active' ? { ...t, status: 'completed' } : t)]);
+    // Note: Task is no longer automatically created here; it's created when the NGO dispatches a volunteer.
     addLog('DONATION', `New donation ${randomId} of ${newDon.qty} listed by ${newDon.donor}.`);
     return randomId;
   };

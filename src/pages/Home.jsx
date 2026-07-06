@@ -6,7 +6,7 @@ import timelineDonor from '../assets/timeline-donor.png';
 import timelineDispatch from '../assets/timeline-dispatch.png';
 import timelinePickup from '../assets/timeline-pickup.png';
 import timelineDelivery from '../assets/timeline-delivery.png';
-import heroBg from '../assets/hero-bg.png';
+import heroBg from '../assets/tn.png';
 import cardDinnerChildren from '../assets/card-dinner-children.png';
 import cardSurplusRice from '../assets/card-surplus-rice.png';
 import cardElderlyMeals from '../assets/card-elderly-meals.png';

@@ -8,6 +8,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import HungerHeatmap from './pages/HungerHeatmap';
 import DonorDashboard from './pages/DonorDashboard';
 import CityAdminConsole from './pages/CityAdminConsole';
+import NGODashboard from './pages/NGODashboard';
 import Footer from './components/Footer';
 
 function App() {
@@ -21,6 +22,10 @@ function App() {
 
   if (route === '/admin') {
     return <CityAdminConsole />;
+  }
+
+  if (route === '/ngo') {
+    return <NGODashboard />;
   }
 
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Bell } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import logoImg from '../assets/logo.jpg';
+import logoImg from '../assets/logo.png';
 
 const Navbar = () => {
   const { t, language, setLanguage } = useLanguage();
@@ -19,7 +19,9 @@ const Navbar = () => {
       <div className="container navbar-inner">
         {/* Logo */}
         <div className="navbar-logo" onClick={() => scrollTo('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <img src={logoImg} alt="Food For Hungry Logo" style={{ height: '72px', width: 'auto', objectFit: 'contain' }} />
+          <div style={{ width: '64px', height: '64px', borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <img src={logoImg} alt="Food For Hungry Logo" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.35)' }} />
+          </div>
           <span className="navbar-logo-text" style={{ fontSize: '1.4rem' }}>Food <span>For Hungry</span></span>
         </div>
 
@@ -55,7 +57,6 @@ const Navbar = () => {
               }}
             >
               <option value="en">English</option>
-              <option value="ta">தமிழ் (Tamil)</option>
               <option value="hi">हिंदी (Hindi)</option>
               <option value="te">తెలుగు (Telugu)</option>
               <option value="ml">മലയാളം (Malayalam)</option>

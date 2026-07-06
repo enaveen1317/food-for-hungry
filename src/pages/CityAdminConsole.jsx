@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Shield, Activity, Package, Users, Truck, AlertTriangle, BarChart2, Download, CheckCircle, Clock, Lock } from 'lucide-react';
+import { useApp } from '../context/AppContext';
 
 const CityAdminConsole = () => {
+  const { logs, stats, donations, requests, volunteers } = useApp();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -47,6 +49,9 @@ const CityAdminConsole = () => {
       </div>
     );
   }
+
+  const activeSosCount = requests.filter(r => !r.dispatched).length;
+  const onDutyCount = volunteers.filter(v => v.status === 'Available' || v.status === 'Delivering').length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#F1F5F9', fontFamily: 'Inter, Poppins, sans-serif' }}>
@@ -130,26 +135,26 @@ const CityAdminConsole = () => {
           {/* Stats Row */}
           <div className="grid-4-col" style={{ gap: '24px', marginBottom: '32px' }}>
             <div style={{ background: 'white', borderRadius: '16px', padding: '24px', borderTop: '4px solid #10B981', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-              <p style={{ color: '#64748B', fontSize: '0.9rem', fontWeight: 600, marginBottom: '12px' }}>Donations Today</p>
-              <h3 style={{ fontFamily: 'Poppins', fontSize: '2.5rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>147</h3>
-              <p style={{ color: '#64748B', fontSize: '0.8rem', marginTop: '12px' }}>+12% from yesterday</p>
+              <p style={{ color: '#64748B', fontSize: '0.9rem', fontWeight: 600, marginBottom: '12px' }}>Donations Listed</p>
+              <h3 style={{ fontFamily: 'Poppins', fontSize: '2.5rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{donations.length}</h3>
+              <p style={{ color: '#64748B', fontSize: '0.8rem', marginTop: '12px' }}>Live overall</p>
             </div>
             
             <div style={{ background: '#FEF2F2', borderRadius: '16px', padding: '24px', borderTop: '4px solid #EF4444', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
               <p style={{ color: '#64748B', fontSize: '0.9rem', fontWeight: 600, marginBottom: '12px' }}>Active SOS Alerts</p>
-              <h3 style={{ fontFamily: 'Poppins', fontSize: '2.5rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>2</h3>
+              <h3 style={{ fontFamily: 'Poppins', fontSize: '2.5rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{activeSosCount}</h3>
               <p style={{ color: '#EF4444', fontSize: '0.8rem', marginTop: '12px', fontWeight: 600 }}>Requires immediate action</p>
             </div>
             
             <div style={{ background: 'white', borderRadius: '16px', padding: '24px', borderTop: '4px solid #F97316', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
               <p style={{ color: '#64748B', fontSize: '0.9rem', fontWeight: 600, marginBottom: '12px' }}>On-Duty Fleet</p>
-              <h3 style={{ fontFamily: 'Poppins', fontSize: '2.5rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>34</h3>
-              <p style={{ color: '#64748B', fontSize: '0.8rem', marginTop: '12px' }}>Out of 124 registered</p>
+              <h3 style={{ fontFamily: 'Poppins', fontSize: '2.5rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{onDutyCount}</h3>
+              <p style={{ color: '#64748B', fontSize: '0.8rem', marginTop: '12px' }}>Out of {volunteers.length} registered</p>
             </div>
             
             <div style={{ background: 'white', borderRadius: '16px', padding: '24px', borderTop: '4px solid #3B82F6', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
               <p style={{ color: '#64748B', fontSize: '0.9rem', fontWeight: 600, marginBottom: '12px' }}>NGOs Receiving</p>
-              <h3 style={{ fontFamily: 'Poppins', fontSize: '2.5rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>18</h3>
+              <h3 style={{ fontFamily: 'Poppins', fontSize: '2.5rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>4</h3>
               <p style={{ color: '#64748B', fontSize: '0.8rem', marginTop: '12px' }}>Currently accepting food</p>
             </div>
           </div>
@@ -162,23 +167,17 @@ const CityAdminConsole = () => {
               <h3 style={{ fontFamily: 'Poppins', fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '20px' }}>Recent Platform Activity</h3>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 0', borderBottom: '1px solid #F1F5F9' }}>
-                  <div style={{ color: '#94A3B8', fontSize: '0.85rem', fontWeight: 600, width: '45px' }}>14:32</div>
-                  <div style={{ background: '#DBEAFE', color: '#2563EB', fontSize: '0.7rem', fontWeight: 700, padding: '4px 8px', borderRadius: '4px', width: '60px', textAlign: 'center' }}>MATCH</div>
-                  <div style={{ color: '#334155', fontSize: '0.9rem' }}>Donation DON-8492 automatically matched to Hope Shelter.</div>
-                </div>
-                
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 0', borderBottom: '1px solid #F1F5F9' }}>
-                  <div style={{ color: '#94A3B8', fontSize: '0.85rem', fontWeight: 600, width: '45px' }}>14:28</div>
-                  <div style={{ background: '#FFEDD5', color: '#EA580C', fontSize: '0.7rem', fontWeight: 700, padding: '4px 8px', borderRadius: '4px', width: '60px', textAlign: 'center' }}>DONATION</div>
-                  <div style={{ color: '#334155', fontSize: '0.9rem' }}>New donation of 40 portions listed by A1 Mahal.</div>
-                </div>
-                
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 0' }}>
-                  <div style={{ color: '#94A3B8', fontSize: '0.85rem', fontWeight: 600, width: '45px' }}>14:15</div>
-                  <div style={{ background: '#DCFCE7', color: '#16A34A', fontSize: '0.7rem', fontWeight: 700, padding: '4px 8px', borderRadius: '4px', width: '60px', textAlign: 'center' }}>DELIVERY</div>
-                  <div style={{ color: '#334155', fontSize: '0.9rem' }}>Volunteer Suresh completed delivery to Annai Trust.</div>
-                </div>
+                {logs.length === 0 ? (
+                  <div style={{ padding: '20px', textAlign: 'center', color: '#94A3B8', fontSize: '0.9rem' }}>No recent activity.</div>
+                ) : (
+                  logs.slice(0, 5).map((log, index) => (
+                    <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '16px 0', borderBottom: index < logs.slice(0, 5).length - 1 ? '1px solid #F1F5F9' : 'none' }}>
+                      <div style={{ color: '#94A3B8', fontSize: '0.85rem', fontWeight: 600, width: '45px' }}>{log.time}</div>
+                      <div style={{ background: log.type === 'SOS' ? '#FEE2E2' : log.type === 'DONATION' ? '#FFEDD5' : '#DBEAFE', color: log.type === 'SOS' ? '#DC2626' : log.type === 'DONATION' ? '#EA580C' : '#2563EB', fontSize: '0.7rem', fontWeight: 700, padding: '4px 8px', borderRadius: '4px', width: '70px', textAlign: 'center' }}>{log.type}</div>
+                      <div style={{ color: '#334155', fontSize: '0.9rem' }}>{log.text}</div>
+                    </div>
+                  ))
+                )}
 
               </div>
             </div>
