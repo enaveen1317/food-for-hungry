@@ -93,11 +93,21 @@ const Home = () => {
   return (
     <div>
       {/* ── HERO ─────────────────────────────────────── */}
-      <section className="hero">
-        <div className="hero-inner container">
+      <section className="hero" style={{ 
+        backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0) 65%), url(${heroBg})`,
+        backgroundSize: 'auto 100%',
+        backgroundPosition: 'right bottom',
+        backgroundRepeat: 'no-repeat',
+        width: '100%',
+        margin: '0',
+        minHeight: '85vh',
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <div className="hero-inner container" style={{ width: '100%', paddingLeft: '40px' }}>
 
           {/* Left: Text Content */}
-          <div className="hero-content">
+          <div className="hero-content" style={{ padding: '40px 0', maxWidth: '600px' }}>
 
             {/* Eyebrow tag */}
             <div className="hero-badge">
@@ -108,19 +118,19 @@ const Home = () => {
             </div>
 
             {/* Main Title */}
-            <h1 className="hero-title">
+            <h1 className="hero-title" style={{ color: '#000000', letterSpacing: '-0.02em', fontWeight: 900 }}>
               From Waste to Worth –
-              <span>Feeding Every Hungry<br />Heart.</span>
+              <span style={{ color: '#16A34A' }}>Feeding Every Hungry<br />Heart.</span>
             </h1>
 
             {/* Org / meta */}
-            <div className="hero-meta">
-              Organised by <strong>Food For Hungry Foundation</strong><br />
-              Tamil Nadu, India &nbsp;·&nbsp; <strong>Active Since 2022</strong>
+            <div className="hero-meta" style={{ color: '#000000', fontSize: '1rem', fontWeight: 500 }}>
+              Organised by <strong style={{ color: '#000000', fontWeight: 800 }}>Food For Hungry Foundation</strong><br />
+              Tamil Nadu, India &nbsp;·&nbsp; <strong style={{ color: '#000000', fontWeight: 800 }}>Active Since 2022</strong>
             </div>
 
             {/* Subtitle */}
-            <p className="hero-subtitle">
+            <p className="hero-subtitle" style={{ color: '#000000', fontSize: '1.1rem', fontWeight: 500, marginBottom: '36px', lineHeight: 1.6 }}>
               Connect surplus food from restaurants, events, and homes directly to NGOs and volunteers. Together, we reduce waste and end hunger — fast, verified, and transparent.
             </p>
 
@@ -142,20 +152,42 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Right: Photo */}
-          <div className="hero-image-wrap">
-            <div className="hero-image-card">
-              <img src={heroBg} alt="Feeding Every Hungry Heart" className="hero-img-element" />
-              <div className="hero-image-overlay"></div>
-            </div>
-          </div>
-
         </div>
       </section>
 
       {/* ── NEW SECTION: SERVICE CARDS ───────────────────────── */}
       <section id="services" style={{ width: '100%', background: '#F8FAFC', display: 'flex', justifyContent: 'center' }}>
-        <img src={avImg} alt="Our Core Services" style={{ width: '100%', maxWidth: '1400px', height: 'auto', display: 'block' }} />
+        <div style={{ position: 'relative', width: '100%', maxWidth: '1400px' }}>
+          <img src={avImg} alt="Our Core Services" style={{ width: '100%', height: 'auto', display: 'block' }} />
+          
+          {/* Clickable Overlays */}
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
+            <div 
+              style={{ flex: 1, cursor: 'pointer' }} 
+              onClick={() => {
+                const el = document.getElementById('donate');
+                if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
+              }}
+              title="Go to Food Rescue"
+            />
+            <div 
+              style={{ flex: 1, cursor: 'pointer' }} 
+              onClick={() => {
+                const el = document.getElementById('education');
+                if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
+              }}
+              title="Go to Education Support"
+            />
+            <div 
+              style={{ flex: 1, cursor: 'pointer' }} 
+              onClick={() => {
+                const el = document.getElementById('clothes');
+                if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
+              }}
+              title="Go to Clothes Donation"
+            />
+          </div>
+        </div>
       </section>
 
       {/* ── NEW SECTION: IMPACT DASHBOARD ───────────────────────── */}
@@ -164,7 +196,7 @@ const Home = () => {
       </div>
 
       {/* ── SECTION B: HOW FOOD RESCUE WORKS ────────────────────────────── */}
-      <section className="section section-white" style={{ paddingTop: '20px' }}>
+      <section className="section section-white" style={{ paddingTop: '20px', paddingBottom: 0 }}>
         <div className="container">
           <div className="section-header" style={{ marginBottom: '60px' }}>
             <div className="section-tag" style={{ background: '#DCFCE7', color: '#16A34A', border: '1px solid #BBF7D0', padding: '8px 16px', fontSize: '0.95rem' }}>⚙️ {t('howTitleTag') || 'Our Operations'}</div>
@@ -327,14 +359,14 @@ const Home = () => {
           </div>
 
           {/* Bottom Value Strip */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '60px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '-40px', position: 'relative', zIndex: 10 }}>
             <img src={aiImg} alt="Key Benefits" style={{ width: '100%', maxWidth: '1400px', height: 'auto', display: 'block' }} />
           </div>
         </div>
       </section>
 
       {/* ── SECTION C: NEARBY ACTIVE REQUESTS ────────────────────────────── */}
-      <section className="section section-cream" id="live-feed">
+      <section className="section section-cream" id="live-feed" style={{ paddingTop: '30px' }}>
         <div className="container">
           <div className="section-header">
             <div className="section-tag" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -655,14 +687,11 @@ const Home = () => {
               </div>
             ))}
           </div>
-          <div style={{ textAlign: 'center', marginTop: '32px' }}>
-            {/* View All NGOs button removed since the NGO Dashboard was deleted */}
-          </div>
         </div>
       </section>
 
       {/* ── SECTION E: RESCUE STORIES ────────────────────────────── */}
-      <section className="section section-cream" style={{ position: 'relative', overflow: 'hidden' }}>
+      <section className="section section-cream" style={{ position: 'relative', overflow: 'hidden', paddingTop: '10px', marginTop: '-50px' }}>
 
         {/* Decorative background elements */}
         <div style={{ position: 'absolute', top: '40px', left: '40px', opacity: 0.18, pointerEvents: 'none' }}>

@@ -117,7 +117,7 @@ const HungerHeatmap = () => {
   const activeVolunteers = volunteers.filter(v => v.status === 'Delivering' || v.status === 'Available').length;
 
   return (
-    <div className="screen-fit-section" style={{ background: 'var(--cream)' }}>
+    <div className="screen-fit-section" style={{ background: 'var(--cream)', padding: '20px 0' }}>
       <div className="container">
         <div className="section-header">
           <div className="section-tag">🗺️ Live Heatmap</div>

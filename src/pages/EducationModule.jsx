@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BookOpen, Backpack, PenTool, Laptop, GraduationCap, Users, MapPin, Award, CheckCircle } from 'lucide-react';
 import agImg from '../assets/ag.png';
-
+import nvImg from '../assets/nv.png';
 const EducationModule = () => {
   const [formType, setFormType] = useState('request'); // 'request', 'donate'
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,30 +44,21 @@ const EducationModule = () => {
   ];
 
   return (
-    <div className="education-module" style={{ padding: '80px 0', background: '#F8FAFC' }}>
+    <div className="education-module" style={{ padding: '20px 0', background: '#F8FAFC' }}>
       <div className="container">
         {/* Dashboard Image Header */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '60px' }}>
-          <img src={agImg} alt="Education Support Module" style={{ width: '100%', maxWidth: '1400px', height: 'auto', display: 'block' }} />
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <h2 style={{ fontSize: '2.5rem', color: 'var(--text-dark)', fontWeight: '800' }}>Education Support <span style={{ color: '#16A34A' }}>Module</span></h2>
+          <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--text-soft)', fontSize: '1.1rem' }}>
+            Empowering the next generation by providing essential educational supplies, funding, and mentorship to students in need.
+          </p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px', '@media (min-width: 992px)': { gridTemplateColumns: '1.2fr 1fr' } }}>
           {/* Features Grid */}
           <div>
-            <h3 style={{ marginBottom: '25px', fontSize: '1.5rem', fontWeight: '700' }}>How You Can Help</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '15px' }}>
-              {FEATURES.map((f, i) => (
-                <div key={i} style={{ 
-                  background: 'var(--white)', padding: '20px 15px', borderRadius: 'var(--radius-md)', 
-                  textAlign: 'center', boxShadow: 'var(--shadow-sm)', cursor: 'pointer',
-                  transition: 'all 0.2s ease', border: '1px solid var(--border)'
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.borderColor = '#3B82F6'; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>{f.icon}</div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-dark)' }}>{f.title}</div>
-                </div>
-              ))}
+            <div style={{ width: '100%', overflow: 'hidden', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
+              <img src={nvImg} alt="How You Can Help Options" style={{ width: '100%', height: 'auto', display: 'block', transform: 'scale(1.01)' }} />
             </div>
           </div>
 

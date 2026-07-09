@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import DonationForm from './pages/DonationForm';
@@ -13,37 +14,50 @@ import EducationModule from './pages/EducationModule';
 import ClothesModule from './pages/ClothesModule';
 import Footer from './components/Footer';
 
+const LandingPage = () => (
+  <main style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '30px', paddingBottom: '80px' }}>
+    <div id="home" style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><Home /></div>
+    <div id="donate" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><DonationForm /></div>
+    <div id="request" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><Emergency /></div>
+    <div id="heatmap" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(248, 250, 252, 0.95)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><HungerHeatmap /></div>
+    <div id="education" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><EducationModule /></div>
+    <div id="clothes" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><ClothesModule /></div>
+  </main>
+);
+
+const PageLayout = ({ children }) => (
+  <main style={{ flex: 1, padding: '40px', background: '#F8FAFC' }}>
+    {children}
+  </main>
+);
+
 function App() {
-  const [route, setRoute] = useState(window.location.pathname);
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    const handlePopState = () => setRoute(window.location.pathname);
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  if (route === '/admin') {
-    return <CityAdminConsole />;
-  }
-
-  if (route === '/ngo') {
-    return <NGODashboard />;
-  }
+    if (hash) {
+      const id = hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        const top = element.getBoundingClientRect().top + window.scrollY - 110;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '80px', paddingBottom: '80px' }}>
-        {/* Each section is min-height:100vh — fills the viewport */}
-        <div id="home" style={{ minHeight: '100vh' }}><Home /></div>
-        <div id="donate" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><DonationForm /></div>
-        <div id="donor-dashboard" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: '#0f172a' }}><DonorDashboard /></div>
-        <div id="request" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><Emergency /></div>
-        <div id="volunteer-dashboard" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><Dashboard /></div>
-        <div id="heatmap" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'var(--cream)' }}><HungerHeatmap /></div>
-        <div id="education" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><EducationModule /></div>
-        <div id="clothes" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><ClothesModule /></div>
-      </main>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/donor" element={<PageLayout><DonorDashboard /></PageLayout>} />
+        <Route path="/volunteer" element={<PageLayout><Dashboard /></PageLayout>} />
+        <Route path="/admin" element={<PageLayout><AdminDashboard /></PageLayout>} />
+        <Route path="/city-admin" element={<PageLayout><CityAdminConsole /></PageLayout>} />
+        <Route path="/ngo" element={<PageLayout><NGODashboard /></PageLayout>} />
+      </Routes>
       <Footer />
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Shirt, Users, ThermometerSnowflake, Truck, AlertCircle, Building2, MapPin, CheckCircle } from 'lucide-react';
+import nsImg from '../assets/ns.png';
 
 const ClothesModule = () => {
   const [formType, setFormType] = useState('request'); // 'request', 'donate'
@@ -44,8 +45,9 @@ const ClothesModule = () => {
   return (
     <div className="clothes-module" style={{ padding: '80px 0', background: '#FDF4FF' }}>
       <div className="container">
+        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <h2 style={{ fontSize: '2.5rem', color: 'var(--text-dark)', fontWeight: '800' }}>Clothes Donation <span style={{ color: '#D946EF' }}>Module</span></h2>
+          <h2 style={{ fontSize: '2.5rem', color: 'var(--text-dark)', fontWeight: '800' }}>Clothes Donation <span style={{ color: '#16A34A' }}>Module</span></h2>
           <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--text-soft)', fontSize: '1.1rem' }}>
             Providing warmth and dignity to families in need by donating clothes, winter wear, and essentials.
           </p>
@@ -69,20 +71,8 @@ const ClothesModule = () => {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px', '@media (min-width: 992px)': { gridTemplateColumns: '1.2fr 1fr' } }}>
           {/* Features Grid */}
           <div>
-            <h3 style={{ marginBottom: '25px', fontSize: '1.5rem', fontWeight: '700' }}>Ways to Contribute</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '15px' }}>
-              {FEATURES.map((f, i) => (
-                <div key={i} style={{ 
-                  background: 'var(--white)', padding: '20px 15px', borderRadius: 'var(--radius-md)', 
-                  textAlign: 'center', boxShadow: 'var(--shadow-sm)', cursor: 'pointer',
-                  transition: 'all 0.2s ease', border: '1px solid var(--border)'
-                }}
-                onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.borderColor = '#D946EF'; }}
-                onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>{f.icon}</div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-dark)' }}>{f.title}</div>
-                </div>
-              ))}
+            <div style={{ width: '100%', overflow: 'hidden', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
+              <img src={nsImg} alt="Ways to Contribute Options" style={{ width: '100%', height: 'auto', display: 'block', transform: 'scale(1.01)' }} />
             </div>
           </div>
 

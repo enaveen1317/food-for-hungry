@@ -97,7 +97,8 @@ const Emergency = () => {
   }
 
   return (
-    <div style={{ background: '#FFF5F5', minHeight: '100vh', fontFamily: "'Inter','Poppins',sans-serif", paddingTop: '20px' }}>
+    <div style={{ background: '#FFF5F5', fontFamily: "'Inter','Poppins',sans-serif", paddingTop: '20px' }}>
+      <div className="container" style={{ maxWidth: '900px', margin: '0 auto', paddingBottom: '10px' }}>
       <style>{`
         @keyframes sos-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
         @keyframes sos-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }

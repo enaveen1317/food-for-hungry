@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 
 const Navbar = () => {
   const { language, setLanguage } = useLanguage();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
-  const scrollTo = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 110;
-      window.scrollTo({ top, behavior: 'smooth' });
+  const handleNavClick = (link) => {
+    if (link.path) {
+      navigate(link.path);
+    } else if (link.id) {
+      if (pathname !== '/') {
+        navigate(`/#${link.id}`);
+      } else {
+        const el = document.getElementById(link.id);
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY - 110;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }
     }
   };
 
@@ -18,8 +29,8 @@ const Navbar = () => {
     { label: 'Food Rescue', id: 'donate' },
     { label: 'Education', id: 'education' },
     { label: 'Clothes', id: 'clothes' },
-    { label: 'Volunteers', id: 'volunteer-dashboard' },
-    { label: 'NGO Partners', action: () => window.location.href = '/ngo' },
+    { label: 'Volunteers', path: '/volunteer' },
+    { label: 'NGO Partners', path: '/ngo' },
     { label: 'Impact', id: 'impact' },
     { label: 'Contact', id: 'footer' },
   ];
@@ -104,11 +115,11 @@ const Navbar = () => {
 
           {/* Logo */}
           <div
-            onClick={() => scrollTo('home')}
+            onClick={() => handleNavClick({ id: 'home' })}
             style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', flexShrink: 0 }}
           >
             <div style={{
-              width: '40px', height: '40px', borderRadius: '50%',
+              width: '48px', height: '48px', borderRadius: '50%',
               overflow: 'hidden', flexShrink: 0,
               border: '2px solid #ccfbf1',
               boxShadow: '0 2px 8px rgba(13,148,136,0.2)',
@@ -118,11 +129,11 @@ const Navbar = () => {
             <span style={{
               fontFamily: 'Poppins, sans-serif',
               fontWeight: 800,
-              fontSize: '1.12rem',
+              fontSize: '1.45rem',
               color: '#0a1628',
               letterSpacing: '-0.02em',
             }}>
-              Food <span style={{ color: '#0d9488' }}>For Hungry</span>
+              Food <span style={{ color: '#16A34A' }}>For Hungry</span>
             </span>
           </div>
 
@@ -131,22 +142,22 @@ const Navbar = () => {
             {navLinks.map((link, i) => (
               <button
                 key={i}
-                onClick={() => link.action ? link.action() : scrollTo(link.id)}
+                onClick={() => handleNavClick(link)}
                 style={{
                   background: 'transparent',
                   border: 'none',
                   fontFamily: 'Inter, sans-serif',
                   fontSize: '0.875rem',
-                  fontWeight: 500,
-                  color: '#334155',
+                  fontWeight: 700,
+                  color: '#000000',
                   cursor: 'pointer',
                   padding: '8px 13px',
                   borderRadius: '6px',
                   transition: 'background 0.18s, color 0.18s',
                   whiteSpace: 'nowrap',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#f0fdfa'; e.currentTarget.style.color = '#0d9488'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#000000'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#000000'; }}
               >
                 {link.label}
               </button>
@@ -155,13 +166,13 @@ const Navbar = () => {
 
           {/* CTA Button */}
           <button
-            onClick={() => scrollTo('donate')}
+            onClick={() => handleNavClick({ id: 'donate' })}
             style={{
               flexShrink: 0,
-              background: '#0a1628',
+              background: '#000000',
               color: '#ffffff',
               fontFamily: 'Poppins, sans-serif',
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: '0.82rem',
               padding: '0 22px',
               height: '42px',
@@ -171,13 +182,13 @@ const Navbar = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              boxShadow: '0 4px 14px rgba(10,22,40,0.22)',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
               transition: 'all 0.2s',
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#0f2044'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 8px 22px rgba(10,22,40,0.32)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#0a1628'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(10,22,40,0.22)'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#222222'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 8px 22px rgba(0,0,0,0.35)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#000000'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.25)'; }}
           >
             Donate Now →
           </button>
