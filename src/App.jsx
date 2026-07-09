@@ -9,6 +9,8 @@ import HungerHeatmap from './pages/HungerHeatmap';
 import DonorDashboard from './pages/DonorDashboard';
 import CityAdminConsole from './pages/CityAdminConsole';
 import NGODashboard from './pages/NGODashboard';
+import EducationModule from './pages/EducationModule';
+import ClothesModule from './pages/ClothesModule';
 import Footer from './components/Footer';
 
 function App() {
@@ -39,6 +41,8 @@ function App() {
         <div id="request" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><Emergency /></div>
         <div id="volunteer-dashboard" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><Dashboard /></div>
         <div id="heatmap" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'var(--cream)' }}><HungerHeatmap /></div>
+        <div id="education" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><EducationModule /></div>
+        <div id="clothes" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}><ClothesModule /></div>
       </main>
       <Footer />
     </div>

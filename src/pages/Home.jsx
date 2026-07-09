@@ -6,6 +6,11 @@ import timelineDonor from '../assets/timeline-donor.png';
 import timelineDispatch from '../assets/timeline-dispatch.png';
 import timelinePickup from '../assets/timeline-pickup.png';
 import timelineDelivery from '../assets/timeline-delivery.png';
+import requestBg from '../assets/request-bg.png';
+import avImg from '../assets/av.png';
+import asImg from '../assets/as.png';
+import itImg from '../assets/it.png';
+import aiImg from '../assets/ai.png';
 import heroBg from '../assets/tn.png';
 import cardDinnerChildren from '../assets/card-dinner-children.png';
 import cardSurplusRice from '../assets/card-surplus-rice.png';
@@ -54,11 +59,11 @@ const Home = () => {
   // Card definitions so filters can show/hide them
   const CARDS = [
     ...dynamicSOSCards,
-    { key: 'dinner',  category: 'Food Requests',       priority: 'HIGH PRIORITY',      priorityColor: '#EF4444', priorityShadow: 'rgba(239,68,68,0.4)',   btnBg: 'linear-gradient(135deg,#F97316,#EA580C)', btnShadow: 'rgba(249,115,22,0.35)', img: cardDinnerChildren, icon: '👨\u200d👩\u200d👧', title: 'Dinner for 18 Children', location: 'Hope Shelter, Perambur', meta1: '👨\u200d👩\u200d👧 Serves ~18 Children', meta2color: '#EF4444', meta2: '⏰ Needed today', foodType: '🥗 Veg Dinner', btnLabel: 'btnFulfill', modalType: 'Fulfill Request', modalTarget: 'donate' },
-    { key: 'rice',    category: 'Volunteer Needed',     priority: 'VOLUNTEER NEEDED',   priorityColor: '#16A34A', priorityShadow: 'rgba(22,163,74,0.4)',    btnBg: 'linear-gradient(135deg,#16A34A,#15803D)', btnShadow: 'rgba(22,163,74,0.35)',  img: cardSurplusRice,    icon: '🍲',              title: 'Surplus Rice & Dal (30 kg)', location: 'Grand Hotel, Velachery', meta1: '📦 30 kg Available', meta2color: '#16A34A', meta2: '🚚 Pickup Today', foodType: '🥗 Veg', btnLabel: 'btnAccept', modalType: 'Accept Pickup', modalTarget: 'volunteer-dashboard' },
-    { key: 'elderly', category: 'Food Requests',       priority: 'MEDIUM PRIORITY',    priorityColor: '#F59E0B', priorityShadow: 'rgba(245,158,11,0.4)',   btnBg: 'linear-gradient(135deg,#F97316,#EA580C)', btnShadow: 'rgba(249,115,22,0.35)', img: cardElderlyMeals,   icon: '🏠',              title: 'Packed Meals for Elderly', location: 'Old Age Home, T Nagar', meta1: '👴 Serves ~25 People', meta2color: '#F59E0B', meta2: '⏰ Needed by 6 PM', foodType: '🥗 Veg Meals', btnLabel: 'btnFulfill', modalType: 'Fulfill Request', modalTarget: 'donate' },
-    { key: 'daily1',  category: 'Daily Updates',       priority: 'LATEST UPDATE',      priorityColor: '#3B82F6', priorityShadow: 'rgba(59,130,246,0.4)',   btnBg: 'linear-gradient(135deg,#3B82F6,#1D4ED8)', btnShadow: 'rgba(59,130,246,0.35)', img: storyMonsoon, icon: '📰', title: 'Monsoon Relief Food Camp', location: 'Chennai Central', meta1: '👥 150+ Served', meta2color: '#3B82F6', meta2: '🕒 1 hr ago', foodType: '🍲 Hot Meals', btnLabel: 'Read More', modalType: 'Info', modalTarget: 'none' },
-    { key: 'daily2',  category: 'Daily Updates',       priority: 'NGO HIGHLIGHT',      priorityColor: '#8B5CF6', priorityShadow: 'rgba(139,92,246,0.4)',   btnBg: 'linear-gradient(135deg,#8B5CF6,#6D28D9)', btnShadow: 'rgba(139,92,246,0.35)', img: storyCorporate, icon: '🏢', title: 'Corporate Mega Drive', location: 'OMR IT Park', meta1: '📦 500 kg Rescued', meta2color: '#8B5CF6', meta2: '🕒 4 hrs ago', foodType: '🍱 Mixed Surplus', btnLabel: 'Read More', modalType: 'Info', modalTarget: 'none' },
+    { key: 'dinner', category: 'Food Requests', priority: 'HIGH PRIORITY', priorityColor: '#EF4444', priorityShadow: 'rgba(239,68,68,0.4)', btnBg: 'linear-gradient(135deg,#F97316,#EA580C)', btnShadow: 'rgba(249,115,22,0.35)', img: cardDinnerChildren, icon: '👨\u200d👩\u200d👧', title: 'Dinner for 18 Children', location: 'Hope Shelter, Perambur', meta1: '👨\u200d👩\u200d👧 Serves ~18 Children', meta2color: '#EF4444', meta2: '⏰ Needed today', foodType: '🥗 Veg Dinner', btnLabel: 'btnFulfill', modalType: 'Fulfill Request', modalTarget: 'donate' },
+    { key: 'rice', category: 'Volunteer Needed', priority: 'VOLUNTEER NEEDED', priorityColor: '#16A34A', priorityShadow: 'rgba(22,163,74,0.4)', btnBg: 'linear-gradient(135deg,#16A34A,#15803D)', btnShadow: 'rgba(22,163,74,0.35)', img: cardSurplusRice, icon: '🍲', title: 'Surplus Rice & Dal (30 kg)', location: 'Grand Hotel, Velachery', meta1: '📦 30 kg Available', meta2color: '#16A34A', meta2: '🚚 Pickup Today', foodType: '🥗 Veg', btnLabel: 'btnAccept', modalType: 'Accept Pickup', modalTarget: 'volunteer-dashboard' },
+    { key: 'elderly', category: 'Food Requests', priority: 'MEDIUM PRIORITY', priorityColor: '#F59E0B', priorityShadow: 'rgba(245,158,11,0.4)', btnBg: 'linear-gradient(135deg,#F97316,#EA580C)', btnShadow: 'rgba(249,115,22,0.35)', img: cardElderlyMeals, icon: '🏠', title: 'Packed Meals for Elderly', location: 'Old Age Home, T Nagar', meta1: '👴 Serves ~25 People', meta2color: '#F59E0B', meta2: '⏰ Needed by 6 PM', foodType: '🥗 Veg Meals', btnLabel: 'btnFulfill', modalType: 'Fulfill Request', modalTarget: 'donate' },
+    { key: 'daily1', category: 'Daily Updates', priority: 'LATEST UPDATE', priorityColor: '#3B82F6', priorityShadow: 'rgba(59,130,246,0.4)', btnBg: 'linear-gradient(135deg,#3B82F6,#1D4ED8)', btnShadow: 'rgba(59,130,246,0.35)', img: storyMonsoon, icon: '📰', title: 'Monsoon Relief Food Camp', location: 'Chennai Central', meta1: '👥 150+ Served', meta2color: '#3B82F6', meta2: '🕒 1 hr ago', foodType: '🍲 Hot Meals', btnLabel: 'Read More', modalType: 'Info', modalTarget: 'none' },
+    { key: 'daily2', category: 'Daily Updates', priority: 'NGO HIGHLIGHT', priorityColor: '#8B5CF6', priorityShadow: 'rgba(139,92,246,0.4)', btnBg: 'linear-gradient(135deg,#8B5CF6,#6D28D9)', btnShadow: 'rgba(139,92,246,0.35)', img: storyCorporate, icon: '🏢', title: 'Corporate Mega Drive', location: 'OMR IT Park', meta1: '📦 500 kg Rescued', meta2color: '#8B5CF6', meta2: '🕒 4 hrs ago', foodType: '🍱 Mixed Surplus', btnLabel: 'Read More', modalType: 'Info', modalTarget: 'none' },
   ];
   const visibleCards = activeFilter === 'All' ? CARDS : CARDS.filter(c => c.category === activeFilter);
   const [activeModal, setActiveModal] = useState(null);
@@ -89,104 +94,97 @@ const Home = () => {
     <div>
       {/* ── HERO ─────────────────────────────────────── */}
       <section className="hero">
-        <div className="container hero-inner">
-          {/* Centered Content */}
+        <div className="hero-inner container">
+
+          {/* Left: Text Content */}
           <div className="hero-content">
+
+            {/* Eyebrow tag */}
             <div className="hero-badge">
               <span className="hero-badge-dot"></span>
-              {t('heroBadge')}
+              <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '0.78rem', color: '#0d9488', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+                Zero Hunger Initiative
+              </span>
             </div>
+
+            {/* Main Title */}
             <h1 className="hero-title">
-              {t('heroTitle1')}<br />
-              <span>{t('heroTitle2')}</span>
+              From Waste to Worth –
+              <span>Feeding Every Hungry<br />Heart.</span>
             </h1>
+
+            {/* Org / meta */}
+            <div className="hero-meta">
+              Organised by <strong>Food For Hungry Foundation</strong><br />
+              Tamil Nadu, India &nbsp;·&nbsp; <strong>Active Since 2022</strong>
+            </div>
+
+            {/* Subtitle */}
             <p className="hero-subtitle">
-              {t('heroSub')}
+              Connect surplus food from restaurants, events, and homes directly to NGOs and volunteers. Together, we reduce waste and end hunger — fast, verified, and transparent.
             </p>
+
+            {/* CTAs */}
             <div className="hero-btns">
               <button className="hero-btn-primary" onClick={() => scrollTo('donate')}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '18px', height: '18px', fontSize: '1.1rem', lineHeight: 1 }}>🍱</span> {t('btnDonate')}
+                🍱 Donate Food
               </button>
               <button className="hero-btn-secondary" onClick={() => scrollTo('request')}>
-                {t('btnRequest')}{' '}<ArrowRight size={18} />
+                Request Food <ArrowRight size={16} />
               </button>
             </div>
+
+            {/* Trust badges */}
             <div className="trust-badges">
               <span className="trust-badge">✅ Verified NGO Network</span>
               <span className="trust-badge">🚴 Live GPS Routing</span>
               <span className="trust-badge">📍 Local Impact</span>
             </div>
           </div>
-          
-          {/* Right Column (visible only on desktop) */}
+
+          {/* Right: Photo */}
           <div className="hero-image-wrap">
             <div className="hero-image-card">
               <img src={heroBg} alt="Feeding Every Hungry Heart" className="hero-img-element" />
               <div className="hero-image-overlay"></div>
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* ── SECTION A: LIVE IMPACT STRIP ───────────────────────── */}
-      <div className="impact-strip">
-        <div className="container impact-strip-grid">
-          <div className="impact-item">
-            <div className="impact-icon">🍱</div>
-            <div>
-              <div className="impact-val">24,850</div>
-              <div className="impact-lbl">{t('statFood') || 'Meals Rescued Today'}</div>
-            </div>
-          </div>
-          <div className="impact-item">
-            <div className="impact-icon">👨‍👩‍👧</div>
-            <div>
-              <div className="impact-val">5,120</div>
-              <div className="impact-lbl">{t('statMeals') || 'Families Served'}</div>
-            </div>
-          </div>
-          <div className="impact-item">
-            <div className="impact-icon">⏱️</div>
-            <div>
-              <div className="impact-val">18 mins</div>
-              <div className="impact-lbl">{t('statVolunteers') || 'Avg. Pickup Time'}</div>
-            </div>
-          </div>
-          <div className="impact-item">
-            <div className="impact-icon">📍</div>
-            <div>
-              <div className="impact-val">12 Zones</div>
-              <div className="impact-lbl">{t('statCO2') || 'Active Service Areas'}</div>
-            </div>
-          </div>
-        </div>
+      {/* ── NEW SECTION: SERVICE CARDS ───────────────────────── */}
+      <section id="services" style={{ width: '100%', background: '#F8FAFC', display: 'flex', justifyContent: 'center' }}>
+        <img src={avImg} alt="Our Core Services" style={{ width: '100%', maxWidth: '1400px', height: 'auto', display: 'block' }} />
+      </section>
+
+      {/* ── NEW SECTION: IMPACT DASHBOARD ───────────────────────── */}
+      <div id="impact" style={{ background: '#F8FAFC', padding: '0', display: 'flex', justifyContent: 'center' }}>
+        <img src={itImg} alt="Our Live Impact" style={{ width: '100%', maxWidth: '1400px', height: 'auto', display: 'block' }} />
       </div>
 
       {/* ── SECTION B: HOW FOOD RESCUE WORKS ────────────────────────────── */}
-      <section className="section section-white">
+      <section className="section section-white" style={{ paddingTop: '20px' }}>
         <div className="container">
-          <div className="section-header">
-            <div className="section-tag" style={{ background: '#DCFCE7', color: '#16A34A', border: '1px solid #BBF7D0' }}>⚙️ {t('howTitleTag') || 'Our Operations'}</div>
-            <h2 className="section-title" style={{ fontSize: '2.5rem', fontWeight: 800 }}>How <span style={{ color: '#16A34A' }}>We</span> Work</h2>
-            <p className="section-sub" style={{ maxWidth: '600px' }}>
-              {t('howDesc1') || 'A smart and seamless zig-zag process that brings surplus food from donors to those who need it – fast, safe and transparent.'}
+          <div className="section-header" style={{ marginBottom: '60px' }}>
+            <div className="section-tag" style={{ background: '#DCFCE7', color: '#16A34A', border: '1px solid #BBF7D0', padding: '8px 16px', fontSize: '0.95rem' }}>⚙️ {t('howTitleTag') || 'Our Operations'}</div>
+            <h2 className="section-title" style={{ fontSize: '3.6rem', fontWeight: 900, marginTop: '20px', letterSpacing: '-0.02em', color: '#0f172a' }}>How <span style={{ color: '#16A34A' }}>We</span> Work</h2>
+            <p className="section-sub" style={{ maxWidth: '700px', fontSize: '1.2rem', lineHeight: '1.8', color: '#475569', marginTop: '20px' }}>
+              A seamlessly integrated pipeline that moves surplus food from donor to beneficiary in under 60 minutes.
             </p>
           </div>
 
           <div className="timeline-zigzag-grid">
             {/* Background SVG curve connector lines */}
-            <svg className="timeline-svg-connector" viewBox="0 0 1000 860" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.5 }}>
+            <svg className="timeline-svg-connector" viewBox="0 0 1000 860" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.8 }}>
               {/* Curve 1 to 2 */}
-              <path d="M 620 120 C 720 120, 720 340, 380 340" stroke="#16A34A" strokeWidth="2" strokeDasharray="4 6" />
+              <path d="M 620 120 C 720 120, 720 340, 380 340" stroke="#000000" strokeWidth="2" strokeDasharray="4 6" />
               {/* Curve 2 to 3 */}
-              <path d="M 380 340 C 280 340, 280 560, 620 560" stroke="#F97316" strokeWidth="2" strokeDasharray="4 6" />
+              <path d="M 380 340 C 280 340, 280 560, 620 560" stroke="#000000" strokeWidth="2" strokeDasharray="4 6" />
               {/* Curve 3 to 4 */}
-              <path d="M 620 560 C 720 560, 720 780, 380 780" stroke="#3B82F6" strokeWidth="2" strokeDasharray="4 6" />
-              
+              <path d="M 620 560 C 720 560, 720 780, 380 780" stroke="#000000" strokeWidth="2" strokeDasharray="4 6" />
+
               {/* Connection Dots */}
-              <circle cx="620" cy="120" r="5" fill="#16A34A" stroke="white" strokeWidth="1.5" />
-              <circle cx="380" cy="340" r="5" fill="#F97316" stroke="white" strokeWidth="1.5" />
-              <circle cx="620" cy="560" r="5" fill="#3B82F6" stroke="white" strokeWidth="1.5" />
               <circle cx="380" cy="780" r="5" fill="#16A34A" stroke="white" strokeWidth="1.5" />
             </svg>
 
@@ -299,7 +297,7 @@ const Home = () => {
                   From a generous heart to a grateful heart <span style={{ color: '#16A34A', fontWeight: 700 }}>in under 60 minutes.</span> ❤️
                 </p>
               </div>
-              
+
               {/* Step 4 Card (Desktop right column, mobile order: 1) */}
               <div className="timeline-step-card card-step-4">
                 <div className="timeline-step-img-wrap">
@@ -329,32 +327,8 @@ const Home = () => {
           </div>
 
           {/* Bottom Value Strip */}
-          <div className="timeline-benefits-strip">
-            <div className="benefit-item">
-              <div className="benefit-icon">🛡️</div>
-              <h4 className="benefit-title">Safe & Hygienic</h4>
-              <p className="benefit-desc">Quality checks at every step</p>
-            </div>
-            <div className="benefit-item">
-              <div className="benefit-icon">⏱️</div>
-              <h4 className="benefit-title">Under 60 Minutes</h4>
-              <p className="benefit-desc">Average delivery time</p>
-            </div>
-            <div className="benefit-item">
-              <div className="benefit-icon">🤝</div>
-              <h4 className="benefit-title">Verified Network</h4>
-              <p className="benefit-desc">Trusted NGOs & volunteers</p>
-            </div>
-            <div className="benefit-item">
-              <div className="benefit-icon">📍</div>
-              <h4 className="benefit-title">Real-time Tracking</h4>
-              <p className="benefit-desc">Live updates at every step</p>
-            </div>
-            <div className="benefit-item">
-              <div className="benefit-icon">🌱</div>
-              <h4 className="benefit-title">Maximum Impact</h4>
-              <p className="benefit-desc">More food, more smiles</p>
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '60px' }}>
+            <img src={aiImg} alt="Key Benefits" style={{ width: '100%', maxWidth: '1400px', height: 'auto', display: 'block' }} />
           </div>
         </div>
       </section>
@@ -427,8 +401,8 @@ const Home = () => {
                   <button
                     onClick={() => toggleFav(card.key)}
                     style={{ position: 'absolute', top: '10px', right: '12px', background: 'white', border: 'none', borderRadius: '50%', width: '34px', height: '34px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.12)', fontSize: '1.1rem', transition: 'transform 0.2s' }}
-                    onMouseEnter={e => e.currentTarget.style.transform='scale(1.2)'}
-                    onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.2)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                   >
                     {favourites[card.key] ? '❤️' : '🤍'}
                   </button>
@@ -500,7 +474,7 @@ const Home = () => {
               <p className="section-sub" style={{ margin: 0 }}>{t('partnerSub')}</p>
             </div>
           </div>
-          
+
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
             {[
               {
@@ -693,19 +667,19 @@ const Home = () => {
         {/* Decorative background elements */}
         <div style={{ position: 'absolute', top: '40px', left: '40px', opacity: 0.18, pointerEvents: 'none' }}>
           <svg width="80" height="120" viewBox="0 0 80 120" fill="none">
-            <path d="M40 10 C20 20, 5 40, 10 60 C15 80, 35 90, 40 110 C45 90, 65 80, 70 60 C75 40, 60 20, 40 10Z" fill="#16A34A"/>
-            <path d="M40 30 C30 40, 20 55, 25 68 C30 82, 40 88, 40 100" stroke="#16A34A" strokeWidth="2"/>
+            <path d="M40 10 C20 20, 5 40, 10 60 C15 80, 35 90, 40 110 C45 90, 65 80, 70 60 C75 40, 60 20, 40 10Z" fill="#16A34A" />
+            <path d="M40 30 C30 40, 20 55, 25 68 C30 82, 40 88, 40 100" stroke="#16A34A" strokeWidth="2" />
           </svg>
         </div>
         <div style={{ position: 'absolute', top: '80px', left: '130px', opacity: 0.15, pointerEvents: 'none' }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#16A34A"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#16A34A"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" /></svg>
         </div>
         <div style={{ position: 'absolute', top: '60px', right: '120px', opacity: 0.15, pointerEvents: 'none' }}>
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="#16A34A"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="#16A34A"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" /></svg>
         </div>
         <div style={{ position: 'absolute', top: '30px', right: '50px', opacity: 0.12, pointerEvents: 'none' }}>
           <svg width="60" height="90" viewBox="0 0 60 90" fill="none">
-            <path d="M30 8 C15 16, 5 30, 8 46 C11 62, 26 68, 30 82 C34 68, 49 62, 52 46 C55 30, 45 16, 30 8Z" fill="#16A34A"/>
+            <path d="M30 8 C15 16, 5 30, 8 46 C11 62, 26 68, 30 82 C34 68, 49 62, 52 46 C55 30, 45 16, 30 8Z" fill="#16A34A" />
           </svg>
         </div>
 
@@ -713,7 +687,7 @@ const Home = () => {
           {/* Section Header */}
           <div className="section-header" style={{ position: 'relative' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#DCFCE7', color: '#15803D', padding: '6px 16px', borderRadius: '9999px', fontSize: '0.78rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px', border: '1px solid #BBF7D0' }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#16A34A"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" /></svg>
               {t('storyTag')}
             </div>
             <h2 style={{ fontFamily: 'Poppins', fontWeight: 900, fontSize: '2.8rem', color: '#0F172A', marginBottom: '12px', lineHeight: 1.1 }}>{t('storyTitle')}</h2>
@@ -721,7 +695,7 @@ const Home = () => {
             {/* Green divider line */}
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
               <div style={{ width: '60px', height: '2px', background: 'linear-gradient(90deg, transparent, #16A34A)' }}></div>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#16A34A"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#16A34A"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" /></svg>
               <div style={{ width: '60px', height: '2px', background: 'linear-gradient(90deg, #16A34A, transparent)' }}></div>
             </div>
           </div>
@@ -782,7 +756,7 @@ const Home = () => {
                 {/* Card Top: icon + photo overlapping */}
                 <div style={{ position: 'relative', height: '180px', background: story.photoBg, overflow: 'hidden' }}>
                   {/* Real photo */}
-                  <img src={story.photo} alt={story.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={e => { e.target.style.display='none'; }} />
+                  <img src={story.photo} alt={story.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={e => { e.target.style.display = 'none'; }} />
                   {/* Gradient overlay */}
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.35) 100%)' }}></div>
                   {/* Emoji icon circle - top left */}
@@ -958,7 +932,7 @@ const Home = () => {
 
               {/* ── RIGHT COLUMN ── */}
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '380px' }}>
-                
+
                 {/* Image Container masked as a perfect circle */}
                 <div style={{
                   position: 'relative',
@@ -1004,7 +978,7 @@ const Home = () => {
                     flexShrink: 0,
                   }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="#B91C1C">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                     </svg>
                   </div>
                   <div>
@@ -1103,7 +1077,7 @@ const Home = () => {
         <div className="home-modal-overlay" onClick={() => !isSubmitting && setActiveModal(null)}>
           <div className="home-modal-card" onClick={(e) => e.stopPropagation()}>
             <button className="home-modal-close" onClick={() => setActiveModal(null)} disabled={isSubmitting}>×</button>
-            
+
             {!modalSuccess ? (
               <div>
                 <h3 className="home-modal-title">Confirm Action</h3>
@@ -1144,8 +1118,8 @@ const Home = () => {
                 </div>
                 <h3 className="home-modal-title" style={{ color: '#16A34A', marginTop: '16px' }}>Task Confirmed!</h3>
                 <p style={{ color: 'var(--text-soft)', marginBottom: '24px', fontSize: '0.95rem' }}>
-                  {activeModal.type === 'Fulfill Request' 
-                    ? 'Request successfully assigned! Hope Shelter has been notified of your fulfillment.' 
+                  {activeModal.type === 'Fulfill Request'
+                    ? 'Request successfully assigned! Hope Shelter has been notified of your fulfillment.'
                     : 'Pickup accepted! Task added to your active list. Live GPS routing is ready.'}
                 </p>
                 <button className="btn btn-primary" style={{ width: '100%' }} onClick={() => {
