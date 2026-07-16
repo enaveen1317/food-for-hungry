@@ -93,7 +93,7 @@ const Home = () => {
   return (
     <div>
       {/* ── HERO ─────────────────────────────────────── */}
-      <section className="hero" style={{ 
+      <section className="hero" style={{
         backgroundImage: `linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 40%, rgba(255, 255, 255, 0) 65%), url(${heroBg})`,
         backgroundSize: 'auto 100%',
         backgroundPosition: 'right bottom',
@@ -159,30 +159,30 @@ const Home = () => {
       <section id="services" style={{ width: '100%', background: '#F8FAFC', display: 'flex', justifyContent: 'center' }}>
         <div style={{ position: 'relative', width: '100%', maxWidth: '1400px' }}>
           <img src={avImg} alt="Our Core Services" style={{ width: '100%', height: 'auto', display: 'block' }} />
-          
+
           {/* Clickable Overlays */}
           <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex' }}>
-            <div 
-              style={{ flex: 1, cursor: 'pointer' }} 
+            <div
+              style={{ flex: 1, cursor: 'pointer' }}
               onClick={() => {
                 const el = document.getElementById('donate');
-                if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
+                if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
               }}
               title="Go to Food Rescue"
             />
-            <div 
-              style={{ flex: 1, cursor: 'pointer' }} 
+            <div
+              style={{ flex: 1, cursor: 'pointer' }}
               onClick={() => {
                 const el = document.getElementById('education');
-                if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
+                if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
               }}
               title="Go to Education Support"
             />
-            <div 
-              style={{ flex: 1, cursor: 'pointer' }} 
+            <div
+              style={{ flex: 1, cursor: 'pointer' }}
               onClick={() => {
                 const el = document.getElementById('clothes');
-                if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
+                if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
               }}
               title="Go to Clothes Donation"
             />

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import logoImg from '../assets/logo.png';
 
 const Footer = () => {
   const { t } = useLanguage();
@@ -18,8 +19,18 @@ const Footer = () => {
         <div className="footer-grid">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-              <div className="navbar-logo-icon">🍽️</div>
-              <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1.2rem', color: 'white' }}>Food For Hungry</span>
+              <div style={{
+                width: '40px', height: '40px', borderRadius: '50%',
+                overflow: 'hidden', flexShrink: 0,
+                border: '2px solid #ccfbf1',
+                boxShadow: '0 2px 8px rgba(13,148,136,0.2)',
+                background: 'white'
+              }}>
+                <img src={logoImg} alt="Food For Hungry" style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.3)' }} />
+              </div>
+              <span style={{ fontFamily: 'Poppins', fontWeight: 800, fontSize: '1.2rem', color: 'white' }}>
+                Food <span style={{ color: '#4ade80' }}>For Hungry</span>
+              </span>
             </div>
             <p className="footer-tagline">{t('footerTagline')}</p>
           </div>

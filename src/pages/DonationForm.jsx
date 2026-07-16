@@ -3,10 +3,12 @@ import { Upload, Mic, Camera, MapPin, AlertCircle, CheckCircle, Clock, ArrowRigh
 import requestBg from '../assets/request-bg.png';
 import { useLanguage } from '../context/LanguageContext';
 import { useApp } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 const DonationForm = () => {
   const { t } = useLanguage();
   const { submitDonation } = useApp();
+  const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
   const [foodTitle, setFoodTitle] = useState('');
@@ -125,7 +127,7 @@ const DonationForm = () => {
             </div>
             <div style={{ display: 'flex', gap: '16px' }}>
               <button className="btn btn-secondary" style={{ flex: 1 }} onClick={handleResetForm}>Donate More</button>
-              <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => scrollTo('donor-dashboard')}>Track Progress</button>
+              <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => navigate('/donor')}>Track Progress</button>
             </div>
           </div>
         </div>

@@ -1,11 +1,46 @@
 import React, { useState } from 'react';
-import { Shirt, Users, ThermometerSnowflake, Truck, AlertCircle, Building2, MapPin, CheckCircle } from 'lucide-react';
+import { Shirt, Users, ThermometerSnowflake, Truck, AlertCircle, Building2, CheckCircle, ChevronRight } from 'lucide-react';
 import nsImg from '../assets/ns.png';
 
+const FEATURES = [
+  { icon: '👕', title: "Men's Clothes", desc: 'Donate gently used clothing.', type: 'donate', item: "Men's Clothes" },
+  { icon: '👗', title: "Women's Clothes", desc: 'Support women in need.', type: 'donate', item: "Women's Clothes" },
+  { icon: '🧒', title: "Children's Clothes", desc: 'Help keep kids warm.', type: 'donate', item: "Children's Clothes" },
+  { icon: '🎒', title: 'School Uniforms', desc: 'Donate old uniforms.', type: 'donate', item: "Mixed Items" },
+  { icon: '🥾', title: 'Footwear', desc: 'Donate usable shoes.', type: 'donate', item: "Shoes / Footwear" },
+  { icon: '🧥', title: 'Winter Clothes', desc: 'Provide winter warmth.', type: 'donate', item: "Winter Wear / Blankets" },
+  { icon: '🛏', title: 'Blankets', desc: 'Donate blankets and sheets.', type: 'donate', item: "Winter Wear / Blankets" },
+  { icon: '👜', title: 'Bags', desc: 'Donate bags and backpacks.', type: 'donate', item: "Mixed Items" },
+  { icon: '📦', title: 'Schedule Pickup', desc: 'Request a home pickup.', type: 'donate', item: "Mixed Items" },
+  { icon: '📍', title: 'Nearby Center', desc: 'Find a drop-off center.', type: 'donate', item: "Mixed Items" },
+  { icon: '🔍', title: 'Quality Verification', desc: 'View quality guidelines.', type: 'request', item: '' },
+  { icon: '📊', title: 'Distribution Tracking', desc: 'See where your clothes go.', type: 'request', item: '' },
+  { icon: '📜', title: 'Donation History', desc: 'View past contributions.', type: 'request', item: '' }
+];
+
+const STATS = [
+  { icon: <Shirt size={20} />, label: 'Clothes Donated', value: '38,900', color: '#10B981' },
+  { icon: <Users size={20} />, label: 'Families Supported', value: '15,200', color: '#3B82F6' },
+  { icon: <ThermometerSnowflake size={20} />, label: 'Winter Kits', value: '6,450', color: '#8B5CF6' },
+  { icon: <Truck size={20} />, label: 'Collection Drives', value: '185', color: '#F59E0B' },
+  { icon: <AlertCircle size={20} />, label: 'Active Requests', value: '312', color: '#EF4444' },
+  { icon: <Building2 size={20} />, label: 'Distribution Centers', value: '45', color: '#14B8A6' },
+];
+
 const ClothesModule = () => {
-  const [formType, setFormType] = useState('request'); // 'request', 'donate'
+  const [formType, setFormType] = useState('donate'); // 'request', 'donate'
+  const [activeFeature, setActiveFeature] = useState("Men's Clothes");
+  const [itemCategory, setItemCategory] = useState("Men's Clothes");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleFeatureClick = (feat) => {
+    setActiveFeature(feat.title);
+    setFormType(feat.type);
+    if (feat.type === 'donate' && feat.item) {
+      setItemCategory(feat.item);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,34 +52,9 @@ const ClothesModule = () => {
     }, 1500);
   };
 
-  const STATS = [
-    { icon: <Shirt size={20} />, label: 'Clothes Donated', value: '38,900', color: '#10B981' },
-    { icon: <Users size={20} />, label: 'Families Supported', value: '15,200', color: '#3B82F6' },
-    { icon: <ThermometerSnowflake size={20} />, label: 'Winter Kits', value: '6,450', color: '#8B5CF6' },
-    { icon: <Truck size={20} />, label: 'Collection Drives', value: '185', color: '#F59E0B' },
-    { icon: <AlertCircle size={20} />, label: 'Active Requests', value: '312', color: '#EF4444' },
-    { icon: <Building2 size={20} />, label: 'Distribution Centers', value: '45', color: '#14B8A6' },
-  ];
-
-  const FEATURES = [
-    { icon: '👕', title: "Men's Clothes" },
-    { icon: '👗', title: "Women's Clothes" },
-    { icon: '🧒', title: "Children's Clothes" },
-    { icon: '🎒', title: 'School Uniforms' },
-    { icon: '🥾', title: 'Footwear' },
-    { icon: '🧥', title: 'Winter Clothes' },
-    { icon: '🛏', title: 'Blankets' },
-    { icon: '👜', title: 'Bags' },
-    { icon: '📦', title: 'Schedule Pickup' },
-    { icon: '📍', title: 'Nearby Center' },
-    { icon: '🔍', title: 'Quality Verification' },
-    { icon: '📊', title: 'Distribution Tracking' },
-    { icon: '📜', title: 'Donation History' }
-  ];
-
   return (
     <div className="clothes-module" style={{ padding: '80px 0', background: '#FDF4FF' }}>
-      <div className="container">
+      <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 20px' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <h2 style={{ fontSize: '2.5rem', color: 'var(--text-dark)', fontWeight: '800' }}>Clothes Donation <span style={{ color: '#16A34A' }}>Module</span></h2>
@@ -68,16 +78,89 @@ const ClothesModule = () => {
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '40px', '@media (min-width: 992px)': { gridTemplateColumns: '1.2fr 1fr' } }}>
-          {/* Features Grid */}
-          <div>
-            <div style={{ width: '100%', overflow: 'hidden', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.08)' }}>
-              <img src={nsImg} alt="Ways to Contribute Options" style={{ width: '100%', height: 'auto', display: 'block', transform: 'scale(1.01)' }} />
-            </div>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '1fr', 
+          gap: '40px',
+          alignItems: 'start'
+        }} className="clothes-grid">
+          <style>{`
+            @media (min-width: 1024px) {
+              .clothes-grid { grid-template-columns: 1.5fr 1fr !important; }
+            }
+          `}</style>
+          
+          {/* Interactive Features Grid */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', 
+            gap: '20px',
+            alignContent: 'start'
+          }}>
+            {FEATURES.map((feat, i) => {
+              const isActive = activeFeature === feat.title;
+              return (
+                <div 
+                  key={i} 
+                  onClick={() => handleFeatureClick(feat)}
+                  style={{
+                    background: '#FFF',
+                    borderRadius: '20px',
+                    padding: '24px 16px',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    border: isActive ? '2px solid #D946EF' : '1px solid #E2E8F0',
+                    boxShadow: isActive ? '0 8px 24px rgba(217,70,239,0.15)' : '0 4px 12px rgba(0,0,0,0.03)',
+                    transition: 'all 0.2s',
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '12px'
+                  }}
+                >
+                  {isActive && (
+                    <div style={{
+                      position: 'absolute', top: '10px', right: '10px', background: '#D946EF', 
+                      color: 'white', borderRadius: '50%', width: '22px', height: '22px', 
+                      display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }}>
+                      <CheckCircle size={14} strokeWidth={3} />
+                    </div>
+                  )}
+                  <div style={{ 
+                    fontSize: '2.5rem', 
+                    background: isActive ? '#FDF4FF' : '#F8FAFC', 
+                    width: '70px', height: '70px', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                    borderRadius: '50%',
+                    transition: 'all 0.2s'
+                  }}>
+                    {feat.icon}
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: '#1E293B', marginBottom: '8px' }}>{feat.title}</h4>
+                    <p style={{ fontSize: '0.8rem', color: '#64748B', lineHeight: '1.4' }}>{feat.desc}</p>
+                  </div>
+                  <div style={{ 
+                    marginTop: 'auto', 
+                    width: '28px', height: '28px', 
+                    borderRadius: '50%', 
+                    border: isActive ? '1px solid #D946EF' : '1px solid #E2E8F0',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: isActive ? '#D946EF' : '#94A3B8',
+                    background: isActive ? '#FDF4FF' : 'transparent',
+                    transition: 'all 0.2s'
+                  }}>
+                    <ChevronRight size={16} />
+                  </div>
+                </div>
+              )
+            })}
           </div>
 
           {/* Form Section */}
-          <div className="card" style={{ background: 'var(--white)', padding: '35px', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)' }}>
+          <div className="card" style={{ background: 'var(--white)', padding: '35px', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)', position: 'sticky', top: '20px' }}>
             <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', background: '#FDF4FF', padding: '6px', borderRadius: 'var(--radius-md)' }}>
               <button onClick={() => setFormType('request')} style={{ flex: 1, padding: '12px', borderRadius: 'var(--radius-sm)', border: 'none', background: formType === 'request' ? '#D946EF' : 'transparent', color: formType === 'request' ? '#FFF' : '#475569', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s', boxShadow: formType === 'request' ? '0 4px 12px rgba(217,70,239,0.2)' : 'none' }}>Request Clothes</button>
               <button onClick={() => setFormType('donate')} style={{ flex: 1, padding: '12px', borderRadius: 'var(--radius-sm)', border: 'none', background: formType === 'donate' ? '#10B981' : 'transparent', color: formType === 'donate' ? '#FFF' : '#475569', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s', boxShadow: formType === 'donate' ? '0 4px 12px rgba(16,185,129,0.2)' : 'none' }}>Donate Clothes</button>
@@ -157,13 +240,17 @@ const ClothesModule = () => {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                     <div style={{ gridColumn: 'span 2' }}>
                       <label style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-muted)', marginBottom: '8px', display: 'block' }}>Item Category</label>
-                      <select style={{ width: '100%', padding: '12px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: '#F8FAFC', outline: 'none' }}>
-                        <option>Men's Clothes</option>
-                        <option>Women's Clothes</option>
-                        <option>Children's Clothes</option>
-                        <option>Winter Wear / Blankets</option>
-                        <option>Shoes / Footwear</option>
-                        <option>Mixed Items</option>
+                      <select 
+                        value={itemCategory}
+                        onChange={(e) => setItemCategory(e.target.value)}
+                        style={{ width: '100%', padding: '12px 16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: '#F8FAFC', outline: 'none' }}
+                      >
+                        <option value="Men's Clothes">Men's Clothes</option>
+                        <option value="Women's Clothes">Women's Clothes</option>
+                        <option value="Children's Clothes">Children's Clothes</option>
+                        <option value="Winter Wear / Blankets">Winter Wear / Blankets</option>
+                        <option value="Shoes / Footwear">Shoes / Footwear</option>
+                        <option value="Mixed Items">Mixed Items</option>
                       </select>
                     </div>
                     <div>

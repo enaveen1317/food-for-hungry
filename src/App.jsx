@@ -12,6 +12,7 @@ import CityAdminConsole from './pages/CityAdminConsole';
 import NGODashboard from './pages/NGODashboard';
 import EducationModule from './pages/EducationModule';
 import ClothesModule from './pages/ClothesModule';
+import VolunteersManagement from './pages/VolunteersManagement';
 import Footer from './components/Footer';
 
 const LandingPage = () => (
@@ -22,6 +23,8 @@ const LandingPage = () => (
     <div id="heatmap" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(248, 250, 252, 0.95)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><HungerHeatmap /></div>
     <div id="education" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><EducationModule /></div>
     <div id="clothes" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><ClothesModule /></div>
+    <div id="volunteers" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><VolunteersManagement /></div>
+    <div id="ngo" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderRadius: '32px', margin: '0 40px', boxShadow: '0 20px 40px rgba(0,0,0,0.05)', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.6)' }}><NGODashboard /></div>
   </main>
 );
 
@@ -56,7 +59,6 @@ function App() {
         <Route path="/volunteer" element={<PageLayout><Dashboard /></PageLayout>} />
         <Route path="/admin" element={<PageLayout><AdminDashboard /></PageLayout>} />
         <Route path="/city-admin" element={<PageLayout><CityAdminConsole /></PageLayout>} />
-        <Route path="/ngo" element={<PageLayout><NGODashboard /></PageLayout>} />
       </Routes>
       <Footer />
     </div>
