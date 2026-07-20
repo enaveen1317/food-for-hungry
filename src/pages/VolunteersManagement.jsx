@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Star, Clock, Activity, Award, User, Phone, Mail, ChevronRight, CheckCircle, TrendingUp, Heart, Filter, Calendar } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import VolunteerRegistrationModal from '../components/volunteers/VolunteerRegistrationModal';
 
 const VolunteersManagement = () => {
   const navigate = useNavigate();
   const { volunteers: contextVolunteers } = useApp();
   const [activeFilter, setActiveFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showJoinModal, setShowJoinModal] = useState(false);
-  const [joinSuccess, setJoinSuccess] = useState(false);
+  const [showGuidelinesModal, setShowGuidelinesModal] = useState(false);
   
   const stats = [
     { label: 'Active Volunteers', value: contextVolunteers.length.toString(), icon: <User size={24} color="#16A34A" /> },
@@ -61,13 +59,26 @@ const VolunteersManagement = () => {
           <p style={{ fontSize: '1.1rem', color: '#334155', lineHeight: 1.6, maxWidth: '600px', fontFamily: 'Inter, sans-serif', marginBottom: '32px' }}>
             Meet the dedicated volunteers who rescue surplus food, support education, distribute clothing, and serve communities across Tamil Nadu. Join our growing network of changemakers.
           </p>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            <button onClick={() => setShowJoinModal(true)} style={{ background: '#16A34A', color: 'white', padding: '16px 32px', borderRadius: '12px', border: 'none', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 10px 25px rgba(22, 163, 74, 0.3)', transition: '0.2s' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}>
-              Join as Volunteer <ChevronRight size={20} />
-            </button>
-            <button onClick={() => alert('Guidelines: Must be 18+ and have a valid ID. Training is provided.')} style={{ background: '#F8FAFC', color: '#0a1628', padding: '16px 32px', borderRadius: '12px', border: '1px solid #E2E8F0', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', transition: '0.2s' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}>
-              View Guidelines
-            </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', gap: '16px' }}>
+              <button onClick={() => setShowGuidelinesModal(!showGuidelinesModal)} style={{ background: showGuidelinesModal ? '#F1F5F9' : '#F8FAFC', color: '#0a1628', padding: '16px 32px', borderRadius: '12px', border: '1px solid #E2E8F0', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', transition: '0.2s' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                {showGuidelinesModal ? 'Hide Guidelines' : 'View Guidelines'}
+              </button>
+            </div>
+            
+            {showGuidelinesModal && (
+              <div style={{ background: '#F8FAFC', padding: '20px 24px', borderRadius: '16px', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'flex-start', gap: '16px', maxWidth: '500px', animation: 'fadeIn 0.3s ease-out' }}>
+                <div style={{ width: '48px', height: '48px', background: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Award size={24} color="#16A34A" />
+                </div>
+                <div>
+                  <h4 style={{ color: '#0f172a', fontWeight: 700, marginBottom: '6px', fontSize: '1.05rem' }}>Volunteer Guidelines</h4>
+                  <p style={{ color: '#64748B', fontSize: '0.95rem', lineHeight: 1.6, margin: 0 }}>
+                    Must be 18+ and have a valid ID. Comprehensive training is provided for all roles.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         
@@ -158,10 +169,6 @@ const VolunteersManagement = () => {
         
       </div>
 
-      {/* Join as Volunteer Modal */}
-      {showJoinModal && (
-        <VolunteerRegistrationModal onClose={() => setShowJoinModal(false)} />
-      )}
     </div>
   );
 };

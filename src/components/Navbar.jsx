@@ -33,6 +33,7 @@ const Navbar = () => {
     { label: 'NGO Partners', id: 'ngo' },
     { label: 'Impact', id: 'impact' },
     { label: 'Contact', id: 'footer' },
+    { label: 'Join Volunteer', path: '/join-volunteer' },
   ];
 
   return (

@@ -71,23 +71,39 @@ const DonationForm = () => {
     }
   };
 
-  const handleConfirmDispatch = () => {
-    const donationId = submitDonation({
-      donor: 'Self (Donor)',
-      foodTitle: foodTitle || 'Wedding Meals',
-      qty: qty || '20',
-      unit: unit,
-      category,
-      prepTime,
-      bestBefore,
-      storage,
-      address: address || 'Anna Nagar, Chennai',
-      contact: contact || '+91 98765 43210',
-      window: windowTime,
-      packaging,
-      ngo: selectedNgo === 'Any (Auto-assign)' ? 'System Assigned NGO' : selectedNgo
-    });
-    setSubmittedDonationId(donationId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleConfirmDispatch = async () => {
+    try {
+      setIsSubmitting(true);
+      setFormError('');
+      const donationId = await submitDonation({
+        donor: 'Self (Donor)',
+        foodTitle: foodTitle || 'Wedding Meals',
+        qty: qty || '20',
+        unit: unit,
+        category,
+        prepTime,
+        bestBefore,
+        storage,
+        address: address || 'Anna Nagar, Chennai',
+        contact: contact || '+91 98765 43210',
+        window: windowTime,
+        packaging,
+        ngo: selectedNgo === 'Any (Auto-assign)' ? 'System Assigned NGO' : selectedNgo
+      });
+      
+      if (donationId) {
+        setSubmittedDonationId(donationId);
+      } else {
+        setFormError("Failed to dispatch donation. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error in dispatch:", error);
+      setFormError("Error occurred during dispatch. " + error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleResetForm = () => {
@@ -134,6 +150,55 @@ const DonationForm = () => {
       </div>
     );
   }
+
+  const TimeSelector = ({ value, onChange }) => {
+    const [h, m] = value.split(':');
+    let hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    const hourStr = hour.toString().padStart(2, '0');
+
+    const handleHourChange = (e) => {
+      let newH = parseInt(e.target.value, 10);
+      if (ampm === 'PM' && newH !== 12) newH += 12;
+      if (ampm === 'AM' && newH === 12) newH = 0;
+      onChange(`${newH.toString().padStart(2, '0')}:${m}`);
+    };
+
+    const handleMinChange = (e) => {
+      onChange(`${h}:${e.target.value}`);
+    };
+
+    const handleAmPmChange = (e) => {
+      const newAmPm = e.target.value;
+      let newH = parseInt(h, 10);
+      if (newAmPm === 'PM' && newH < 12) newH += 12;
+      if (newAmPm === 'AM' && newH >= 12) newH -= 12;
+      onChange(`${newH.toString().padStart(2, '0')}:${m}`);
+    };
+
+    return (
+      <div style={{ display: 'flex', gap: '4px' }}>
+        <select className="form-input" value={hourStr} onChange={handleHourChange} style={{ flex: 1, padding: '0 8px', textAlign: 'center' }}>
+          {[...Array(12)].map((_, i) => {
+            const val = (i + 1).toString().padStart(2, '0');
+            return <option key={val} value={val}>{val}</option>;
+          })}
+        </select>
+        <span style={{ display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>:</span>
+        <select className="form-input" value={m} onChange={handleMinChange} style={{ flex: 1, padding: '0 8px', textAlign: 'center' }}>
+          {[...Array(60)].map((_, i) => {
+            const val = i.toString().padStart(2, '0');
+            return <option key={val} value={val}>{val}</option>;
+          })}
+        </select>
+        <select className="form-input" value={ampm} onChange={handleAmPmChange} style={{ flex: 1, padding: '0 8px', textAlign: 'center' }}>
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </div>
+    );
+  };
 
   return (
     <div className="screen-fit-section" style={{ backgroundImage: `url(${requestBg})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'center center', backgroundSize: 'cover', width: '100%' }}>
@@ -240,11 +305,11 @@ const DonationForm = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label className="form-label">{t('dfTimePrep') || 'Time Prepared'}</label>
-                  <input type="time" className="form-input" value={prepTime} onChange={e => setPrepTime(e.target.value)} />
+                  <TimeSelector value={prepTime} onChange={setPrepTime} />
                 </div>
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label className="form-label">{t('dfBestBefore') || 'Best Before'}</label>
-                  <input type="time" className="form-input" value={bestBefore} onChange={e => setBestBefore(e.target.value)} />
+                  <TimeSelector value={bestBefore} onChange={setBestBefore} />
                 </div>
               </div>
 
@@ -479,7 +544,9 @@ const DonationForm = () => {
             {step < 5 ? (
               <button type="button" className="btn btn-primary" onClick={nextStep}>{t('dfNextStep') || 'Next Step '}{' '}<ArrowRight size={18} /></button>
             ) : (
-              <button type="button" className="btn btn-primary" onClick={handleConfirmDispatch}>{t('dfConfirmDispatch') || 'Confirm & Dispatch'}</button>
+              <button type="button" className="btn btn-primary" onClick={handleConfirmDispatch} disabled={isSubmitting}>
+                {isSubmitting ? 'Dispatching...' : (t('dfConfirmDispatch') || 'Confirm & Dispatch')}
+              </button>
             )}
           </div>
         </div>

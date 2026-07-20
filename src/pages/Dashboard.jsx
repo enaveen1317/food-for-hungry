@@ -367,7 +367,7 @@ function LiveTrackCard({ activeTask, driverPos, driverStatus, gpsHistory, v }) {
       <div style={{ flex:1, minHeight:'360px', position:'relative' }}>
         <FleetLiveMap
           pickupLocation={activeTask?.pickup}
-          dropLocation={activeTask?.drop}
+          dropLocation={activeTask?.drop_loc}
           driverLat={driverPos.lat}
           driverLng={driverPos.lng}
           driverName={v.name}
@@ -376,21 +376,22 @@ function LiveTrackCard({ activeTask, driverPos, driverStatus, gpsHistory, v }) {
           gpsTrail={trail}
         />
 
-        {/* No-task overlay */}
+        {/* Waiting for tasks overlay - non blocking */}
         {!activeTask && (
           <div style={{
-            position:'absolute', inset:0,
-            display:'flex', flexDirection:'column',
-            alignItems:'center', justifyContent:'center',
-            background:'rgba(248,250,252,0.88)', backdropFilter:'blur(4px)',
+            position:'absolute', top:'20px', left:'50%', transform:'translateX(-50%)',
+            background:'rgba(255,255,255,0.95)', border:'1px solid #e2e8f0',
+            borderRadius:'20px', padding:'8px 16px', zIndex: 1000,
+            display:'flex', alignItems:'center', gap:'8px',
+            boxShadow:'0 4px 14px rgba(0,0,0,0.08)'
           }}>
-            <p style={{ fontSize:'2.5rem', marginBottom:'10px' }}>🗺️</p>
-            <p style={{ fontFamily:'Poppins', fontWeight:700, color:'#1e293b' }}>
-              No active delivery
-            </p>
-            <p style={{ fontSize:'0.82rem', color:'#94a3b8', marginTop:'4px' }}>
-              Accept an order to see live route
-            </p>
+            <div style={{
+              width:'8px', height:'8px', borderRadius:'50%', background:'#f59e0b',
+              animation:'fd-dot 1.5s ease-in-out infinite'
+            }} />
+            <span style={{ fontFamily:'Poppins', fontWeight:700, fontSize:'0.8rem', color:'#1e293b' }}>
+              Searching for tasks...
+            </span>
           </div>
         )}
       </div>
@@ -413,7 +414,7 @@ function LiveTrackCard({ activeTask, driverPos, driverStatus, gpsHistory, v }) {
           </div>
           <div style={{ textAlign:'center' }}>
             <p style={{ fontFamily:'Poppins', fontWeight:800, fontSize:'0.85rem', color:'#f97316' }}>
-              {activeTask.distanceRemaining.toFixed(2)} km
+              {(activeTask.distance_remaining || 0).toFixed(2)} km
             </p>
             <div style={{
               height:'3px', width:'48px', margin:'4px auto',
@@ -427,7 +428,7 @@ function LiveTrackCard({ activeTask, driverPos, driverStatus, gpsHistory, v }) {
               textTransform:'uppercase', letterSpacing:'0.07em' }}>Destination</p>
             <p style={{ fontSize:'0.88rem', fontWeight:700, color:'#0f172a',
               fontFamily:'Poppins', marginTop:'2px' }}>
-              🏠 {activeTask.drop.split(',')[0]}
+              🏠 {(activeTask.drop_loc || '').split(',')[0]}
             </p>
           </div>
         </div>
@@ -500,13 +501,13 @@ function TaskCard({ task, onAccept, onPickup, onProof, onDeliver }) {
             </div>
             <div>
               <p style={{ color:'#94a3b8', marginBottom:'2px', fontWeight:500 }}>🏠 Drop-off</p>
-              <p style={{ fontWeight:700, color:'#0f172a' }}>{task.drop.split(',')[0]}</p>
+              <p style={{ fontWeight:700, color:'#0f172a' }}>{(task.drop_loc || '').split(',')[0]}</p>
             </div>
             {(task.status === 'active' || task.status === 'pickup') && (
               <div>
                 <p style={{ color:'#94a3b8', marginBottom:'2px', fontWeight:500 }}>📍 Remaining</p>
                 <p style={{ fontWeight:700, color:'#f97316' }}>
-                  {task.distanceRemaining.toFixed(2)} km · ETA {fmtEta(task.eta)}
+                  {(task.distance_remaining || 0).toFixed(2)} km · ETA {fmtEta(task.eta)}
                 </p>
               </div>
             )}
@@ -526,7 +527,13 @@ function TaskCard({ task, onAccept, onPickup, onProof, onDeliver }) {
           </p>
 
           {task.status === 'available' && (
-            <button onClick={() => onAccept(task.id)} style={{
+            <button onClick={async (e) => {
+              const btn = e.currentTarget;
+              const originalText = btn.innerHTML;
+              btn.innerHTML = 'Accepting...';
+              btn.disabled = true;
+              await onAccept(task.id);
+            }} style={{
               padding:'10px', borderRadius:'12px', border:'none', cursor:'pointer',
               background:'linear-gradient(135deg,#16a34a,#22c55e)',
               color:'white', fontFamily:'Poppins', fontWeight:700, fontSize:'0.84rem',
@@ -536,7 +543,12 @@ function TaskCard({ task, onAccept, onPickup, onProof, onDeliver }) {
             </button>
           )}
           {task.status === 'active' && (
-            <button onClick={() => onPickup(task.id)} style={{
+            <button onClick={async (e) => {
+              const btn = e.currentTarget;
+              btn.innerHTML = 'Updating...';
+              btn.disabled = true;
+              await onPickup(task.id);
+            }} style={{
               padding:'10px', borderRadius:'12px', border:'none', cursor:'pointer',
               background:'linear-gradient(135deg,#2563eb,#3b82f6)',
               color:'white', fontFamily:'Poppins', fontWeight:700, fontSize:'0.84rem',
@@ -557,7 +569,13 @@ function TaskCard({ task, onAccept, onPickup, onProof, onDeliver }) {
               }}>
                 <Camera size={14}/> {task.proofUploaded ? '✓ Proof Uploaded' : '📸 Upload Proof'}
               </button>
-              <button onClick={() => { if (!task.proofUploaded) onProof(task.id); onDeliver(task.id); }} style={{
+              <button onClick={async (e) => {
+                if (!task.proofUploaded) onProof(task.id);
+                const btn = e.currentTarget;
+                btn.innerHTML = 'Confirming...';
+                btn.disabled = true;
+                await onDeliver(task.id);
+              }} style={{
                 padding:'10px', borderRadius:'12px', border:'none', cursor:'pointer',
                 background:'linear-gradient(135deg,#16a34a,#22c55e)',
                 color:'white', fontFamily:'Poppins', fontWeight:700, fontSize:'0.84rem',
@@ -603,7 +621,7 @@ const Dashboard = () => {
 
   const currentRoute = activeTask ? (() => {
     const p = getCoords(activeTask.pickup);
-    const d = getCoords(activeTask.drop);
+    const d = getCoords(activeTask.drop_loc || '');
     return { pickupLat:p.lat, pickupLng:p.lng, dropLat:d.lat, dropLng:d.lng };
   })() : null;
 

@@ -101,7 +101,26 @@ const VolunteerRegistrationModal = ({ onClose }) => {
   const [showLocationPicker, setShowLocationPicker] = useState(false);
 
   const captureGPS = () => {
-    setShowLocationPicker(true);
+    if (navigator.geolocation) {
+      setLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          handleInputChange('personalInfo', 'gpsLocation', {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+          setLoading(false);
+        },
+        (error) => {
+          console.warn("Could not get location:", error);
+          setShowLocationPicker(true); // Fallback to map
+          setLoading(false);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      setShowLocationPicker(true);
+    }
   };
 
   const isValidPhone = /^[6-9]\d{9}$/.test(formData.personalInfo.phone);
@@ -128,7 +147,7 @@ const VolunteerRegistrationModal = ({ onClose }) => {
       await api.sendOTP(formData.personalInfo.phone);
       setOtpSent(true);
       setCountdown(30);
-      setOtpCode(['1', '2', '3', '4', '5', '6']); // Auto-fill mock code for testing 
+      setOtpCode(['', '', '', '', '', '']); // Clear code for real entry
     } catch (err) {
       setError(err.message);
     } finally {

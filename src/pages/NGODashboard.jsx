@@ -109,7 +109,7 @@ const NGODashboard = () => {
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                       <span style={{ background: '#ECFDF5', color: '#10B981', padding: '4px 10px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700 }}>{don.id}</span>
-                      <span style={{ color: '#64748B', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'Inter, sans-serif' }}><Clock size={14}/> {don.time}</span>
+                      <span style={{ color: '#64748B', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'Inter, sans-serif' }}><Clock size={14}/> {don.time || 'Just now'}</span>
                     </div>
                     <h4 style={{ fontWeight: 800, fontSize: '1.4rem', color: '#0F172A', marginBottom: '4px' }}>{don.food}</h4>
                     <p style={{ color: '#475569', fontSize: '0.95rem', fontFamily: 'Inter, sans-serif' }}>Donor: {don.donor} • Qty: <span style={{ fontWeight: 600 }}>{don.qty}</span></p>
@@ -120,7 +120,12 @@ const NGODashboard = () => {
                   </div>
                   
                   <button 
-                    onClick={() => dispatchRiderNGO(don.id, 'Rahul S.')}
+                    onClick={async (e) => {
+                      const btn = e.currentTarget;
+                      btn.innerHTML = 'Dispatching...';
+                      btn.disabled = true;
+                      await dispatchRiderNGO(don.id, 'Rahul S.');
+                    }}
                     style={{ marginTop: 'auto', background: '#10B981', color: 'white', padding: '16px', borderRadius: '16px', border: 'none', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', transition: '0.2s', boxShadow: '0 4px 14px rgba(16,185,129,0.2)' }}
                     onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
                     onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}

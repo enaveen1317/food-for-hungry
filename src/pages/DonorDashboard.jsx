@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   CheckCircle, MapPin, Star, TrendingUp, Bell,
   ChevronDown, Filter, Calendar, Shield, Package,
@@ -52,6 +53,7 @@ const getEstimatedDelivery = (progress) => {
 
 const DonorDashboard = () => {
   const [tab, setTab] = useState('active');
+  const navigate = useNavigate();
   const { donations } = useApp();
 
   const activeDonations = donations
@@ -308,10 +310,7 @@ const DonorDashboard = () => {
                   </div>
                   {/* Quick action */}
                   <button 
-                    onClick={() => {
-                      const el = document.getElementById('volunteer-dashboard');
-                      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
-                    }}
+                    onClick={() => navigate('/volunteer')}
                     style={{ marginTop: 'auto', width: '100%', background: 'linear-gradient(135deg,#22C55E,#16A34A)', border: 'none', borderRadius: '8px', padding: '7px', color: 'white', fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.73rem', cursor: 'pointer', boxShadow: '0 4px 14px rgba(34,197,94,0.3)' }}
                   >
                     Track Live 📍

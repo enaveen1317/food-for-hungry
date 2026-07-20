@@ -14,6 +14,7 @@ import EducationModule from './pages/EducationModule';
 import ClothesModule from './pages/ClothesModule';
 import VolunteersManagement from './pages/VolunteersManagement';
 import Footer from './components/Footer';
+import JoinVolunteer from './pages/JoinVolunteer';
 
 const LandingPage = () => (
   <main style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '30px', paddingBottom: '80px' }}>
@@ -59,6 +60,7 @@ function App() {
         <Route path="/volunteer" element={<PageLayout><Dashboard /></PageLayout>} />
         <Route path="/admin" element={<PageLayout><AdminDashboard /></PageLayout>} />
         <Route path="/city-admin" element={<PageLayout><CityAdminConsole /></PageLayout>} />
+        <Route path="/join-volunteer" element={<JoinVolunteer />} />
       </Routes>
       <Footer />
     </div>

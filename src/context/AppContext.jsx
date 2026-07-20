@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useRef, useCallback, useEffect } from 'react';
 import { haversineKm } from '../utils/haversine';
+import { api } from '../services/api';
 
 const AppContext = createContext();
 
@@ -21,6 +22,20 @@ function useLocalStorage(key, initialValue) {
       console.warn(`Error setting localStorage key "${key}":`, error);
     }
   }, [key, value]);
+
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === key) {
+        try {
+          setValue(e.newValue ? JSON.parse(e.newValue) : initialValue);
+        } catch (error) {
+          console.warn(`Error parsing storage change for key "${key}":`, error);
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [key]);
 
   return [value, setValue];
 }
@@ -75,7 +90,6 @@ export function getCoords(locationStr) {
   for (const [key, val] of Object.entries(LOCATION_COORDS)) {
     if (locationStr.toLowerCase().includes(key.toLowerCase())) return val;
   }
-  // Deterministic fallback based on string length and first char code
   const hash = (locationStr.length * 13 + locationStr.charCodeAt(0)) % 100;
   const hash2 = (locationStr.length * 17 + (locationStr.charCodeAt(locationStr.length - 1) || 0)) % 100;
   return { 
@@ -85,39 +99,46 @@ export function getCoords(locationStr) {
 }
 
 export const AppProvider = ({ children }) => {
-  // ── Statistics ─────────────────────────────────────────────────────────────
-  const [stats, setStats] = useLocalStorage('ffh_stats', {
+  // ── Real Backend State ─────────────────────────────────────────────────────────────
+  const [stats, setStats] = useState({
     mealsToday: 0,
     familiesServed: 0,
     avgPickupMins: 0,
     activeZones: 0
   });
 
-  // ── Donations State ────────────────────────────────────────────────────────
-  const [donations, setDonations] = useLocalStorage('ffh_donations', []);
-
-  // ── Urgent Requests ────────────────────────────────────────────────────────
+  const [donations, setDonations] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [requests, setRequests] = useLocalStorage('ffh_requests', []);
-
-  // ── Volunteers State ───────────────────────────────────────────────────────
+  const [logs, setLogs] = useLocalStorage('ffh_logs', []);
+  
   const [volunteers, setVolunteers] = useLocalStorage('ffh_volunteers', [
     { name: 'Rahul S.', area: 'T Nagar', status: 'Available', deliveries: 48, points: 1285, avatar: '🚴', tier: 'Gold' },
     { name: 'Karthik R.', area: 'Anna Nagar', status: 'Available', deliveries: 3, points: 120, avatar: '🚴', tier: 'Silver' },
     { name: 'Meena S.', area: 'Adyar', status: 'Available', deliveries: 1, points: 40, avatar: '🚴', tier: 'Silver' },
     { name: 'Pradeep K.', area: 'Velachery', status: 'Available', deliveries: 5, points: 200, avatar: '🚴', tier: 'Silver' },
-    { name: 'Divya T.', area: 'T Nagar', status: 'Break', deliveries: 2, points: 80, avatar: '🚴', tier: 'Silver' },
-    { name: 'Suresh V.', area: 'Chromepet', status: 'Available', deliveries: 15, points: 450, avatar: '🚴', tier: 'Silver' },
-    { name: 'Manoj P.', area: 'Guindy', status: 'Available', deliveries: 89, points: 2150, avatar: '🚴', tier: 'Platinum' },
-    { name: 'Anjali N.', area: 'Mylapore', status: 'Available', deliveries: 120, points: 3050, avatar: '🚴', tier: 'Diamond' },
-    { name: 'Vikram B.', area: 'Porur', status: 'Available', deliveries: 12, points: 340, avatar: '🚴', tier: 'Silver' },
-    { name: 'Senthil M.', area: 'Tambaram', status: 'Break', deliveries: 55, points: 1400, avatar: '🚴', tier: 'Gold' }
   ]);
 
-  // ── Tasks ──────────────────────────────────────────────────────────────────
-  const [tasks, setTasks] = useLocalStorage('ffh_tasks', []);
+  const fetchLiveState = useCallback(async () => {
+    try {
+      const [dons, tsks, stts] = await Promise.all([
+        api.getDonations(),
+        api.getTasks(),
+        api.getStats()
+      ]);
+      setDonations(dons || []);
+      setTasks(tsks || []);
+      if (stts) setStats(stts);
+    } catch (err) {
+      console.error("Failed to fetch live state", err);
+    }
+  }, []);
 
-  // ── Activity Logs ──────────────────────────────────────────────────────────
-  const [logs, setLogs] = useLocalStorage('ffh_logs', []);
+  useEffect(() => {
+    fetchLiveState();
+    const interval = setInterval(fetchLiveState, 5000);
+    return () => clearInterval(interval);
+  }, [fetchLiveState]);
 
   // ── GPS & Shift State (NEW) ────────────────────────────────────────────────
   const [gpsHistory, setGpsHistory] = useState([]);
@@ -125,7 +146,6 @@ export const AppProvider = ({ children }) => {
   const [driverPos, setDriverPos]   = useState({ lat: 13.0650, lng: 80.2250 }); 
   const [driverStatus, setDriverStatus] = useState('Available'); 
 
-  // Shift timer
   const [shiftState, setShiftState] = useState({
     isRunning: false,
     startTime: null,
@@ -133,7 +153,6 @@ export const AppProvider = ({ children }) => {
     totalPausedMs: 0,
   });
 
-  // ── GPS accumulation (called by useGpsSimulator) ────────────────────────
   const lastGpsRef = useRef({ lat: 13.0650, lng: 80.2250 });
 
   const addGpsPoint = useCallback((lat, lng) => {
@@ -141,23 +160,20 @@ export const AppProvider = ({ children }) => {
     const segKm = haversineKm(prev.lat, prev.lng, lat, lng);
     lastGpsRef.current = { lat, lng };
 
-    // Only accumulate if driver is active (not offline/break)
     setDriverPos({ lat, lng });
-    setGpsHistory(h => [...h.slice(-199), { lat, lng, ts: Date.now() }]); // keep last 200 pts
+    setGpsHistory(h => [...h.slice(-199), { lat, lng, ts: Date.now() }]);
     setDistanceKm(d => parseFloat((d + segKm).toFixed(3)));
 
-    // Decrease distanceRemaining on active task
     setTasks(prev => prev.map(t => {
-      if ((t.status === 'active' || t.status === 'pickup') && t.distanceRemaining > 0) {
-        const newRem = Math.max(0, parseFloat((t.distanceRemaining - segKm).toFixed(3)));
-        const newEta = newRem > 0 ? Math.ceil((newRem / 20) * 60) : 0; // 20 km/h avg speed → minutes
-        return { ...t, distanceRemaining: newRem, eta: newEta };
+      if ((t.status === 'active' || t.status === 'pickup') && t.distance_remaining > 0) {
+        const newRem = Math.max(0, parseFloat((t.distance_remaining - segKm).toFixed(3)));
+        const newEta = newRem > 0 ? Math.ceil((newRem / 20) * 60) : 0;
+        return { ...t, distance_remaining: newRem, eta: newEta };
       }
       return t;
     }));
   }, []);
 
-  // ── Shift controls ─────────────────────────────────────────────────────────
   const startShift = () => {
     setShiftState({ isRunning: true, startTime: Date.now(), pausedAt: null, totalPausedMs: 0 });
     setDriverStatus('Available');
@@ -187,7 +203,6 @@ export const AppProvider = ({ children }) => {
 
   const setStatus = (status) => setDriverStatus(status);
 
-  // ── Helper ─────────────────────────────────────────────────────────────────
   const getCurrentTimeStr = () => {
     const d = new Date();
     return d.toTimeString().substring(0, 5);
@@ -198,33 +213,13 @@ export const AppProvider = ({ children }) => {
   };
 
   // ── Donate ─────────────────────────────────────────────────────────────────
-  const submitDonation = (details) => {
-    const randomId = 'DON-' + Math.floor(1000 + Math.random() * 9000);
-    const newDon = {
-      id: randomId,
-      donor: details.donor || 'Self',
-      food: details.foodTitle || 'Surplus Food',
-      qty: `${details.qty} ${details.unit || 'Portions'}`,
-      category: details.category || 'Cooked Meals',
-      prepTime: details.prepTime || '14:00',
-      bestBefore: details.bestBefore || '20:00',
-      storage: details.storage || 'Room Temp',
-      address: details.address || 'Anna Nagar, Chennai',
-      contact: details.contact || '+91 98765 43210',
-      window: details.window || 'Next 2 Hours',
-      packaging: details.packaging || 'Loose / requires packaging',
-      status: 'Listed',
-      progress: 1,
-      time: 'Just now',
-      date: 'Today',
-      volunteer: 'Rahul S.',
-      ngo: details.ngo || 'Hope Shelter'
-    };
-    
-    setDonations(prev => [newDon, ...prev]);
-    // Note: Task is no longer automatically created here; it's created when the NGO dispatches a volunteer.
-    addLog('DONATION', `New donation ${randomId} of ${newDon.qty} listed by ${newDon.donor}.`);
-    return randomId;
+  const submitDonation = async (details) => {
+    const res = await api.submitDonation(details);
+    if (res && res.success) {
+      addLog('DONATION', `New donation ${res.id} listed.`);
+      await fetchLiveState();
+      return res.id;
+    }
   };
 
   // ── SOS ────────────────────────────────────────────────────────────────────
@@ -244,82 +239,40 @@ export const AppProvider = ({ children }) => {
   };
 
   // ── NGO Actions ────────────────────────────────────────────────────────────
-  const acceptDonationNGO = (donationId) => {
-    setDonations(prev => prev.map(d => d.id === donationId ? { ...d, status: 'accepted', progress: 2 } : d));
+  const acceptDonationNGO = async (donationId) => {
+    await api.acceptDonation(donationId);
     addLog('MATCH', `Donation ${donationId} accepted by NGO.`);
+    await fetchLiveState();
   };
 
-  const dispatchRiderNGO = (donationId, volunteerName) => {
-    const donObj = donations.find(d => d.id === donationId);
-    if (!donObj) return;
-    setDonations(prev => prev.map(d =>
-      d.id === donationId ? { ...d, status: 'Volunteer Assigned', progress: 3, volunteer: volunteerName, eta: '10 mins' } : d
-    ));
+  const dispatchRiderNGO = async (donationId, volunteerName) => {
+    await api.dispatchVolunteer(donationId, volunteerName);
     setVolunteers(prev => prev.map(v => v.name === volunteerName ? { ...v, status: 'Delivering' } : v));
-    const newTask = {
-      id: 'TSK-' + Math.floor(100 + Math.random() * 900),
-      donor: donObj.donor,
-      food: `${donObj.food} — ${donObj.qty}`,
-      pickup: donObj.address.split(',')[0],
-      drop: donObj.ngo || 'Hope Shelter',
-      urgency: 'high',
-      distanceKm: 2.5,
-      distanceRemaining: 2.5,
-      payout: '50 pts',
-      status: 'active',
-      pickupTime: 'Ready now',
-      dropTime: 'Deliver soon',
-      proofUploaded: false,
-      donationId,
-      eta: 8,
-      assignedAt: Date.now(),
-    };
-    setTasks(prev => [newTask, ...prev]);
     addLog('MATCH', `Volunteer ${volunteerName} dispatched for donation ${donationId}.`);
+    await fetchLiveState();
   };
 
   const dispatchSOSRequest = (requestId, volunteerName) => {
     setRequests(prev => prev.map(r => r.id === requestId ? { ...r, dispatched: true, volunteer: volunteerName } : r));
     setVolunteers(prev => prev.map(v => v.name === volunteerName ? { ...v, status: 'Delivering' } : v));
-    const reqObj = requests.find(r => r.id === requestId);
-    const newTask = {
-      id: 'TSK-' + Math.floor(100 + Math.random() * 900),
-      donor: reqObj ? reqObj.name : 'SOS Requester',
-      food: `Emergency Food Support — ${reqObj ? reqObj.ppl : 10} people`,
-      pickup: 'Central Depot',
-      drop: reqObj ? reqObj.loc : 'Requested Address',
-      urgency: 'high',
-      distanceKm: 3.0,
-      distanceRemaining: 3.0,
-      payout: '60 pts',
-      status: 'active',
-      pickupTime: 'Ready now',
-      dropTime: 'Deliver immediately',
-      proofUploaded: false,
-      requestId,
-      eta: 10,
-      assignedAt: Date.now(),
-    };
-    setTasks(prev => [newTask, ...prev]);
     addLog('SOS', `Rider ${volunteerName} dispatched for emergency request #${requestId}.`);
   };
 
   // ── Volunteer Actions ──────────────────────────────────────────────────────
-  const acceptTaskVolunteer = (taskId) => {
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: 'active', assignedAt: Date.now() } : t));
+  const acceptTaskVolunteer = async (taskId) => {
+    await api.updateTaskStatus(taskId, 'active');
     setDriverStatus('Delivering');
     setVolunteers(prev => prev.map(v => v.name === 'Rahul S.' ? { ...v, status: 'Delivering' } : v));
     addLog('MATCH', `Task ${taskId} accepted by rider.`);
+    await fetchLiveState();
   };
 
-  const markPickedUpVolunteer = (taskId) => {
+  const markPickedUpVolunteer = async (taskId) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: 'pickup' } : t));
-    if (task.donationId) {
-      setDonations(prev => prev.map(d => d.id === task.donationId ? { ...d, status: 'Picked up', progress: 4 } : d));
-    }
+    await api.updateTaskStatus(taskId, 'pickup', task.donation_id);
     addLog('DELIVERY', `Rider picked up food for task ${taskId}.`);
+    await fetchLiveState();
   };
 
   const uploadProofVolunteer = (taskId) => {
@@ -327,35 +280,15 @@ export const AppProvider = ({ children }) => {
     addLog('DELIVERY', `Delivery proof uploaded for task ${taskId}.`);
   };
 
-  const markDeliveredVolunteer = (taskId) => {
+  const markDeliveredVolunteer = async (taskId) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
 
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: 'completed', distanceRemaining: 0, eta: 0 } : t));
+    await api.updateTaskStatus(taskId, 'completed', task.donation_id);
 
-    // ── Reward point calculation ──────────────────────────────────────────
     const basePoints = 20;
-    const distBonus  = Math.floor((task.distanceKm || 0) * 2);  // +2 per km
-    const onTimeBonus = task.assignedAt
-      ? (Date.now() - task.assignedAt < 45 * 60 * 1000 ? 10 : 0) // on time if < 45 min
-      : 0;
-    const ratingBonus = 5; // simulated rating always >= 4.5 for demo
-    const ptsEarned = basePoints + distBonus + onTimeBonus + ratingBonus;
-
-    if (task.donationId) {
-      setDonations(prev => prev.map(d =>
-        d.id === task.donationId ? { ...d, status: 'delivered', progress: 5 } : d
-      ));
-      const donObj = donations.find(d => d.id === task.donationId);
-      if (donObj) {
-        const qtyVal = parseInt(donObj.qty) || 20;
-        setStats(prev => ({
-          ...prev,
-          mealsToday: prev.mealsToday + qtyVal,
-          familiesServed: prev.familiesServed + Math.ceil(qtyVal / 4)
-        }));
-      }
-    }
+    const distBonus  = Math.floor((task.distance_km || 0) * 2);
+    const ptsEarned = basePoints + distBonus + 5;
 
     setVolunteers(prev => prev.map(v => {
       if (v.name === 'Rahul S.') {
@@ -366,21 +299,19 @@ export const AppProvider = ({ children }) => {
     }));
 
     setDriverStatus('Available');
-    addLog('DELIVERY', `Rahul S. completed task ${task.id}. +${ptsEarned} pts earned!`);
+    addLog('DELIVERY', `Completed task ${task.id}. +${ptsEarned} pts earned!`);
+    await fetchLiveState();
   };
 
   return (
     <AppContext.Provider value={{
       stats, donations, requests, volunteers, tasks, logs,
-      // GPS & shift
       gpsHistory, distanceKm, driverPos, driverStatus, shiftState,
       addGpsPoint, startShift, pauseShift, resumeShift, endShift, setStatus,
-      // Actions
       submitDonation, submitSOS,
       acceptDonationNGO, dispatchRiderNGO, dispatchSOSRequest,
       acceptTaskVolunteer, markPickedUpVolunteer, uploadProofVolunteer, markDeliveredVolunteer,
-      // Helpers
-      getTier, getTierProgress, getCoords,
+      getTier, getTierProgress, getCoords, fetchLiveState
     }}>
       {children}
     </AppContext.Provider>
