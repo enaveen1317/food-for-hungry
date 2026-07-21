@@ -6,12 +6,16 @@ import { LanguageProvider } from './context/LanguageContext.jsx'
 import { AppProvider } from './context/AppContext.jsx'
 import { BrowserRouter } from 'react-router-dom'
 
+import { ToastProvider } from './context/ToastContext.jsx'
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <LanguageProvider>
         <AppProvider>
-          <App />
+          <ToastProvider>
+            <App />
+          </ToastProvider>
         </AppProvider>
       </LanguageProvider>
     </BrowserRouter>

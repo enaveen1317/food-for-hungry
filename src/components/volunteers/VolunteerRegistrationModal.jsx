@@ -622,54 +622,17 @@ const OTPInput = ({ value, onChange, disabled }) => {
   );
 };
 
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+
 const LocationPickerMap = ({ onSelect, onClose }) => {
-  const mapRef = React.useRef(null);
-  const [L, setL] = React.useState(null);
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+  });
+
   const [markerLatLgn, setMarkerLatLgn] = React.useState({ lat: 13.0827, lng: 80.2707 }); 
-  
-  React.useEffect(() => {
-    if (!document.getElementById('leaflet-css')) {
-      const link = document.createElement('link');
-      link.id = 'leaflet-css';
-      link.rel = 'stylesheet';
-      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-      document.head.appendChild(link);
-    }
-    import('leaflet').then((leaflet) => {
-      setL(leaflet);
-    });
-  }, []);
 
-  React.useEffect(() => {
-    if (!L || !mapRef.current) return;
-    const map = L.map(mapRef.current).setView([13.0827, 80.2707], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    
-    // Fix Leaflet's default icon paths issue
-    const DefaultIcon = L.icon({
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
-    L.Marker.prototype.options.icon = DefaultIcon;
-
-    const marker = L.marker([13.0827, 80.2707], { draggable: true }).addTo(map);
-    marker.on('dragend', function(event) {
-      const position = marker.getLatLng();
-      setMarkerLatLgn({ lat: position.lat, lng: position.lng });
-    });
-
-    map.on('click', function(e) {
-      marker.setLatLng(e.latlng);
-      setMarkerLatLgn({ lat: e.latlng.lat, lng: e.latlng.lng });
-    });
-
-    return () => map.remove();
-  }, [L]);
+  if (loadError) return <div>Error loading maps</div>;
 
   return (
     <div style={{ position: 'fixed', top:0, left:0, right:0, bottom:0, background: 'rgba(0,0,0,0.5)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -679,7 +642,26 @@ const LocationPickerMap = ({ onSelect, onClose }) => {
           <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B' }}><X size={20} /></button>
         </div>
         <p style={{ color: '#64748B', fontSize: '0.9rem', marginBottom: '20px', marginTop: 0 }}>Drag the pin or click on the map to set your exact location.</p>
-        <div ref={mapRef} style={{ height: '350px', width: '100%', borderRadius: '12px', background: '#F1F5F9', marginBottom: '24px', overflow: 'hidden' }}></div>
+        
+        <div style={{ height: '350px', width: '100%', borderRadius: '12px', background: '#F1F5F9', marginBottom: '24px', overflow: 'hidden' }}>
+          {!isLoaded ? (
+            <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>Loading Map...</div>
+          ) : (
+            <GoogleMap
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+              center={markerLatLgn}
+              zoom={12}
+              onClick={(e) => setMarkerLatLgn({ lat: e.latLng.lat(), lng: e.latLng.lng() })}
+            >
+              <Marker
+                position={markerLatLgn}
+                draggable={true}
+                onDragEnd={(e) => setMarkerLatLgn({ lat: e.latLng.lat(), lng: e.latLng.lng() })}
+              />
+            </GoogleMap>
+          )}
+        </div>
+        
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
           <button onClick={onClose} style={{ padding: '12px 20px', borderRadius: '10px', border: '1px solid #CBD5E1', background: 'white', fontWeight: 600, color: '#475569', cursor: 'pointer' }}>Cancel</button>
           <button onClick={() => onSelect(markerLatLgn)} style={{ padding: '12px 24px', borderRadius: '10px', border: 'none', background: '#16A34A', color: 'white', fontWeight: 700, cursor: 'pointer' }}>Confirm Location</button>

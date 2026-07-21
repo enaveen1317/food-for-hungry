@@ -4,11 +4,13 @@ import requestBg from '../assets/request-bg.png';
 import { useLanguage } from '../context/LanguageContext';
 import { useApp } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../context/ToastContext';
 
 const DonationForm = () => {
   const { t } = useLanguage();
   const { submitDonation } = useApp();
   const navigate = useNavigate();
+  const { addToast } = useToast();
 
   const [step, setStep] = useState(1);
   const [foodTitle, setFoodTitle] = useState('');
@@ -94,9 +96,15 @@ const DonationForm = () => {
       });
       
       if (donationId) {
-        setSubmittedDonationId(donationId);
+        setSubmittedDonationId(donationId.id || donationId);
+        addToast('Donation submitted successfully!', 'success');
+        // Reset form or redirect
+        setTimeout(() => {
+          navigate('/donor');
+        }, 2000);
       } else {
         setFormError("Failed to dispatch donation. Please try again.");
+        addToast("Failed to dispatch donation", 'error');
       }
     } catch (error) {
       console.error("Error in dispatch:", error);

@@ -1,6 +1,9 @@
 import React, { createContext, useState, useContext, useRef, useCallback, useEffect } from 'react';
 import { haversineKm } from '../utils/haversine';
-import { api } from '../services/api';
+import { api, BASE_URL } from '../services/api';
+import { io } from 'socket.io-client';
+
+const socket = io(BASE_URL || 'http://localhost:3001');
 
 const AppContext = createContext();
 
@@ -109,26 +112,27 @@ export const AppProvider = ({ children }) => {
 
   const [donations, setDonations] = useState([]);
   const [tasks, setTasks] = useState([]);
-  const [requests, setRequests] = useLocalStorage('ffh_requests', []);
+  const [requests, setRequests] = useState([]);
   const [logs, setLogs] = useLocalStorage('ffh_logs', []);
-  
-  const [volunteers, setVolunteers] = useLocalStorage('ffh_volunteers', [
-    { name: 'Rahul S.', area: 'T Nagar', status: 'Available', deliveries: 48, points: 1285, avatar: '🚴', tier: 'Gold' },
-    { name: 'Karthik R.', area: 'Anna Nagar', status: 'Available', deliveries: 3, points: 120, avatar: '🚴', tier: 'Silver' },
-    { name: 'Meena S.', area: 'Adyar', status: 'Available', deliveries: 1, points: 40, avatar: '🚴', tier: 'Silver' },
-    { name: 'Pradeep K.', area: 'Velachery', status: 'Available', deliveries: 5, points: 200, avatar: '🚴', tier: 'Silver' },
-  ]);
+  const [volunteers, setVolunteers] = useState([]);
+  const [ngos, setNgos] = useState([]);
 
   const fetchLiveState = useCallback(async () => {
     try {
-      const [dons, tsks, stts] = await Promise.all([
+      const [dons, tsks, stts, ngs, vols, reqs] = await Promise.all([
         api.getDonations(),
         api.getTasks(),
-        api.getStats()
+        api.getStats(),
+        api.getNGOs(),
+        api.getVolunteers(),
+        api.getSOSRequests()
       ]);
       setDonations(dons || []);
       setTasks(tsks || []);
       if (stts) setStats(stts);
+      setNgos(ngs || []);
+      setVolunteers(vols || []);
+      setRequests(reqs || []);
     } catch (err) {
       console.error("Failed to fetch live state", err);
     }
@@ -136,8 +140,21 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     fetchLiveState();
-    const interval = setInterval(fetchLiveState, 5000);
-    return () => clearInterval(interval);
+    
+    socket.on('donations_updated', fetchLiveState);
+    socket.on('tasks_updated', fetchLiveState);
+    socket.on('sos_requests_updated', fetchLiveState);
+    socket.on('new_notification', fetchLiveState);
+
+    const interval = setInterval(fetchLiveState, 15000); // reduced polling frequency
+    
+    return () => {
+      clearInterval(interval);
+      socket.off('donations_updated', fetchLiveState);
+      socket.off('tasks_updated', fetchLiveState);
+      socket.off('sos_requests_updated', fetchLiveState);
+      socket.off('new_notification', fetchLiveState);
+    };
   }, [fetchLiveState]);
 
   // ── GPS & Shift State (NEW) ────────────────────────────────────────────────
@@ -159,6 +176,13 @@ export const AppProvider = ({ children }) => {
     const prev = lastGpsRef.current;
     const segKm = haversineKm(prev.lat, prev.lng, lat, lng);
     lastGpsRef.current = { lat, lng };
+
+    // Emit live location over websocket
+    socket.emit('location_update', {
+      volunteerId: 'VOL-TN-2026-00001', // Mock or get from actual user session
+      lat,
+      lng
+    });
 
     setDriverPos({ lat, lng });
     setGpsHistory(h => [...h.slice(-199), { lat, lng, ts: Date.now() }]);
@@ -223,19 +247,20 @@ export const AppProvider = ({ children }) => {
   };
 
   // ── SOS ────────────────────────────────────────────────────────────────────
-  const submitSOS = (reqDetails) => {
-    const newId = requests.length + 1;
-    const newReq = {
-      id: newId,
+  const submitSOS = async (reqDetails) => {
+    const coords = getCoords(reqDetails.address || 'Chennai City Center');
+    const res = await api.submitSOS({
       name: reqDetails.name || 'Anonymous',
       loc: reqDetails.address || 'Chennai City Center',
-      ppl: parseInt(reqDetails.peopleCount) || 10,
+      people_count: parseInt(reqDetails.peopleCount) || 10,
       urgent: reqDetails.urgency === 'critical' || reqDetails.urgency === 'high',
-      dispatched: false,
-      volunteer: null
-    };
-    setRequests(prev => [newReq, ...prev]);
-    addLog('SOS', `SOS alert raised by ${newReq.name} for ${newReq.ppl} people.`);
+      lat: coords.lat,
+      lng: coords.lng
+    });
+    if (res && res.success) {
+      addLog('SOS', `SOS alert raised by ${reqDetails.name || 'Anonymous'} for ${reqDetails.peopleCount || 10} people.`);
+      await fetchLiveState();
+    }
   };
 
   // ── NGO Actions ────────────────────────────────────────────────────────────
@@ -305,7 +330,7 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
-      stats, donations, requests, volunteers, tasks, logs,
+      stats, donations, requests, volunteers, tasks, logs, ngos,
       gpsHistory, distanceKm, driverPos, driverStatus, shiftState,
       addGpsPoint, startShift, pauseShift, resumeShift, endShift, setStatus,
       submitDonation, submitSOS,

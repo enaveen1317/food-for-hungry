@@ -69,7 +69,7 @@ const DonorDashboard = () => {
       ngo: d.ngo || 'Assigning NGO...',
       address: d.address,
       time: d.time || 'Just now',
-      serves: `~${parseInt(d.qty) * (d.qty.includes('kg') ? 2.5 : 1) || 20} People`,
+      serves: `~${parseInt(d.qty) * (String(d.qty || '').includes('kg') ? 2.5 : 1) || 20} People`,
       weight: d.qty
     }));
 
@@ -81,7 +81,7 @@ const DonorDashboard = () => {
       qty: d.qty,
       date: d.date || 'Recently',
       ngo: d.ngo,
-      meals: Math.floor(parseInt(d.qty) * (d.qty.includes('kg') ? 2.5 : 1)) || 20
+      meals: Math.floor(parseInt(d.qty) * (String(d.qty || '').includes('kg') ? 2.5 : 1)) || 20
     }));
 
   const STATS = [

@@ -9,7 +9,7 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const getDB = (key) => JSON.parse(localStorage.getItem(key) || '[]');
 const setDB = (key, data) => localStorage.setItem(key, JSON.stringify(data));
-const BASE_URL = 'http://localhost:3001/api';
+export const BASE_URL = 'http://localhost:3001/api';
 
 export const api = {
   // --- AUTHENTICATION & OTP ---
@@ -56,9 +56,8 @@ export const api = {
       if (!response.ok) throw new Error(data.error || "Failed to send email verification");
       return data;
     } catch (err) {
-      console.warn("Backend server not running. Mock sendEmailVerification success.");
-      await delay(800);
-      return { success: true, mock: true };
+      console.error("sendEmailVerification Error:", err);
+      throw err;
     }
   },
 
@@ -69,23 +68,25 @@ export const api = {
       if (!response.ok) throw new Error(data.error || "Failed to check email verification status");
       return data;
     } catch (err) {
-      console.warn("Backend server not running or failed. Mock email verification status: true.");
-      await delay(800);
-      return { verified: true, mock: true };
+      console.error("checkEmailVerification Error:", err);
+      throw err;
     }
   },
 
   loginWithEmail: async (email, password) => {
-    await delay(800);
-    if (email === "admin@ffh.org" && password === "admin123") {
-      return { success: true, user: { role: 'admin', name: 'System Admin' } };
+    try {
+      const response = await fetch(`${BASE_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Invalid credentials");
+      return data;
+    } catch (err) {
+      console.error("loginWithEmail Error:", err);
+      throw err;
     }
-    const volunteers = getDB('ffh_registered_volunteers');
-    const user = volunteers.find(v => v.personalInfo.email === email);
-    if (user) {
-      return { success: true, user: { role: 'volunteer', id: user.volunteerId, ...user } };
-    }
-    throw new Error("Invalid credentials");
   },
 
   // --- DONATIONS & WORKFLOW ---
@@ -100,9 +101,8 @@ export const api = {
       if (!response.ok) throw new Error(data.error || "Failed to submit donation");
       return data;
     } catch (err) {
-      console.warn("Backend server not running. Mock submitDonation success.");
-      await delay(800);
-      return { success: true, id: 'DON-MOCK-' + Math.floor(1000 + Math.random() * 9000), mock: true };
+      console.error("submitDonation Error:", err);
+      throw err;
     }
   },
 
@@ -169,15 +169,72 @@ export const api = {
     }
   },
 
+  // --- MAP & LIVE TRACKING ---
+  getNGOs: async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/ngos`);
+      const data = await response.json();
+      return data.ngos || [];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  },
+
+  getVolunteers: async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/volunteers`);
+      const data = await response.json();
+      return data.volunteers || [];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  },
+
+  getSOSRequests: async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/sos-requests`);
+      const data = await response.json();
+      return data.requests || [];
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  },
+
+  submitSOS: async (requestData) => {
+    try {
+      const response = await fetch(`${BASE_URL}/sos-requests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to submit SOS request");
+      return data;
+    } catch (err) {
+      console.error("submitSOS Error:", err);
+      throw err;
+    }
+  },
+
   // --- VOLUNTEER REGISTRATION ---
   uploadDocument: async (file) => {
-    await delay(1500);
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-      reader.readAsDataURL(file);
-    });
+    const formData = new FormData();
+    formData.append('document', file);
+    try {
+      const response = await fetch(`${BASE_URL}/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Failed to upload document");
+      return data.url;
+    } catch (err) {
+      console.error("uploadDocument Error:", err);
+      throw err;
+    }
   },
 
   registerVolunteer: async (volunteerData) => {
